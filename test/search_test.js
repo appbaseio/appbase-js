@@ -16,19 +16,21 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 		}
 
 		var first = true
-		streamingClient.streamSearch({
+		var responseStream = streamingClient.streamSearch({
 			type: 'tweet',
 			body: {
 				query: {
 					match_all: {}
 				}
 			}
-		}).on('error', function(err) {
+		})
+		responseStream.on('error', function(err) {
 			if(err) {
 				done(err)
 				return
 			}
-		}).on('data', function(res) {
+		})
+		responseStream.on('data', function(res) {
 			if(first) {
 				setTimeout(function() {
 					client.index({
