@@ -1,8 +1,8 @@
 var assert = require('assert')
 
-var streamDocumentTests = {}
+var streamSearchTests = {}
 
-streamDocumentTests.streamOneDocument = function streamOneDocument(client, streamingClient, done) {
+streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClient, done) {
 	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
 	client.index({
 		index: 'testindex',
@@ -16,29 +16,33 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 		}
 
 		var first = true
-		responseStream = streamingClient.streamDocument({
+		streamingClient.streamSearch({
 			type: 'tweet',
-			id: '1'
-		})
-		responseStream.on('error', function(err) {
+			body: {
+				query: {
+					match_all: {}
+				}
+			}
+		}).on('error', function(err) {
 			if(err) {
 				done(err)
 				return
 			}
-		})
-		responseStream.on('data', function(res) {
+		}).on('data', function(res) {
 			if(first) {
-				client.index({
-					index: 'testindex',
-					type: 'tweet',
-					id: '1',
-					body: tweet
-				}, function(err, res) {
-					if(err) {
-						done(err)
-						return
-					}
-				})
+				setTimeout(function() {
+					client.index({
+						index: 'testindex',
+						type: 'tweet',
+						id: '1',
+						body: tweet
+					}, function(err, res) {
+						if(err) {
+							done(err)
+							return
+						}
+					})
+				}, 2000)
 				first = false
 			} else {
 				assert.deepEqual(res, {
@@ -56,4 +60,4 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 	})
 }
 
-module.exports = streamDocumentTests
+module.exports = streamSearchTests
