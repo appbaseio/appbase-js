@@ -48,7 +48,6 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 				first = false
 			} else {
 				assert.deepEqual(res, {
-					_index: 'testindex',
 			        _type: 'tweet',
 			        _id: '1',
 			        _source: tweet
