@@ -1,5 +1,3 @@
-var events = require('events')
-
 var newStreamSearchService = function newStreamSearchService(client, args) {
 	var searchService = {}
 
@@ -33,7 +31,7 @@ var newStreamSearchService = function newStreamSearchService(client, args) {
 
 	return client.performStreamingRequest({
 		method: 'POST',
-		path: '/' + type + '/_search',
+		path: type + '/_search',
 		params: args,
 		body: body
 	})

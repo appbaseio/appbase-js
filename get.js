@@ -1,5 +1,3 @@
-var events = require('events')
-
 var newStreamDocumentService = function newStreamDocumentService(client, args) {
 	var getService = {}
 
@@ -33,7 +31,7 @@ var newStreamDocumentService = function newStreamDocumentService(client, args) {
 
 	return client.performStreamingRequest({
 		method: 'GET',
-		path: '/' + type + '/' + id,
+		path: type + '/' + id,
 		params: args,
 	})
 }

@@ -1,5 +1,5 @@
 var elasticsearch = require('elasticsearch')
-var appbase = require('../appbase.js')
+var appbase = require('../')
 
 var streamDocumentTests = require('./get_test.js')
 var streamSearchTests = require('./search_test.js')

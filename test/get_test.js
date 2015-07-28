@@ -16,7 +16,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 		}
 
 		var first = true
-		responseStream = streamingClient.streamDocument({
+		var responseStream = streamingClient.streamDocument({
 			type: 'tweet',
 			id: '1'
 		})
