@@ -139,5 +139,5 @@ Get all the document changes as a stream. Returns a [``stream.Readable``](https:
 Get all the query results as a stream. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
 
 > **args** - A set of key/value pairs that makes the document URL  
-&nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string
+&nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string  
 &nbsp;&nbsp;&nbsp;&nbsp;body: A JSON Query Body (Any query matching the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html))
