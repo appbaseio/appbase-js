@@ -4,6 +4,8 @@ Appbase.io streaming client lib for Node.JS and Javascript (browser builds in [/
 
 ## Quick Example
 
+Working code snippets where each step builds on the previous ones.
+
 #### Step 1: Add some data into the app (uses elasticsearch.js)
 ```js
 // app and authentication configurations 
@@ -56,7 +58,7 @@ streamingClient.streamDocument({
 })
 ```
 
-#### Console Output
+##### Console Output
 
 ```js
 { _index: 'app`248',
@@ -71,7 +73,42 @@ streamingClient.streamDocument({
      stores: [ 'Walmart', 'Target' ] } }
 ```
 
-streamDocument() returns a ``stream.Readable`` object, which can be conveniently listened via the 'on("data")' event listener. 
+streamDocument() returns a ``stream.Readable`` object, which can be conveniently listened via the 'on("data")' event listener. Check out the [get_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/get_test.js) where we make an update to the document and see it stream. 
+
+#### Step 3: Streaming Queries
+
+While streaming documents is straightforward, streaming queries touch the entire breadth of [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - boolean, regex, geo, fuzzy to name a few. We will stream the results of a simple **``match_all``** query on the ``product`` type:
+
+```js
+streamingClient.streamSearch({
+	type: 'product',
+	body: {
+		query: {
+			match_all: {}
+		}
+	}
+}).on('data', function(res, err) {
+	console.log(res);
+}).on('error', function(err) {
+	console.log("caught a stream error", err)
+	return
+})
+```
+
+##### Console Output
+
+```js
+{ took: 1,
+  timed_out: false,
+  _shards: { total: 1, successful: 1, failed: 0 },
+  hits: 
+   { total: 4,
+     max_score: 1,
+     hits: [ [Object], [Object], [Object], [Object] ] } }
+```
+
+streamSearch() also returns a ``stream.Readable`` object, which can be conveniently listened via the 'on("data")' event listener. Check out the [search_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/search_test.js) where we make an update that matches the query and see it stream. 
+
 
 ## API Reference
 
