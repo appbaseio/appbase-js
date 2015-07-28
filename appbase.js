@@ -52,4 +52,8 @@ appbase.newClient = function newClient(args) {
 	return client
 }
 
+if(typeof window !== 'undefined') {
+	window.appbase = appbase
+}
+
 module.exports = appbase
