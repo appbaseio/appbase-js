@@ -131,13 +131,13 @@ Returns a ``client`` object on which streaming requests can be performed.
 Get all the document changes as a stream. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
 
 > **args** - A set of key/value pairs that makes the document URL  
-&nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type  
-&nbsp;&nbsp;&nbsp;&nbsp;id: Document ID
+&nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string  
+&nbsp;&nbsp;&nbsp;&nbsp;id: Valid Document ID
 
 **[client.streamSearch(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L48)** 
 
 Get all the query results as a stream. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
 
 > **args** - A set of key/value pairs that makes the document URL  
-&nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type  
-&nbsp;&nbsp;&nbsp;&nbsp;id: Document ID
+&nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string
+&nbsp;&nbsp;&nbsp;&nbsp;body: A JSON Query Body (Any query matching the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html))
