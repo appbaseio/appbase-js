@@ -28,17 +28,63 @@ appbase.newClient = function newClient(args) {
 			body = {}
 		}
 
+		var response
 		var requestStream = hyperquest({
 			method: method,
 			uri: url + '/' + appname + '/' + path + '?' + querystring.stringify(params),
 			auth: username + ':' + password
 		})
+		requestStream.on('response', function(res) {
+			response = res
+		})
+
+		var resultStream = requestStream.pipe(JSONStream.parse())
+
+		resultStream.stopStream = function stopStream() {
+			if(response) {
+				response.destroy()
+			} else {
+				requestStream.on('response', function(res) {
+					res.destroy()
+				})
+			}
+		}
+
+		requestStream.on('end', function() {
+			resultStream.stopStream()
+		})
+
+		resultStream.on('end', function() {
+			resultStream.stopStream()
+		})
+
+		requestStream.on('error', function(err) {
+			resultStream.stopStream()
+			process.nextTick(function() {
+				resultStream.emit('error', err)
+			})
+		})
+
+		resultStream.getQueryId = function getQueryId(callback) {
+			if(response) {
+				callback(response.headers['query-id'])
+			} else {
+				requestStream.on('response', function(res) {
+					callback(res.headers['query-id'])
+				})
+			}
+		}
+
+		resultStream.reconnectStream = function reconnectStream() {
+			resultStream.stopStream()
+			return performStreamingRequest(args)
+		}
 
 		if(requestStream.writable) {
 			requestStream.end(JSON.stringify(body))
 		}
 
-		return requestStream.pipe(JSONStream.parse())
+		return resultStream
 	}
 
 	client.streamDocument = function streamDocument(args) {

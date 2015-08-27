@@ -55,4 +55,53 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 	})
 }
 
+streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(client, streamingClient, done) {
+	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
+	client.index({
+		index: 'testindex',
+		type: 'tweet',
+		id: '1',
+		body: tweet
+	}, function(err, res) {
+		if(err) {
+			done(err)
+			return
+		}
+
+		var first = true
+		var responseStream = streamingClient.streamDocument({
+			type: 'tweet',
+			id: '1'
+		})
+		responseStream.on('error', function(err) {
+			if(err) {
+				done(err)
+				return
+			}
+		})
+		responseStream.on('data', function(res) {
+			if(first) {
+				client.index({
+					index: 'testindex',
+					type: 'tweet',
+					id: '1',
+					body: tweet
+				}, function(err, res) {
+					if(err) {
+						done(err)
+						return
+					}
+				})
+				responseStream.stopStream()
+				var waitForEvent = setTimeout(function () {
+					done();
+				}, 1000);
+				first = false
+			} else {
+				done(new Error('Received second event'))
+			}
+		})
+	})
+}
+
 module.exports = streamDocumentTests
