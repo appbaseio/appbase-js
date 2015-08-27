@@ -1,23 +1,7 @@
-var newStreamDocumentService = function newStreamDocumentService(client, args) {
-	var getService = {}
+var streamDocumentService = function streamDocumentService(client, args) {
+	this.args = args
 
-	var validate = function validate() {
-		var invalid = []
-		if(args.type === "") {
-			invalid += 'type'
-		}
-		if(args.id === "") {
-			invalid += 'id'
-		}
-
-		if(invalid.length > 0) {
-			return new Error('fields missing: ' + invalid[0])
-		}
-
-		return true
-	}
-
-	var valid = validate()
+	var valid = this.validate()
 	if(valid !== true) {
 		throw valid
 		return
@@ -36,4 +20,20 @@ var newStreamDocumentService = function newStreamDocumentService(client, args) {
 	})
 }
 
-module.exports = newStreamDocumentService
+streamDocumentService.prototype.validate = function validate() {
+	var invalid = []
+	if(this.args.type === "") {
+		invalid += 'type'
+	}
+	if(this.args.id === "") {
+		invalid += 'id'
+	}
+
+	if(invalid.length > 0) {
+		return new Error('fields missing: ' + invalid[0])
+	}
+
+	return true
+}
+
+module.exports = streamDocumentService

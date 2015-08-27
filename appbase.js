@@ -2,104 +2,102 @@ var hyperquest = require('hyperquest')
 var JSONStream = require('JSONStream')
 var querystring = require('querystring')
 
-var newStreamDocumentService = require('./get.js')
-var newStreamSearchService = require('./search.js')
+var streamDocumentService = require('./get.js')
+var streamSearchService = require('./search.js')
 
-var appbase = {}
-
-appbase.newClient = function newClient(args) {
-	var url = args.url
-	var username = args.username
-	var password = args.password
-	var appname = args.appname
-
-	var client = {}
-
-	if(url.slice(-1) === "/") {
-		url = url.slice(0, -1)
+var appbaseClient = function appbaseClient(args) {
+	if ( !(this instanceof appbaseClient) ) {
+		return new appbaseClient()
 	}
 
-	client.performStreamingRequest = function performStreamingRequest(args) {
-		var method = args.method
-		var path = args.path
-		var params = args.params
-		var body = args.body
-		if(!body || typeof body !== 'object') {
-			body = {}
-		}
+	this.url = args.url
+	this.username = args.username
+	this.password = args.password
+	this.appname = args.appname
 
-		var response
-		var requestStream = hyperquest({
-			method: method,
-			uri: url + '/' + appname + '/' + path + '?' + querystring.stringify(params),
-			auth: username + ':' + password
-		})
-		requestStream.on('response', function(res) {
-			response = res
-		})
+	if(this.url.slice(-1) === "/") {
+		this.url = this.url.slice(0, -1)
+	}
+}
 
-		var resultStream = requestStream.pipe(JSONStream.parse())
+appbaseClient.prototype.performStreamingRequest =  function performStreamingRequest(args) {
+	var method = args.method
+	var path = args.path
+	var params = args.params
+	var body = args.body
+	if(!body || typeof body !== 'object') {
+		body = {}
+	}
 
-		resultStream.stopStream = function stopStream() {
-			if(response) {
-				response.destroy()
-			} else {
-				requestStream.on('response', function(res) {
-					res.destroy()
-				})
-			}
-		}
+	var response
+	var requestStream = hyperquest({
+		method: method,
+		uri: this.url + '/' + this.appname + '/' + path + '?' + querystring.stringify(params),
+		auth: this.username + ':' + this.password
+	})
+	requestStream.on('response', function(res) {
+		response = res
+	})
 
-		requestStream.on('end', function() {
-			resultStream.stopStream()
-		})
+	var resultStream = requestStream.pipe(JSONStream.parse())
 
-		resultStream.on('end', function() {
-			resultStream.stopStream()
-		})
-
-		requestStream.on('error', function(err) {
-			resultStream.stopStream()
-			process.nextTick(function() {
-				resultStream.emit('error', err)
+	resultStream.stopStream = function stopStream() {
+		if(response) {
+			response.destroy()
+		} else {
+			requestStream.on('response', function(res) {
+				res.destroy()
 			})
+		}
+	}
+
+	requestStream.on('end', function() {
+		resultStream.stopStream()
+	})
+
+	resultStream.on('end', function() {
+		resultStream.stopStream()
+	})
+
+	requestStream.on('error', function(err) {
+		resultStream.stopStream()
+		process.nextTick(function() {
+			resultStream.emit('error', err)
 		})
+	})
 
-		resultStream.getQueryId = function getQueryId(callback) {
-			if(response) {
-				callback(response.headers['query-id'])
-			} else {
-				requestStream.on('response', function(res) {
-					callback(res.headers['query-id'])
-				})
-			}
+	resultStream.getQueryId = function getQueryId(callback) {
+		if(response) {
+			callback(response.headers['query-id'])
+		} else {
+			requestStream.on('response', function(res) {
+				callback(res.headers['query-id'])
+			})
 		}
-
-		resultStream.reconnectStream = function reconnectStream() {
-			resultStream.stopStream()
-			return performStreamingRequest(args)
-		}
-
-		if(requestStream.writable) {
-			requestStream.end(JSON.stringify(body))
-		}
-
-		return resultStream
 	}
 
-	client.streamDocument = function streamDocument(args) {
-		return newStreamDocumentService(client, args)
+	resultStream.reconnectStream = function reconnectStream() {
+		resultStream.stopStream()
+		return performStreamingRequest(args)
 	}
 
-	client.streamSearch = function streamSearch(args) {
-		return newStreamSearchService(client, args)
+	if(requestStream.writable) {
+		requestStream.end(JSON.stringify(body))
 	}
 
-	return client
+	return resultStream
+}
+
+appbaseClient.prototype.streamDocument = function streamDocument(args) {
+	return new streamDocumentService(this, args)
+}
+
+appbaseClient.prototype.streamSearch = function streamSearch(args) {
+	return new streamSearchService(this, args)
 }
 
 if(typeof window !== 'undefined') {
-	window.appbase = appbase
+	window.appbase = appbaseClient
 }
 
-module.exports = appbase
+module.exports = appbaseClient

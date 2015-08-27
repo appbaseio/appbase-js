@@ -1,23 +1,7 @@
-var newStreamSearchService = function newStreamSearchService(client, args) {
-	var searchService = {}
+var streamSearchService = function streamSearchService(client, args) {
+	this.args = args
 
-	var validate = function validate() {
-		var invalid = []
-		if(args.type === "") {
-			invalid += 'type'
-		}
-		if(args.body === "") {
-			invalid += 'body'
-		}
-
-		if(invalid.length > 0) {
-			return new Error('fields missing: ' + invalid[0])
-		}
-
-		return true
-	}
-
-	var valid = validate()
+	var valid = this.validate()
 	if(valid !== true) {
 		throw valid
 		return
@@ -37,4 +21,20 @@ var newStreamSearchService = function newStreamSearchService(client, args) {
 	})
 }
 
-module.exports = newStreamSearchService
+streamSearchService.prototype.validate = function validate() {
+	var invalid = []
+	if(this.args.type === "") {
+		invalid += 'type'
+	}
+	if(this.args.body === "") {
+		invalid += 'body'
+	}
+
+	if(invalid.length > 0) {
+		return new Error('fields missing: ' + invalid[0])
+	}
+
+	return true
+}
+
+module.exports = streamSearchService
