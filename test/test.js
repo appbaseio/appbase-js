@@ -15,7 +15,7 @@ describe('Appbase', function() {
 			apiVersion: '1.6'
 		});
 
-		streamingClient = appbase.newClient({
+		streamingClient = new appbase({
 			url: 'http://localhost:7999',
 			username: 'testuser',
 			password: 'testpass',
