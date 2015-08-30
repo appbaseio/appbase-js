@@ -24,18 +24,18 @@ var streamingRequest = function streamingRequest(client, args) {
 }
 
 streamingRequest.prototype.init = function init() {
+	var that = this
+
 	this.requestStream = hyperquest({
 		method: this.method,
 		uri: this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
 		auth: this.client.username + ':' + this.client.password
 	})
 	this.requestStream.on('response', function(res) {
-		this.response = res
+		that.response = res
 	})
 
 	var resultStream = this.requestStream.pipe(JSONStream.parse())
-
-	var that = this
 
 	this.requestStream.on('end', function() {
 		that.stop.apply(that)
@@ -46,7 +46,7 @@ streamingRequest.prototype.init = function init() {
 	})
 
 	this.requestStream.on('error', function(err) {
-		this.stop()
+		that.stop()
 		process.nextTick(function() {
 			resultStream.emit('error', err)
 		})
