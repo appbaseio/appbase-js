@@ -1,8 +1,9 @@
 var elasticsearch = require('elasticsearch')
 var appbase = require('../')
 
-var streamDocumentTests = require('./get_test.js')
-var streamSearchTests = require('./search_test.js')
+var indexTest = require('./index_test.js')
+var streamDocumentTests = require('./stream_document_test.js')
+var streamSearchTests = require('./stream_search_test.js')
 
 describe('Appbase', function() {
 	this.timeout(5000)
@@ -20,6 +21,12 @@ describe('Appbase', function() {
 			username: 'testuser',
 			password: 'testpass',
 			appname: 'testindex'
+		})
+	})
+
+	describe('#index', function() {
+		it('should index one document', function(done) {
+			indexTest.indexOneDocument(streamingClient, done)
 		})
 	})
 
