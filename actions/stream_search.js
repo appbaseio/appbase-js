@@ -22,16 +22,22 @@ var streamSearchService = function streamSearchService(client, args) {
 }
 
 streamSearchService.prototype.validate = function validate() {
+	console.log()
 	var invalid = []
-	if(this.args.type === "") {
-		invalid += 'type'
+	if(typeof this.args.type !== 'string' || this.args.type === '') {
+		invalid.push('type')
 	}
-	if(this.args.body === "") {
-		invalid += 'body'
+	if(typeof this.args.body !== 'object' || this.args.body === null) {
+		invalid.push('body')
+	}
+
+	var missing = ''
+	for(var i=0;i<invalid.length;i++) {
+		missing += (invalid[i] + ', ')
 	}
 
 	if(invalid.length > 0) {
-		return new Error('fields missing: ' + invalid[0])
+		return new Error('fields missing: ' + missing)
 	}
 
 	return true

@@ -22,15 +22,20 @@ var streamDocumentService = function streamDocumentService(client, args) {
 
 streamDocumentService.prototype.validate = function validate() {
 	var invalid = []
-	if(this.args.type === "") {
-		invalid += 'type'
+	if(typeof this.args.type !== 'string' || this.args.type === '') {
+		invalid.push('type')
 	}
-	if(this.args.id === "") {
-		invalid += 'id'
+	if(typeof this.args.id !== 'string' || this.args.id === '') {
+		invalid.push('id')
+	}
+
+	var missing = ''
+	for(var i=0;i<invalid.length;i++) {
+		missing += (invalid[i] + ', ')
 	}
 
 	if(invalid.length > 0) {
-		return new Error('fields missing: ' + invalid[0])
+		return new Error('fields missing: ' + missing)
 	}
 
 	return true
