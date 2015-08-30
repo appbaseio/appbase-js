@@ -27,7 +27,7 @@ var indexService = function indexService(client, args) {
 	})
 }
 
-index.prototype.validate = function validate() {
+indexService.prototype.validate = function validate() {
 	var invalid = []
 	if(typeof this.args.type !== 'string' || this.args.type === '') {
 		invalid.push('type')

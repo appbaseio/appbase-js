@@ -1,3 +1,4 @@
+var indexService = require('./actions/index.js')
 var streamingRequest = require('./streaming_request.js')
 var streamDocumentService = require('./actions/stream_document.js')
 var streamSearchService = require('./actions/stream_search.js')
@@ -19,6 +20,10 @@ var appbaseClient = function appbaseClient(args) {
 
 appbaseClient.prototype.performStreamingRequest = function performStreamingRequest(args) {
 	return new streamingRequest(this, args)
+}
+
+appbaseClient.prototype.index = function index(args) {
+	return new indexService(this, args)
 }
 
 appbaseClient.prototype.streamDocument = function streamDocument(args) {

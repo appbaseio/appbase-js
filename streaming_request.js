@@ -35,12 +35,14 @@ streamingRequest.prototype.init = function init() {
 
 	var resultStream = this.requestStream.pipe(JSONStream.parse())
 
+	var that = this
+
 	this.requestStream.on('end', function() {
-		this.stop()
+		that.stop.apply(that)
 	})
 
 	resultStream.on('end', function() {
-		this.stop()
+		that.stop.apply(that)
 	})
 
 	this.requestStream.on('error', function(err) {
@@ -50,9 +52,15 @@ streamingRequest.prototype.init = function init() {
 		})
 	})
 
-	resultStream.stop = this.stop.bind(this)
-	resultStream.getId = this.getId.bind(this)
-	resultStream.reconnect = this.reconnect.bind(this)
+	resultStream.stop = function() {
+		that.stop.apply(that)
+	}
+	resultStream.getId = function(callback) {
+		that.getId.apply(that, [callback])
+	}
+	resultStream.reconnect = function() {
+		that.reconnect.apply(that)
+	}
 
 	return resultStream
 }
@@ -71,7 +79,6 @@ streamingRequest.prototype.stop = function stop() {
 	if(this.response) {
 		this.response.destroy()
 	} else {
-		console.log(this.requestStream.on)
 		this.requestStream.on('response', function(res) {
 			res.destroy()
 		})
