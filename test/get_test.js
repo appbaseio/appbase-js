@@ -92,7 +92,7 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 						return
 					}
 				})
-				responseStream.stopStream()
+				responseStream.stop()
 				var waitForEvent = setTimeout(function () {
 					done();
 				}, 1000);

@@ -1,9 +1,6 @@
-var hyperquest = require('hyperquest')
-var JSONStream = require('JSONStream')
-var querystring = require('querystring')
-
-var streamDocumentService = require('./get.js')
-var streamSearchService = require('./search.js')
+var streamingRequest = require('./streaming_request.js')
+var streamDocumentService = require('./actions/stream_document.js')
+var streamSearchService = require('./actions/stream_search.js')
 
 var appbaseClient = function appbaseClient(args) {
 	if ( !(this instanceof appbaseClient) ) {
@@ -20,72 +17,8 @@ var appbaseClient = function appbaseClient(args) {
 	}
 }
 
-appbaseClient.prototype.performStreamingRequest =  function performStreamingRequest(args) {
-	var method = args.method
-	var path = args.path
-	var params = args.params
-	var body = args.body
-	if(!body || typeof body !== 'object') {
-		body = {}
-	}
-
-	var response
-	var requestStream = hyperquest({
-		method: method,
-		uri: this.url + '/' + this.appname + '/' + path + '?' + querystring.stringify(params),
-		auth: this.username + ':' + this.password
-	})
-	requestStream.on('response', function(res) {
-		response = res
-	})
-
-	var resultStream = requestStream.pipe(JSONStream.parse())
-
-	resultStream.stopStream = function stopStream() {
-		if(response) {
-			response.destroy()
-		} else {
-			requestStream.on('response', function(res) {
-				res.destroy()
-			})
-		}
-	}
-
-	requestStream.on('end', function() {
-		resultStream.stopStream()
-	})
-
-	resultStream.on('end', function() {
-		resultStream.stopStream()
-	})
-
-	requestStream.on('error', function(err) {
-		resultStream.stopStream()
-		process.nextTick(function() {
-			resultStream.emit('error', err)
-		})
-	})
-
-	resultStream.getQueryId = function getQueryId(callback) {
-		if(response) {
-			callback(response.headers['query-id'])
-		} else {
-			requestStream.on('response', function(res) {
-				callback(res.headers['query-id'])
-			})
-		}
-	}
-
-	resultStream.reconnectStream = function reconnectStream() {
-		resultStream.stopStream()
-		return performStreamingRequest(args)
-	}
-
-	if(requestStream.writable) {
-		requestStream.end(JSON.stringify(body))
-	}
-
-	return resultStream
+appbaseClient.prototype.performStreamingRequest = function performStreamingRequest(args) {
+	return new streamingRequest(this, args)
 }
 
 appbaseClient.prototype.streamDocument = function streamDocument(args) {
