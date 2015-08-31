@@ -5,7 +5,7 @@ var streamSearchTests = {}
 streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClient, done) {
 	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
 	client.index({
-		index: 'testindex',
+		index: 'createnewtestapp01',
 		type: 'tweet',
 		id: '1',
 		body: tweet
@@ -35,7 +35,7 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 			if(first) {
 				setTimeout(function() {
 					client.index({
-						index: 'testindex',
+						index: 'createnewtestapp01',
 						type: 'tweet',
 						id: '1',
 						body: tweet
