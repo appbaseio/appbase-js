@@ -30,6 +30,12 @@ describe('Appbase', function() {
 		})
 	})
 
+	describe('#index', function() {
+		it('should index one document', function(done) {
+			indexTest.indexOneDocument(streamingClient, done)
+		})
+	})
+
 	describe('#streamDocument()', function () {
 		it('should receive event when new document is inserted', function(done) {
 			streamDocumentTests.streamOneDocument(client, streamingClient, done)
