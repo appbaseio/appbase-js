@@ -87,7 +87,7 @@ streamingClient.streamSearch({
 			match_all: {}
 		}
 	}
-}).on('data', function(res) {
+}).on('data', function(res, err) {
 	console.log(res);
 }).on('error', function(err) {
 	console.log("caught a stream error", err)

@@ -5,7 +5,7 @@ var streamDocumentTests = {}
 streamDocumentTests.streamOneDocument = function streamOneDocument(client, streamingClient, done) {
 	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
 	client.index({
-		index: 'createnewtestapp01',
+		index: 'testindex',
 		type: 'tweet',
 		id: '1',
 		body: tweet
@@ -29,7 +29,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 		responseStream.on('data', function(res) {
 			if(first) {
 				client.index({
-					index: 'createnewtestapp01',
+					index: 'testindex',
 					type: 'tweet',
 					id: '1',
 					body: tweet
@@ -58,7 +58,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(client, streamingClient, done) {
 	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
 	client.index({
-		index: 'createnewtestapp01',
+		index: 'testindex',
 		type: 'tweet',
 		id: '1',
 		body: tweet
@@ -82,7 +82,7 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 		responseStream.on('data', function(res) {
 			if(first) {
 				client.index({
-					index: 'createnewtestapp01',
+					index: 'testindex',
 					type: 'tweet',
 					id: '1',
 					body: tweet

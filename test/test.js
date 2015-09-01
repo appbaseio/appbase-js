@@ -12,21 +12,15 @@ describe('Appbase', function() {
 
 	before(function() {
 		client = new elasticsearch.Client({
-			host: 'http://RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f@scalr.api.appbase.io',
+			host: 'http://testuser:testpass@localhost:7999',
 			apiVersion: '1.6'
 		});
 
 		streamingClient = new appbase({
-			url: 'http://scalr.api.appbase.io',
-			appname: 'createnewtestapp01',
-			username: 'RIvfxo1u1',
-			password: 'dee8ee52-8b75-4b5b-be4f-9df3c364f59f'
-		})
-	})
-
-	describe('#index', function() {
-		it('should index one document', function(done) {
-			indexTest.indexOneDocument(streamingClient, done)
+			url: 'http://localhost:7999',
+			username: 'testuser',
+			password: 'testpass',
+			appname: 'testindex'
 		})
 	})
 
