@@ -12,15 +12,15 @@ describe('Appbase', function() {
 
 	before(function() {
 		client = new elasticsearch.Client({
-			host: 'http://testuser:testpass@localhost:7999',
+			host: 'http://RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f@scalr.api.appbase.io',
 			apiVersion: '1.6'
 		});
 
 		streamingClient = new appbase({
-			url: 'http://localhost:7999',
-			username: 'testuser',
-			password: 'testpass',
-			appname: 'testindex'
+			url: 'http://scalr.api.appbase.io',
+			username: 'RIvfxo1u1',
+			password: 'dee8ee52-8b75-4b5b-be4f-9df3c364f59f',
+			appname: 'createnewtestapp01'
 		})
 	})
 

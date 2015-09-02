@@ -6,8 +6,15 @@ var betterWs = function betterWs(url) {
 	var ee = new EventEmitter()
 
 	ee.send = function(dataObj) {
-		conn.send(JSON.stringify(dataObj))
-		return this
+		if(conn.readyState !== 1) {
+			ee.on('open', function sender() {
+				conn.send(JSON.stringify(dataObj))
+				ee.removeListener('open', sender)
+			})
+		} else {
+			conn.send(JSON.stringify(dataObj))
+			return this
+		}
 	}
 
 	conn.onopen = function() {

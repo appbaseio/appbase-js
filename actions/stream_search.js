@@ -11,7 +11,7 @@ var streamSearchService = function streamSearchService(client, args) {
 	delete args.type
 	delete args.body
 
-	return client.performStreamingRequest({
+	return client.performWsRequest({
 		method: 'POST',
 		path: type + '/_search',
 		params: args,
