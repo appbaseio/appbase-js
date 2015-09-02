@@ -64,8 +64,6 @@ var streamDocumentService = function streamDocumentService(client, args) {
 	delete args.type
 	delete args.id
 
-	args.stream = "true"
-
 	return client.performWsRequest({
 		method: 'GET',
 		path: type + '/' + id,
@@ -108,8 +106,6 @@ var streamSearchService = function streamSearchService(client, args) {
 	var body = args.body
 	delete args.type
 	delete args.body
-
-	args.stream = "true"
 
 	return client.performStreamingRequest({
 		method: 'POST',
