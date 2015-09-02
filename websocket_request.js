@@ -41,8 +41,7 @@ wsRequest.prototype.init = function init() {
 		that.resultStream.push(null)
 	})
 
-	this.client.ws.on('message', function(data) {
-		var dataObj = JSON.parse(data)
+	this.client.ws.on('message', function(dataObj) {
 		if(!dataObj.id && dataObj.message) {
 			that.resultStream.emit('error', dataObj)
 			return
@@ -76,7 +75,7 @@ wsRequest.prototype.init = function init() {
 		}
 	})
 
-	this.client.ws.send(JSON.stringify(this.request))
+	this.client.ws.send(this.request)
 
 	this.resultStream.on('end', function() {
 		that.stop.apply(that)
@@ -117,7 +116,7 @@ wsRequest.prototype.stop = function stop() {
 		unsubRequest[key] = this.request[key]
 	}
 	unsubRequest.unsubscribe = true
-	this.client.ws.send(JSON.stringify(unsubRequest))
+	this.client.ws.send(unsubRequest)
 }
 
 wsRequest.prototype.reconnect = function reconnect() {

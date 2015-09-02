@@ -1,6 +1,6 @@
-var WebSocket = require('ws')
 var URL = require('url')
 
+var betterWs = require('./better_websocket.js')
 var indexService = require('./actions/index.js')
 var streamingRequest = require('./streaming_request.js')
 var wsRequest = require('./websocket_request.js')
@@ -20,9 +20,9 @@ var appbaseClient = function appbaseClient(args) {
 	this.appname = args.appname
 
 	if(this.parsedUrl.protocol === 'https:') {
-		this.ws = new WebSocket('wss://' + this.parsedUrl.host)
+		this.ws = new betterWs('wss://' + this.parsedUrl.host)
 	} else {
-		this.ws = new WebSocket('ws://' + this.parsedUrl.host)
+		this.ws = new betterWs('ws://' + this.parsedUrl.host)
 	}
 
 	if(this.url.slice(-1) === "/") {
@@ -31,16 +31,6 @@ var appbaseClient = function appbaseClient(args) {
 }
 
 appbaseClient.prototype.performWsRequest = function performWsRequest(args) {
-	var request = {
-		id: '1',
-		path: this.appname + '/' + args.path + '?stream=true',
-		method: args.method,
-		body: args.body,
-		authorization: 'Basic ' + (new Buffer(this.username + ':' + this.password).toString('base64'))
-	}
-
-	this.ws.send(JSON.stringify(request))
-
 	return new wsRequest(this, args)
 }
 
