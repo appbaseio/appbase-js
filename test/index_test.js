@@ -12,7 +12,8 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 		var first = true
 		var responseStream = streamingClient.streamDocument({
 			type: 'tweet',
-			id: '1'
+			id: '1',
+			stream: 'true'
 		})
 		responseStream.on('error', function(err) {
 			if(err) {

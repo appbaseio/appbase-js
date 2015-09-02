@@ -11,8 +11,6 @@ var streamDocumentService = function streamDocumentService(client, args) {
 	delete args.type
 	delete args.id
 
-	args.stream = "true"
-
 	return client.performWsRequest({
 		method: 'GET',
 		path: type + '/' + id,

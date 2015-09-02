@@ -18,7 +18,8 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 		var first = true
 		var responseStream = streamingClient.streamDocument({
 			type: 'tweet',
-			id: '1'
+			id: '1',
+			stream: 'true'
 		})
 		responseStream.on('error', function(err) {
 			if(err) {
@@ -71,7 +72,8 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 		var first = true
 		var responseStream = streamingClient.streamDocument({
 			type: 'tweet',
-			id: '1'
+			id: '1',
+			stream: 'true'
 		})
 		responseStream.on('error', function(err) {
 			if(err) {

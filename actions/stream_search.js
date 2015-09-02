@@ -11,8 +11,6 @@ var streamSearchService = function streamSearchService(client, args) {
 	delete args.type
 	delete args.body
 
-	args.stream = "true"
-
 	return client.performStreamingRequest({
 		method: 'POST',
 		path: type + '/_search',
