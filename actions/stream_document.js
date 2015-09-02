@@ -13,7 +13,7 @@ var streamDocumentService = function streamDocumentService(client, args) {
 
 	args.stream = "true"
 
-	return client.performStreamingRequest({
+	return client.performWsRequest({
 		method: 'GET',
 		path: type + '/' + id,
 		params: args,

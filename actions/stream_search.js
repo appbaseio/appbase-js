@@ -22,7 +22,6 @@ var streamSearchService = function streamSearchService(client, args) {
 }
 
 streamSearchService.prototype.validate = function validate() {
-	console.log()
 	var invalid = []
 	if(typeof this.args.type !== 'string' || this.args.type === '') {
 		invalid.push('type')

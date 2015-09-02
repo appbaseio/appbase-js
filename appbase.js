@@ -1,5 +1,9 @@
+var WebSocket = require('ws')
+var URL = require('url')
+
 var indexService = require('./actions/index.js')
 var streamingRequest = require('./streaming_request.js')
+var wsRequest = require('./websocket_request.js')
 var streamDocumentService = require('./actions/stream_document.js')
 var streamSearchService = require('./actions/stream_search.js')
 
@@ -8,14 +12,36 @@ var appbaseClient = function appbaseClient(args) {
 		return new appbaseClient()
 	}
 
+	this.parsedUrl = URL.parse(args.url)
+
 	this.url = args.url
 	this.username = args.username
 	this.password = args.password
 	this.appname = args.appname
 
+	if(this.parsedUrl.protocol === 'https:') {
+		this.ws = new WebSocket('wss://' + this.parsedUrl.host)
+	} else {
+		this.ws = new WebSocket('ws://' + this.parsedUrl.host)
+	}
+
 	if(this.url.slice(-1) === "/") {
 		this.url = this.url.slice(0, -1)
 	}
+}
+
+appbaseClient.prototype.performWsRequest = function performWsRequest(args) {
+	var request = {
+		id: '1',
+		path: this.appname + '/' + args.path + '?stream=true',
+		method: args.method,
+		body: args.body,
+		authorization: 'Basic ' + (new Buffer(this.username + ':' + this.password).toString('base64'))
+	}
+
+	this.ws.send(JSON.stringify(request))
+
+	return new wsRequest(this, args)
 }
 
 appbaseClient.prototype.performStreamingRequest = function performStreamingRequest(args) {

@@ -16,7 +16,10 @@
   "license": "ISC",
   "dependencies": {
     "JSONStream": "^1.0.4",
-    "hyperquest": "^1.2.0"
+    "guid": "0.0.12",
+    "hyperquest": "^1.2.0",
+    "through2": "^2.0.0",
+    "ws": "^0.8.0"
   },
   "devDependencies": {
     "elasticsearch": "^5.0.0",

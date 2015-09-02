@@ -30,7 +30,6 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 				return
 			}
 		})
-		responseStream.on('response', function(res) { console.log(res) })
 		responseStream.on('data', function(res) {
 			if(first) {
 				setTimeout(function() {
