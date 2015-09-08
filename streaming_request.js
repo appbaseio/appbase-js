@@ -46,7 +46,7 @@ streamingRequest.prototype.init = function init() {
 	})
 
 	this.requestStream.on('error', function(err) {
-		that.stop()
+		that.stop.apply(that)
 		process.nextTick(function() {
 			resultStream.emit('error', err)
 		})
