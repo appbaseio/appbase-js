@@ -31,7 +31,7 @@ wsRequest.prototype.init = function init() {
 		path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
 		method: this.method,
 		body: this.body,
-		authorization: 'Basic ' + (new Buffer(this.client.username + ':' + this.client.password).toString('base64'))
+		authorization: 'Basic ' + (new Buffer(this.client.auth).toString('base64'))
 	}
 
 	this.resultStream = through2.obj()

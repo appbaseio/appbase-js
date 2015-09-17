@@ -8,7 +8,10 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 		type: 'tweet',
 		id: '1',
 		body: tweet
-	}).on('data', function(res) {
+	})
+	.on('error', done)
+	.on('data', function(res) {
+		console.log('cool')
 		var first = true
 		var responseStream = streamingClient.streamDocument({
 			type: 'tweet',
@@ -27,7 +30,7 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 					type: 'tweet',
 					id: '1',
 					body: tweet
-				})
+				}).on('error', done)
 				first = false
 			} else {
 				assert.deepEqual(res, {

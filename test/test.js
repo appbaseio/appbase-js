@@ -17,9 +17,7 @@ describe('Appbase', function() {
 		});
 
 		streamingClient = new appbase({
-			url: 'http://scalr.api.appbase.io',
-			username: 'RIvfxo1u1',
-			password: 'dee8ee52-8b75-4b5b-be4f-9df3c364f59f',
+			url: 'http://RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f@scalr.api.appbase.io',
 			appname: 'createnewtestapp01'
 		})
 	})

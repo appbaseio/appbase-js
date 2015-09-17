@@ -1,9 +1,15 @@
 var URL = require('url')
 
 var betterWs = require('./better_websocket.js')
-var indexService = require('./actions/index.js')
 var streamingRequest = require('./streaming_request.js')
 var wsRequest = require('./websocket_request.js')
+
+var indexService = require('./actions/index.js')
+var updateService = require('./actions/update.js')
+var deleteService = require('./actions/delete.js')
+var bulkService = require('./actions/bulk.js')
+var searchService = require('./actions/search.js')
+
 var streamDocumentService = require('./actions/stream_document.js')
 var streamSearchService = require('./actions/stream_search.js')
 
@@ -12,17 +18,25 @@ var appbaseClient = function appbaseClient(args) {
 		return new appbaseClient()
 	}
 
-	this.parsedUrl = URL.parse(args.url)
+	var parsedUrl = URL.parse(args.url)
 
-	this.url = args.url
-	this.username = args.username
-	this.password = args.password
+	this.url = parsedUrl.host
+	this.protocol = parsedUrl.protocol
+	this.auth = parsedUrl.auth
 	this.appname = args.appname
 
-	if(this.parsedUrl.protocol === 'https:') {
-		this.ws = new betterWs('wss://' + this.parsedUrl.host)
+	if(typeof args.username === 'string' && args.username !== '' && typeof args.password === 'string' && args.password !== '') {
+		this.auth = args.username + ':' + args.password
+	}
+
+	if(typeof this.auth !== 'string' || this.auth === '') {
+		throw new Error('Authentication information not present')
+	}
+
+	if(parsedUrl.protocol === 'https:') {
+		this.ws = new betterWs('wss://' + parsedUrl.host)
 	} else {
-		this.ws = new betterWs('ws://' + this.parsedUrl.host)
+		this.ws = new betterWs('ws://' + parsedUrl.host)
 	}
 
 	if(this.url.slice(-1) === "/") {
@@ -40,6 +54,22 @@ appbaseClient.prototype.performStreamingRequest = function performStreamingReque
 
 appbaseClient.prototype.index = function index(args) {
 	return new indexService(this, args)
+}
+
+appbaseClient.prototype.update = function update(args) {
+	return new updateService(this, args)
+}
+
+appbaseClient.prototype.deleteDocument = function deleteDocument(args) {
+	return new deleteService(this, args)
+}
+
+appbaseClient.prototype.bulk = function bulk(args) {
+	return new bulkService(this, args)
+}
+
+appbaseClient.prototype.search = function search(args) {
+	return new searchService(this, args)
 }
 
 appbaseClient.prototype.streamDocument = function streamDocument(args) {

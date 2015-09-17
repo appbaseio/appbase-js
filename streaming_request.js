@@ -16,10 +16,6 @@ var streamingRequest = function streamingRequest(client, args) {
 
 	var resultStream = this.init()
 
-	if(this.requestStream.writable) {
-		this.requestStream.end(JSON.stringify(this.body))
-	}
-
 	return resultStream
 }
 
@@ -28,11 +24,14 @@ streamingRequest.prototype.init = function init() {
 
 	this.requestStream = hyperquest({
 		method: this.method,
-		uri: this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
-		auth: this.client.username + ':' + this.client.password
+		uri:  this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
+		auth: this.client.auth
 	})
 	this.requestStream.on('response', function(res) {
 		that.response = res
+	})
+	this.requestStream.on('request', function(req) {
+		that.request = req
 	})
 
 	var resultStream = this.requestStream.pipe(JSONStream.parse())
@@ -62,6 +61,10 @@ streamingRequest.prototype.init = function init() {
 		that.reconnect.apply(that)
 	}
 
+	if(this.requestStream.writable) {
+		this.requestStream.end(JSON.stringify(this.body))
+	}
+
 	return resultStream
 }
 
@@ -76,11 +79,11 @@ streamingRequest.prototype.getId = function getId(callback) {
 }
 
 streamingRequest.prototype.stop = function stop() {
-	if(this.response) {
-		this.response.destroy()
+	if(this.request) {
+		this.request.destroy()
 	} else {
-		this.requestStream.on('response', function(res) {
-			res.destroy()
+		this.requestStream.on('request', function(req) {
+			req.destroy()
 		})
 	}
 }
