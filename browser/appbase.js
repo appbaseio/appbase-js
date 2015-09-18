@@ -348,6 +348,14 @@ var appbaseClient = function appbaseClient(args) {
 		return new appbaseClient()
 	}
 
+	if(typeof args.appname !== 'string' || args.appname === '') {
+		throw new Error('Appname not present is options.')
+	}
+
+	if(typeof args.url !== 'string' || args.url === '') {
+		throw new Error('URL not present is options.')
+	}
+
 	var parsedUrl = URL.parse(args.url)
 
 	this.url = parsedUrl.host
@@ -355,12 +363,16 @@ var appbaseClient = function appbaseClient(args) {
 	this.auth = parsedUrl.auth
 	this.appname = args.appname
 
+	if(typeof this.protocol !== 'string' || this.protocol === '') {
+		throw new Error('Protocol not present in url. URL should be of the form https://scalr.api.appbase.io')
+	}
+
 	if(typeof args.username === 'string' && args.username !== '' && typeof args.password === 'string' && args.password !== '') {
 		this.auth = args.username + ':' + args.password
 	}
 
 	if(typeof this.auth !== 'string' || this.auth === '') {
-		throw new Error('Authentication information not present')
+		throw new Error('Authentication information not present.')
 	}
 
 	if(parsedUrl.protocol === 'https:') {
@@ -12121,6 +12133,7 @@ var streamingRequest = function streamingRequest(client, args) {
 
 streamingRequest.prototype.init = function init() {
 	var that = this
+
 	this.requestStream = hyperquest({
 		method: this.method,
 		uri:  this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),

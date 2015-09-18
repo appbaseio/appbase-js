@@ -11,7 +11,6 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 	})
 	.on('error', done)
 	.on('data', function(res) {
-		console.log('cool')
 		var first = true
 		var responseStream = streamingClient.streamDocument({
 			type: 'tweet',
