@@ -31,7 +31,7 @@ wsRequest.prototype.init = function init() {
 		path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
 		method: this.method,
 		body: this.body,
-		authorization: 'Basic ' + (new Buffer(this.client.auth).toString('base64'))
+		authorization: 'Basic ' + (new Buffer(this.client.credentials).toString('base64'))
 	}
 
 	this.resultStream = through2.obj()
@@ -58,15 +58,9 @@ wsRequest.prototype.init = function init() {
 		that.stop.apply(that)
 	})
 
-	this.resultStream.stop = function() {
-		that.stop.apply(that)
-	}
-	this.resultStream.getId = function(callback) {
-		that.getId.apply(that, [callback])
-	}
-	this.resultStream.reconnect = function() {
-		that.reconnect.apply(that)
-	}
+	this.resultStream.stop = this.stop.bind(this)
+	//this.resultStream.getId = this.getId.bind(this)
+	this.resultStream.reconnect = this.reconnect.bind(this)
 
 	return this.resultStream
 }

@@ -22,7 +22,7 @@ describe('Appbase', function() {
 		})
 	})
 
-	describe('#index', function() {
+	describe('#index()', function() {
 		it('should index one document', function(done) {
 			indexTest.indexOneDocument(streamingClient, done)
 		})

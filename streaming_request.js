@@ -25,7 +25,7 @@ streamingRequest.prototype.init = function init() {
 	this.requestStream = hyperquest({
 		method: this.method,
 		uri:  this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
-		auth: this.client.auth
+		auth: this.client.credentials
 	})
 	this.requestStream.on('response', function(res) {
 		that.response = res
@@ -51,15 +51,9 @@ streamingRequest.prototype.init = function init() {
 		})
 	})
 
-	resultStream.stop = function() {
-		that.stop.apply(that)
-	}
-	resultStream.getId = function(callback) {
-		that.getId.apply(that, [callback])
-	}
-	resultStream.reconnect = function() {
-		that.reconnect.apply(that)
-	}
+	resultStream.stop = this.stop.bind(this)
+	//resultStream.getId = this.getId.bind(this)
+	resultStream.reconnect = this.reconnect.bind(this)
 
 	if(this.requestStream.writable) {
 		this.requestStream.end(JSON.stringify(this.body))

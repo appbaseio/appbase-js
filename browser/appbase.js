@@ -360,7 +360,7 @@ var appbaseClient = function appbaseClient(args) {
 
 	this.url = parsedUrl.host
 	this.protocol = parsedUrl.protocol
-	this.auth = parsedUrl.auth
+	this.credentials = parsedUrl.auth
 	this.appname = args.appname
 
 	if(typeof this.protocol !== 'string' || this.protocol === '') {
@@ -368,10 +368,10 @@ var appbaseClient = function appbaseClient(args) {
 	}
 
 	if(typeof args.username === 'string' && args.username !== '' && typeof args.password === 'string' && args.password !== '') {
-		this.auth = args.username + ':' + args.password
+		this.credentials = args.username + ':' + args.password
 	}
 
-	if(typeof this.auth !== 'string' || this.auth === '') {
+	if(typeof this.credentials !== 'string' || this.credentials === '') {
 		throw new Error('Authentication information not present.')
 	}
 
@@ -384,6 +384,18 @@ var appbaseClient = function appbaseClient(args) {
 	if(this.url.slice(-1) === "/") {
 		this.url = this.url.slice(0, -1)
 	}
+
+	var client = {}
+
+	client.index = this.index.bind(this)
+	client.update = this.update.bind(this)
+	client.delete = this.delete.bind(this)
+	client.bulk = this.bulk.bind(this)
+	client.search = this.search.bind(this)
+	client.streamDocument = this.streamDocument.bind(this)
+	client.streamSearch = this.streamSearch.bind(this)
+
+	return client
 }
 
 appbaseClient.prototype.performWsRequest = function performWsRequest(args) {
@@ -402,7 +414,7 @@ appbaseClient.prototype.update = function update(args) {
 	return new updateService(this, args)
 }
 
-appbaseClient.prototype.deleteDocument = function deleteDocument(args) {
+appbaseClient.prototype.delete = function deleteDocument(args) {
 	return new deleteService(this, args)
 }
 
@@ -12137,7 +12149,7 @@ streamingRequest.prototype.init = function init() {
 	this.requestStream = hyperquest({
 		method: this.method,
 		uri:  this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
-		auth: this.client.auth
+		auth: this.client.credentials
 	})
 	this.requestStream.on('response', function(res) {
 		that.response = res
@@ -12163,15 +12175,9 @@ streamingRequest.prototype.init = function init() {
 		})
 	})
 
-	resultStream.stop = function() {
-		that.stop.apply(that)
-	}
-	resultStream.getId = function(callback) {
-		that.getId.apply(that, [callback])
-	}
-	resultStream.reconnect = function() {
-		that.reconnect.apply(that)
-	}
+	resultStream.stop = this.stop.bind(this)
+	//resultStream.getId = this.getId.bind(this)
+	resultStream.reconnect = this.reconnect.bind(this)
 
 	if(this.requestStream.writable) {
 		this.requestStream.end(JSON.stringify(this.body))
@@ -12242,7 +12248,7 @@ wsRequest.prototype.init = function init() {
 		path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
 		method: this.method,
 		body: this.body,
-		authorization: 'Basic ' + (new Buffer(this.client.auth).toString('base64'))
+		authorization: 'Basic ' + (new Buffer(this.client.credentials).toString('base64'))
 	}
 
 	this.resultStream = through2.obj()
@@ -12269,15 +12275,9 @@ wsRequest.prototype.init = function init() {
 		that.stop.apply(that)
 	})
 
-	this.resultStream.stop = function() {
-		that.stop.apply(that)
-	}
-	this.resultStream.getId = function(callback) {
-		that.getId.apply(that, [callback])
-	}
-	this.resultStream.reconnect = function() {
-		that.reconnect.apply(that)
-	}
+	this.resultStream.stop = this.stop.bind(this)
+	//this.resultStream.getId = this.getId.bind(this)
+	this.resultStream.reconnect = this.reconnect.bind(this)
 
 	return this.resultStream
 }
