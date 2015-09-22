@@ -22,8 +22,7 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 				query: {
 					match_all: {}
 				}
-			},
-			stream: 'true'
+			}
 		})
 		responseStream.on('error', function(err) {
 			if(err) {

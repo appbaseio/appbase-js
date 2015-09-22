@@ -10,6 +10,13 @@ var streamSearchService = function streamSearchService(client, args) {
 	var body = args.body
 	delete args.type
 	delete args.body
+	delete args.stream
+
+	if(args.streamonly === true || args.streamonly === 'true') {
+		args.streamonly = 'true'
+	} else {
+		args.stream = 'true'
+	}
 
 	return client.performWsRequest({
 		method: 'POST',

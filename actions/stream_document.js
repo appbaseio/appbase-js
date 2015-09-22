@@ -10,6 +10,13 @@ var streamDocumentService = function streamDocumentService(client, args) {
 	var id = args.id
 	delete args.type
 	delete args.id
+	delete args.stream
+
+	if(args.streamonly === true || args.streamonly === 'true') {
+		args.streamonly = 'true'
+	} else {
+		args.stream = 'true'
+	}
 
 	return client.performWsRequest({
 		method: 'GET',
