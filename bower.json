@@ -11,8 +11,9 @@
     "elasticsearch",
     "appbase",
     "stream",
-    "streaming",
-    "search"
+    "data streams",
+    "search",
+    "websockets"
   ],
   "license": "MIT",
   "ignore": [
