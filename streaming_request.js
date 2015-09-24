@@ -1,6 +1,7 @@
 var hyperquest = require('hyperquest')
 var JSONStream = require('JSONStream')
 var querystring = require('querystring')
+var through2 = require('through2')
 
 var streamingRequest = function streamingRequest(client, args) {
 	this.client = client
@@ -34,7 +35,7 @@ streamingRequest.prototype.init = function init() {
 		that.request = req
 	})
 
-	var resultStream = this.requestStream.pipe(JSONStream.parse())
+	var resultStream = this.requestStream.pipe(JSONStream.parse()).pipe(through2.obj())
 
 	this.requestStream.on('end', function() {
 		that.stop.apply(that)

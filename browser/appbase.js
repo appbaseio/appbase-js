@@ -12139,6 +12139,7 @@ if (WebSocket) ws.prototype = WebSocket.prototype;
 var hyperquest = require('hyperquest')
 var JSONStream = require('JSONStream')
 var querystring = require('querystring')
+var through2 = require('through2')
 
 var streamingRequest = function streamingRequest(client, args) {
 	this.client = client
@@ -12172,7 +12173,7 @@ streamingRequest.prototype.init = function init() {
 		that.request = req
 	})
 
-	var resultStream = this.requestStream.pipe(JSONStream.parse())
+	var resultStream = this.requestStream.pipe(JSONStream.parse()).pipe(through2.obj())
 
 	this.requestStream.on('end', function() {
 		that.stop.apply(that)
@@ -12227,7 +12228,7 @@ streamingRequest.prototype.reconnect = function reconnect() {
 
 module.exports = streamingRequest
 }).call(this,require('_process'))
-},{"JSONStream":10,"_process":25,"hyperquest":47,"querystring":29}],86:[function(require,module,exports){
+},{"JSONStream":10,"_process":25,"hyperquest":47,"querystring":29,"through2":83}],86:[function(require,module,exports){
 (function (Buffer){
 var Readable = require('stream').Readable;
 var Guid = require('guid')
