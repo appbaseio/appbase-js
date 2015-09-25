@@ -449,7 +449,7 @@ appbaseClient.prototype.streamSearch = function streamSearch(args) {
 }
 
 if(typeof window !== 'undefined') {
-	window.appbase = appbaseClient
+	window.Appbase = appbaseClient
 }
 
 module.exports = appbaseClient

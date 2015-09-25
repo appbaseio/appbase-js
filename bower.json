@@ -13,7 +13,8 @@
     "stream",
     "data streams",
     "search",
-    "websockets"
+    "websockets",
+    "appbase"
   ],
   "license": "MIT",
   "ignore": [
