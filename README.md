@@ -43,7 +43,7 @@ appbase.streamDocument({
       type: 'product',
       id: '1'
 }).on('data', function(res) {
-      // client would emit "data" event every time there is a document update.
+      // 'data' handler is triggered every time there is a document update.
       console.log(res);
 }).on('error', function(err) {
       console.log("caught a stream error", err);
@@ -72,7 +72,7 @@ streamDocument() returns a ``stream.Readable`` object, which can be conveniently
 While streaming documents is straightforward, streaming queries touch the entire breadth of [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - boolean, regex, geo, fuzzy to name a few. Let's stream the results of a simple **``match_all``** query on the ``product`` type:
 
 ```js
-streamingClient.streamSearch({
+appbae.streamSearch({
 	type: 'product',
 	body: {
 		query: {
@@ -117,7 +117,7 @@ Returns a **reference** object on which streaming requests can be performed.
 
 Optionally (and like in the quick example above), ``url`` can contain username and password fields in the format: https://&lt;USERNAME>:&lt;PASSWORD>@scalr.appbase.io.
 
-### Client
+### Reference
 
 **[reference.streamDocument(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L99)** 
 
