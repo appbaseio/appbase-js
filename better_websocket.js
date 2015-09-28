@@ -5,6 +5,8 @@ var betterWs = function betterWs(url) {
 	var conn = new WebSocket(url)
 	var ee = new EventEmitter()
 
+	ee.setMaxListeners(0)
+
 	ee.send = function(dataObj) {
 		if(conn.readyState !== 1) {
 			ee.on('open', function sender() {

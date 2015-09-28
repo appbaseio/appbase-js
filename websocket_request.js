@@ -135,7 +135,10 @@ wsRequest.prototype.stop = function stop() {
 		unsubRequest[key] = this.request[key]
 	}
 	unsubRequest.unsubscribe = true
-	this.client.ws.send(unsubRequest)
+	if(this.unsubscribed !== true) {
+		this.client.ws.send(unsubRequest)
+	}
+	this.unsubscribed = true
 }
 
 wsRequest.prototype.reconnect = function reconnect() {
