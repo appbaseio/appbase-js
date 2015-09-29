@@ -18,6 +18,7 @@
     "JSONStream": "^1.0.4",
     "guid": "0.0.12",
     "hyperquest": "^1.2.0",
+    "immutable": "^3.7.5",
     "through2": "^2.0.0",
     "ws": "^0.8.0"
   },
