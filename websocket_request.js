@@ -2,6 +2,7 @@ var Readable = require('stream').Readable;
 var Guid = require('guid')
 var querystring = require('querystring')
 var through2 = require('through2')
+var immutable = require('immutable')
 var EventEmitter = require('events').EventEmitter
 
 var wsRequest = function wsRequest(client, args) {
@@ -26,13 +27,13 @@ wsRequest.prototype.init = function init() {
 
 	this.id = Guid.raw()
 
-	this.request = {
+	this.request = immutable.fromJS({
 		id: this.id,
 		path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
 		method: this.method,
 		body: this.body,
 		authorization: 'Basic ' + (new Buffer(this.client.credentials).toString('base64'))
-	}
+	})
 
 	this.resultStream = through2.obj()
 	this.resultStream.writable = false
@@ -130,12 +131,11 @@ wsRequest.prototype.stop = function stop() {
 	if(this.resultStream.readable) {
 		this.resultStream.push(null)
 	}
-	var unsubRequest = {}
-	for(var key in this.request) {
-		unsubRequest[key] = this.request[key]
+	var unsubRequest = this.request.set('unsubscribe', true)
+	if(this.unsubscribed !== true) {
+		this.client.ws.send(unsubRequest)
 	}
-	unsubRequest.unsubscribe = true
-	this.client.ws.send(unsubRequest)
+	this.unsubscribed = true
 }
 
 wsRequest.prototype.reconnect = function reconnect() {
