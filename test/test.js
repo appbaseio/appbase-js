@@ -46,6 +46,9 @@ describe('Appbase', function() {
 		it('should receive event when new document is inserted', function(done) {
 			streamDocumentTests.streamOneDocument(client, streamingClient, done)
 		})
+		it('should not receive initial data', function(done) {
+			streamDocumentTests.onlyStreamOneDocument(client, streamingClient, done)
+		})
 		it('should receive only one event', function(done) {
 			streamDocumentTests.stopStreamingDocument(client, streamingClient, done)
 		})
