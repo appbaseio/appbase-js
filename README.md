@@ -72,7 +72,7 @@ streamDocument() returns a ``stream.Readable`` object, which can be conveniently
 While streaming documents is straightforward, streaming queries touch the entire breadth of [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - boolean, regex, geo, fuzzy to name a few. Let's stream the results of a simple **``match_all``** query on the ``product`` type:
 
 ```js
-appbae.streamSearch({
+appbase.streamSearch({
 	type: 'product',
 	body: {
 		query: {
