@@ -11,7 +11,7 @@ var bulkService = function bulkService(client, args) {
 	delete args.type
 	delete args.body
 
-	if(id) {
+	if(type) {
 		path = type + '/_bulk'
 	} else {
 		path = '/_bulk'

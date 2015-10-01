@@ -3,6 +3,7 @@ var appbase = require('../')
 
 var indexTest = require('./index_test.js')
 var searchTest = require('./search_test.js')
+var bulkTest = require('./bulk_test.js')
 var streamDocumentTests = require('./stream_document_test.js')
 var streamSearchTests = require('./stream_search_test.js')
 
@@ -32,6 +33,12 @@ describe('Appbase', function() {
 	describe('#search()', function() {
 		it('should return results', function(done) {
 			searchTest.searchForOneDoc(streamingClient, done)
+		})
+	})
+
+	describe('#bulk()', function() {
+		it('should bulk index one document', function(done) {
+			bulkTest.bulkIndexOneDocument(streamingClient, done)
 		})
 	})
 

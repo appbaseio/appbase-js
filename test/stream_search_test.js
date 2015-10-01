@@ -47,14 +47,18 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 				}, 2000)
 				first = false
 			} else {
-				assert.deepEqual(res, {
-			        _type: 'tweet',
-			        _id: '1',
-			        _source: tweet
-				}, 'event not as expected')
+				try {
+					assert.deepEqual(res, {
+						_type: 'tweet',
+						_id: '1',
+						_source: tweet
+					}, 'event not as expected')
+				} catch(e) {
+					responseStream.stop()
+					return done(e)
+				}
 
-				responseStream.pause()
-
+				responseStream.stop()
 				done()
 			}
 		})

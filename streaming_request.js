@@ -11,8 +11,16 @@ var streamingRequest = function streamingRequest(client, args) {
 	this.path = args.path
 	this.params = args.params
 	this.body = args.body
-	if(!this.body || typeof this.body !== 'object') {
+	if(!this.body || !(typeof this.body === 'object' || this.body.constructor === Array) ) {
 		this.body = {}
+	}
+	if(this.body.constructor === Array) {
+		arrayBody = this.body
+		this.body = ''
+		for(var i=0; i<arrayBody.length; i++) {
+			this.body += JSON.stringify(arrayBody[i])
+			this.body += '\n'
+		}
 	}
 
 	var resultStream = this.init()
@@ -55,9 +63,12 @@ streamingRequest.prototype.init = function init() {
 	resultStream.stop = this.stop.bind(this)
 	//resultStream.getId = this.getId.bind(this)
 	resultStream.reconnect = this.reconnect.bind(this)
-
 	if(this.requestStream.writable) {
-		this.requestStream.end(JSON.stringify(this.body))
+		if(typeof this.body === 'string') {
+			this.requestStream.end(this.body)
+		} else {
+			this.requestStream.end(JSON.stringify(this.body))
+		}
 	}
 
 	return resultStream

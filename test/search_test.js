@@ -1,5 +1,3 @@
-var assert = require('assert')
-
 var searchTests = {}
 
 searchTests.searchForOneDoc = function searchForOneDoc(streamingClient, done) {
@@ -27,7 +25,7 @@ searchTests.searchForOneDoc = function searchForOneDoc(streamingClient, done) {
 			}
 		})
 		responseStream.on('data', function(res) {
-			if(res.hits.total > 1) {
+			if(res.hits.total > 0) {
 				done()
 			} else {
 				done(new Error('Atleast 1 document should have been present.'))

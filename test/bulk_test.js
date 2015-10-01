@@ -1,20 +1,23 @@
 var assert = require('assert')
 
-var indexTests = {}
+var bulkTests = {}
 
-indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
+bulkTests.bulkIndexOneDocument = function bulkIndexOneDocument(streamingClient, done) {
 	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
-	streamingClient.index({
-		type: 'tweet',
-		id: '1',
-		body: tweet
+	streamingClient.bulk({
+		body: [{
+			index: {
+				'_type': 'tweet',
+				'_id': '2'
+			}
+		}, tweet]
 	})
 	.on('error', done)
 	.on('data', function(res) {
 		var first = true
 		var responseStream = streamingClient.streamDocument({
 			type: 'tweet',
-			id: '1'
+			id: '2'
 		})
 		responseStream.on('error', function(err) {
 			if(err) {
@@ -24,18 +27,31 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 		})
 		responseStream.on('data', function(res) {
 			if(first) {
-				streamingClient.index({
+				delete res._version
+				delete res._index
+				try {
+					assert.deepEqual(res, {
+						_type: 'tweet',
+						_id: '2',
+						found: true,
+						_source: tweet
+					}, 'document not as expected')
+				} catch(e) {
+					responseStream.stop()
+					return done(e)
+				}
+				streamingClient.delete({
 					type: 'tweet',
-					id: '1',
-					body: tweet
+					id: '2'
 				}).on('error', done)
 				first = false
 			} else {
 				try {
 					assert.deepEqual(res, {
 						_type: 'tweet',
-						_id: '1',
-						_source: tweet
+						_id: '2',
+						_source: tweet,
+						_deleted: true
 					}, 'event not as expected')
 				} catch(e) {
 					responseStream.stop()
@@ -49,4 +65,4 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 	})
 }
 
-module.exports = indexTests
+module.exports = bulkTests
