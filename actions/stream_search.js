@@ -15,6 +15,7 @@ var streamSearchService = function streamSearchService(client, args) {
 	if(args.streamonly === true || args.streamonly === 'true') {
 		args.streamonly = 'true'
 	} else {
+		delete args.streamonly
 		args.stream = 'true'
 	}
 
