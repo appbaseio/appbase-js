@@ -1,8 +1,8 @@
 {
   "name": "appbase-js",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Appbase.io streaming client lib for Javascript",
-  "main": "appbase.js",
+  "main": "dist/appbase.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,6 +25,7 @@
   "devDependencies": {
     "elasticsearch": "^5.0.0",
     "grunt": "^0.4.5",
+    "grunt-babel": "^5.0.3",
     "grunt-browserify": "^3.8.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1",

@@ -15,7 +15,7 @@ var streamingRequest = function streamingRequest(client, args) {
 		this.body = {}
 	}
 	if(this.body.constructor === Array) {
-		arrayBody = this.body
+		var arrayBody = this.body
 		this.body = ''
 		for(var i=0; i<arrayBody.length; i++) {
 			this.body += JSON.stringify(arrayBody[i])

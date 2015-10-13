@@ -6,6 +6,7 @@ var searchTest = require('./search_test.js')
 var bulkTest = require('./bulk_test.js')
 var streamDocumentTests = require('./stream_document_test.js')
 var streamSearchTests = require('./stream_search_test.js')
+var getTypesTest = require('./get_types_test.js')
 
 describe('Appbase', function() {
 	this.timeout(5000)
@@ -57,6 +58,12 @@ describe('Appbase', function() {
 	describe('#streamSearch()', function () {
 		it('should receive event when new document is inserted', function(done) {
 			streamSearchTests.streamMatchAll(client, streamingClient, done)
+		})
+	})
+
+	describe('#getTypes()', function () {
+		it('should receive an array of types', function(done) {
+			getTypesTest.getAllTypes(streamingClient, done)
 		})
 	})
 })

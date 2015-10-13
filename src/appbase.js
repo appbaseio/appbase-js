@@ -9,6 +9,7 @@ var updateService = require('./actions/update.js')
 var deleteService = require('./actions/delete.js')
 var bulkService = require('./actions/bulk.js')
 var searchService = require('./actions/search.js')
+var getTypesService = require('./actions/get_types.js')
 
 var streamDocumentService = require('./actions/stream_document.js')
 var streamSearchService = require('./actions/stream_search.js')
@@ -64,6 +65,7 @@ var appbaseClient = function appbaseClient(args) {
 	client.search = this.search.bind(this)
 	client.streamDocument = this.streamDocument.bind(this)
 	client.streamSearch = this.streamSearch.bind(this)
+	client.getTypes = this.getTypes.bind(this)
 
 	return client
 }
@@ -102,6 +104,10 @@ appbaseClient.prototype.streamDocument = function streamDocument(args) {
 
 appbaseClient.prototype.streamSearch = function streamSearch(args) {
 	return new streamSearchService(this, args)
+}
+
+appbaseClient.prototype.getTypes = function getTypes() {
+	return new getTypesService(this)
 }
 
 if(typeof window !== 'undefined') {

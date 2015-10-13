@@ -1,21 +1,24 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
 var bulkService = function bulkService(client, args) {
-	this.args = args
+	this.args = args;
 
-	var valid = this.validate()
-	if(valid !== true) {
-		throw valid
-		return
+	var valid = this.validate();
+	if (valid !== true) {
+		throw valid;
+		return;
 	}
-	var type = args.type
-	var body = args.body
-	delete args.type
-	delete args.body
+	var type = args.type;
+	var body = args.body;
+	delete args.type;
+	delete args.body;
 
-	if(type) {
-		path = type + '/_bulk'
+	var path;
+	if (type) {
+		path = type + '/_bulk';
 	} else {
-		path = '/_bulk'
+		path = '/_bulk';
 	}
 
 	return client.performStreamingRequest({
@@ -23,93 +26,125 @@ var bulkService = function bulkService(client, args) {
 		path: path,
 		params: args,
 		body: body
-	})
-}
+	});
+};
 
 bulkService.prototype.validate = function validate() {
-	var invalid = []
-	if(typeof this.args.body !== 'object' || this.args.body === null) {
-		invalid.push('body')
+	var invalid = [];
+	if (typeof this.args.body !== 'object' || this.args.body === null) {
+		invalid.push('body');
 	}
 
-	var missing = ''
-	for(var i=0;i<invalid.length;i++) {
-		missing += (invalid[i] + ', ')
+	var missing = '';
+	for (var i = 0; i < invalid.length; i++) {
+		missing += invalid[i] + ', ';
 	}
 
-	if(invalid.length > 0) {
-		return new Error('fields missing: ' + missing)
+	if (invalid.length > 0) {
+		return new Error('fields missing: ' + missing);
 	}
 
-	return true
-}
+	return true;
+};
 
-module.exports = bulkService
+module.exports = bulkService;
+
 },{}],2:[function(require,module,exports){
+'use strict';
+
 var deleteService = function deleteService(client, args) {
-	this.args = args
+	this.args = args;
 
-	var valid = this.validate()
-	if(valid !== true) {
-		throw valid
-		return
+	var valid = this.validate();
+	if (valid !== true) {
+		throw valid;
+		return;
 	}
-	var type = args.type
-	var id = args.id
-	delete args.type
-	delete args.id
+	var type = args.type;
+	var id = args.id;
+	delete args.type;
+	delete args.id;
 
-	var path = type + '/' + id
+	var path = type + '/' + id;
 
 	return client.performStreamingRequest({
 		method: 'DELETE',
 		path: path,
 		params: args
-	})
-}
+	});
+};
 
 deleteService.prototype.validate = function validate() {
-	var invalid = []
-	if(typeof this.args.type !== 'string' || this.args.type === '') {
-		invalid.push('type')
+	var invalid = [];
+	if (typeof this.args.type !== 'string' || this.args.type === '') {
+		invalid.push('type');
 	}
-	if(typeof this.args.id !== 'string' || this.args.type === '') {
-		invalid.push('id')
-	}
-
-	var missing = ''
-	for(var i=0;i<invalid.length;i++) {
-		missing += (invalid[i] + ', ')
+	if (typeof this.args.id !== 'string' || this.args.type === '') {
+		invalid.push('id');
 	}
 
-	if(invalid.length > 0) {
-		return new Error('fields missing: ' + missing)
+	var missing = '';
+	for (var i = 0; i < invalid.length; i++) {
+		missing += invalid[i] + ', ';
 	}
 
-	return true
-}
+	if (invalid.length > 0) {
+		return new Error('fields missing: ' + missing);
+	}
 
-module.exports = deleteService
+	return true;
+};
+
+module.exports = deleteService;
+
 },{}],3:[function(require,module,exports){
+'use strict';
+
+var through2 = require('through2');
+
+var getTypesService = function getTypesService(client) {
+	var resultStream = through2.obj(function (chunk, enc, callback) {
+		var appname = Object.keys(chunk)[0];
+		var types = Object.keys(chunk[appname]['mappings']).filter(function (type) {
+			return type !== '_default_';
+		});
+		this.push(types);
+
+		callback();
+	});
+	resultStream.writable = false;
+
+	return client.performStreamingRequest({
+		method: 'GET',
+		path: '_mapping'
+	}).pipe(resultStream);
+};
+
+module.exports = getTypesService;
+
+},{"through2":87}],4:[function(require,module,exports){
+'use strict';
+
 var indexService = function indexService(client, args) {
-	this.args = args
+	this.args = args;
 
-	var valid = this.validate()
-	if(valid !== true) {
-		throw valid
-		return
+	var valid = this.validate();
+	if (valid !== true) {
+		throw valid;
+		return;
 	}
-	var type = args.type
-	var id = args.id
-	var body = args.body
-	delete args.type
-	delete args.id
-	delete args.body
+	var type = args.type;
+	var id = args.id;
+	var body = args.body;
+	delete args.type;
+	delete args.id;
+	delete args.body;
 
-	if(id) {
-		path = type + '/' + id
+	var path;
+	if (id) {
+		path = type + '/' + id;
 	} else {
-		path = type
+		path = type;
 	}
 
 	return client.performStreamingRequest({
@@ -117,49 +152,53 @@ var indexService = function indexService(client, args) {
 		path: path,
 		params: args,
 		body: body
-	})
-}
+	});
+};
 
 indexService.prototype.validate = function validate() {
-	var invalid = []
-	if(typeof this.args.type !== 'string' || this.args.type === '') {
-		invalid.push('type')
+	var invalid = [];
+	if (typeof this.args.type !== 'string' || this.args.type === '') {
+		invalid.push('type');
 	}
-	if(typeof this.args.body !== 'object' || this.args.body === null) {
-		invalid.push('body')
-	}
-
-	var missing = ''
-	for(var i=0;i<invalid.length;i++) {
-		missing += (invalid[i] + ', ')
+	if (typeof this.args.body !== 'object' || this.args.body === null) {
+		invalid.push('body');
 	}
 
-	if(invalid.length > 0) {
-		return new Error('fields missing: ' + missing)
+	var missing = '';
+	for (var i = 0; i < invalid.length; i++) {
+		missing += invalid[i] + ', ';
 	}
 
-	return true
-}
+	if (invalid.length > 0) {
+		return new Error('fields missing: ' + missing);
+	}
 
-module.exports = indexService
-},{}],4:[function(require,module,exports){
+	return true;
+};
+
+module.exports = indexService;
+
+},{}],5:[function(require,module,exports){
+'use strict';
+
 var searchService = function searchService(client, args) {
-	this.args = args
+	this.args = args;
 
-	var valid = this.validate()
-	if(valid !== true) {
-		throw valid
-		return
+	var valid = this.validate();
+	if (valid !== true) {
+		throw valid;
+		return;
 	}
-	var type = args.type
-	var body = args.body
-	delete args.type
-	delete args.body
+	var type = args.type;
+	var body = args.body;
+	delete args.type;
+	delete args.body;
 
-	if(type) {
-		path = type + '/_search'
+	var path;
+	if (type) {
+		path = type + '/_search';
 	} else {
-		path = '/_search'
+		path = '/_search';
 	}
 
 	return client.performStreamingRequest({
@@ -167,99 +206,105 @@ var searchService = function searchService(client, args) {
 		path: path,
 		params: args,
 		body: body
-	})
-}
+	});
+};
 
 searchService.prototype.validate = function validate() {
-	var invalid = []
-	if(typeof this.args.body !== 'object' || this.args.body === null) {
-		invalid.push('body')
+	var invalid = [];
+	if (typeof this.args.body !== 'object' || this.args.body === null) {
+		invalid.push('body');
 	}
 
-	var missing = ''
-	for(var i=0;i<invalid.length;i++) {
-		missing += (invalid[i] + ', ')
+	var missing = '';
+	for (var i = 0; i < invalid.length; i++) {
+		missing += invalid[i] + ', ';
 	}
 
-	if(invalid.length > 0) {
-		return new Error('fields missing: ' + missing)
+	if (invalid.length > 0) {
+		return new Error('fields missing: ' + missing);
 	}
 
-	return true
-}
+	return true;
+};
 
-module.exports = searchService
-},{}],5:[function(require,module,exports){
+module.exports = searchService;
+
+},{}],6:[function(require,module,exports){
+'use strict';
+
 var streamDocumentService = function streamDocumentService(client, args) {
-	this.args = args
+	this.args = args;
 
-	var valid = this.validate()
-	if(valid !== true) {
-		throw valid
-		return
+	var valid = this.validate();
+	if (valid !== true) {
+		throw valid;
+		return;
 	}
-	var type = args.type
-	var id = args.id
-	delete args.type
-	delete args.id
-	delete args.stream
+	var type = args.type;
+	var id = args.id;
+	delete args.type;
+	delete args.id;
+	delete args.stream;
 
-	if(args.streamonly === true || args.streamonly === 'true') {
-		args.streamonly = 'true'
+	if (args.streamonly === true || args.streamonly === 'true') {
+		args.streamonly = 'true';
 	} else {
-		delete args.streamonly
-		args.stream = 'true'
+		delete args.streamonly;
+		args.stream = 'true';
 	}
 
 	return client.performWsRequest({
 		method: 'GET',
 		path: type + '/' + id,
-		params: args,
-	})
-}
+		params: args
+	});
+};
 
 streamDocumentService.prototype.validate = function validate() {
-	var invalid = []
-	if(typeof this.args.type !== 'string' || this.args.type === '') {
-		invalid.push('type')
+	var invalid = [];
+	if (typeof this.args.type !== 'string' || this.args.type === '') {
+		invalid.push('type');
 	}
-	if(typeof this.args.id !== 'string' || this.args.id === '') {
-		invalid.push('id')
-	}
-
-	var missing = ''
-	for(var i=0;i<invalid.length;i++) {
-		missing += (invalid[i] + ', ')
+	if (typeof this.args.id !== 'string' || this.args.id === '') {
+		invalid.push('id');
 	}
 
-	if(invalid.length > 0) {
-		return new Error('fields missing: ' + missing)
+	var missing = '';
+	for (var i = 0; i < invalid.length; i++) {
+		missing += invalid[i] + ', ';
 	}
 
-	return true
-}
+	if (invalid.length > 0) {
+		return new Error('fields missing: ' + missing);
+	}
 
-module.exports = streamDocumentService
-},{}],6:[function(require,module,exports){
+	return true;
+};
+
+module.exports = streamDocumentService;
+
+},{}],7:[function(require,module,exports){
+'use strict';
+
 var streamSearchService = function streamSearchService(client, args) {
-	this.args = args
+	this.args = args;
 
-	var valid = this.validate()
-	if(valid !== true) {
-		throw valid
-		return
+	var valid = this.validate();
+	if (valid !== true) {
+		throw valid;
+		return;
 	}
-	var type = args.type
-	var body = args.body
-	delete args.type
-	delete args.body
-	delete args.stream
+	var type = args.type;
+	var body = args.body;
+	delete args.type;
+	delete args.body;
+	delete args.stream;
 
-	if(args.streamonly === true || args.streamonly === 'true') {
-		args.streamonly = 'true'
+	if (args.streamonly === true || args.streamonly === 'true') {
+		args.streamonly = 'true';
 	} else {
-		delete args.streamonly
-		args.stream = 'true'
+		delete args.streamonly;
+		args.stream = 'true';
 	}
 
 	return client.performWsRequest({
@@ -267,238 +312,514 @@ var streamSearchService = function streamSearchService(client, args) {
 		path: type + '/_search',
 		params: args,
 		body: body
-	})
-}
+	});
+};
 
 streamSearchService.prototype.validate = function validate() {
-	var invalid = []
-	if(typeof this.args.type !== 'string' || this.args.type === '') {
-		invalid.push('type')
+	var invalid = [];
+	if (typeof this.args.type !== 'string' || this.args.type === '') {
+		invalid.push('type');
 	}
-	if(typeof this.args.body !== 'object' || this.args.body === null) {
-		invalid.push('body')
-	}
-
-	var missing = ''
-	for(var i=0;i<invalid.length;i++) {
-		missing += (invalid[i] + ', ')
+	if (typeof this.args.body !== 'object' || this.args.body === null) {
+		invalid.push('body');
 	}
 
-	if(invalid.length > 0) {
-		return new Error('fields missing: ' + missing)
+	var missing = '';
+	for (var i = 0; i < invalid.length; i++) {
+		missing += invalid[i] + ', ';
 	}
 
-	return true
-}
+	if (invalid.length > 0) {
+		return new Error('fields missing: ' + missing);
+	}
 
-module.exports = streamSearchService
-},{}],7:[function(require,module,exports){
+	return true;
+};
+
+module.exports = streamSearchService;
+
+},{}],8:[function(require,module,exports){
+'use strict';
+
 var updateService = function updateService(client, args) {
-	this.args = args
+	this.args = args;
 
-	var valid = this.validate()
-	if(valid !== true) {
-		throw valid
-		return
+	var valid = this.validate();
+	if (valid !== true) {
+		throw valid;
+		return;
 	}
-	var type = args.type
-	var id = args.id
-	var body = args.body
-	delete args.type
-	delete args.id
-	delete args.body
+	var type = args.type;
+	var id = args.id;
+	var body = args.body;
+	delete args.type;
+	delete args.id;
+	delete args.body;
 
-	var path = type + '/' + id + '/_update'
+	var path = type + '/' + id + '/_update';
 
 	return client.performStreamingRequest({
 		method: 'POST',
 		path: path,
 		params: args,
 		body: body
-	})
-}
+	});
+};
 
 updateService.prototype.validate = function validate() {
-	var invalid = []
-	if(typeof this.args.type !== 'string' || this.args.type === '') {
-		invalid.push('type')
+	var invalid = [];
+	if (typeof this.args.type !== 'string' || this.args.type === '') {
+		invalid.push('type');
 	}
-	if(typeof this.args.id !== 'string' || this.args.type === '') {
-		invalid.push('id')
+	if (typeof this.args.id !== 'string' || this.args.type === '') {
+		invalid.push('id');
 	}
-	if(typeof this.args.body !== 'object' || this.args.body === null) {
-		invalid.push('body')
-	}
-
-	var missing = ''
-	for(var i=0;i<invalid.length;i++) {
-		missing += (invalid[i] + ', ')
+	if (typeof this.args.body !== 'object' || this.args.body === null) {
+		invalid.push('body');
 	}
 
-	if(invalid.length > 0) {
-		return new Error('fields missing: ' + missing)
+	var missing = '';
+	for (var i = 0; i < invalid.length; i++) {
+		missing += invalid[i] + ', ';
 	}
 
-	return true
-}
+	if (invalid.length > 0) {
+		return new Error('fields missing: ' + missing);
+	}
 
-module.exports = updateService
-},{}],8:[function(require,module,exports){
-var URL = require('url')
+	return true;
+};
 
-var betterWs = require('./better_websocket.js')
-var streamingRequest = require('./streaming_request.js')
-var wsRequest = require('./websocket_request.js')
+module.exports = updateService;
 
-var indexService = require('./actions/index.js')
-var updateService = require('./actions/update.js')
-var deleteService = require('./actions/delete.js')
-var bulkService = require('./actions/bulk.js')
-var searchService = require('./actions/search.js')
+},{}],9:[function(require,module,exports){
+'use strict';
 
-var streamDocumentService = require('./actions/stream_document.js')
-var streamSearchService = require('./actions/stream_search.js')
+var URL = require('url');
+
+var betterWs = require('./better_websocket.js');
+var streamingRequest = require('./streaming_request.js');
+var wsRequest = require('./websocket_request.js');
+
+var indexService = require('./actions/index.js');
+var updateService = require('./actions/update.js');
+var deleteService = require('./actions/delete.js');
+var bulkService = require('./actions/bulk.js');
+var searchService = require('./actions/search.js');
+var getTypesService = require('./actions/get_types.js');
+
+var streamDocumentService = require('./actions/stream_document.js');
+var streamSearchService = require('./actions/stream_search.js');
 
 var appbaseClient = function appbaseClient(args) {
-	if ( !(this instanceof appbaseClient) ) {
-		return new appbaseClient()
+	if (!(this instanceof appbaseClient)) {
+		return new appbaseClient();
 	}
 
-	if(typeof args.appname !== 'string' || args.appname === '') {
-		throw new Error('Appname not present is options.')
+	if (typeof args.appname !== 'string' || args.appname === '') {
+		throw new Error('Appname not present is options.');
 	}
 
-	if(typeof args.url !== 'string' || args.url === '') {
-		throw new Error('URL not present is options.')
+	if (typeof args.url !== 'string' || args.url === '') {
+		throw new Error('URL not present is options.');
 	}
 
-	var parsedUrl = URL.parse(args.url)
+	var parsedUrl = URL.parse(args.url);
 
-	this.url = parsedUrl.host
-	this.protocol = parsedUrl.protocol
-	this.credentials = parsedUrl.auth
-	this.appname = args.appname
+	this.url = parsedUrl.host;
+	this.protocol = parsedUrl.protocol;
+	this.credentials = parsedUrl.auth;
+	this.appname = args.appname;
 
-	if(typeof this.protocol !== 'string' || this.protocol === '') {
-		throw new Error('Protocol not present in url. URL should be of the form https://scalr.api.appbase.io')
+	if (typeof this.protocol !== 'string' || this.protocol === '') {
+		throw new Error('Protocol not present in url. URL should be of the form https://scalr.api.appbase.io');
 	}
 
-	if(typeof args.username === 'string' && args.username !== '' && typeof args.password === 'string' && args.password !== '') {
-		this.credentials = args.username + ':' + args.password
+	if (typeof args.username === 'string' && args.username !== '' && typeof args.password === 'string' && args.password !== '') {
+		this.credentials = args.username + ':' + args.password;
 	}
 
-	if(typeof this.credentials !== 'string' || this.credentials === '') {
-		throw new Error('Authentication information not present.')
+	if (typeof this.credentials !== 'string' || this.credentials === '') {
+		throw new Error('Authentication information not present.');
 	}
 
-	if(parsedUrl.protocol === 'https:') {
-		this.ws = new betterWs('wss://' + parsedUrl.host)
+	if (parsedUrl.protocol === 'https:') {
+		this.ws = new betterWs('wss://' + parsedUrl.host);
 	} else {
-		this.ws = new betterWs('ws://' + parsedUrl.host)
+		this.ws = new betterWs('ws://' + parsedUrl.host);
 	}
 
-	if(this.url.slice(-1) === "/") {
-		this.url = this.url.slice(0, -1)
+	if (this.url.slice(-1) === "/") {
+		this.url = this.url.slice(0, -1);
 	}
 
-	var client = {}
+	var client = {};
 
-	client.index = this.index.bind(this)
-	client.update = this.update.bind(this)
-	client.delete = this.delete.bind(this)
-	client.bulk = this.bulk.bind(this)
-	client.search = this.search.bind(this)
-	client.streamDocument = this.streamDocument.bind(this)
-	client.streamSearch = this.streamSearch.bind(this)
+	client.index = this.index.bind(this);
+	client.update = this.update.bind(this);
+	client['delete'] = this['delete'].bind(this);
+	client.bulk = this.bulk.bind(this);
+	client.search = this.search.bind(this);
+	client.streamDocument = this.streamDocument.bind(this);
+	client.streamSearch = this.streamSearch.bind(this);
+	client.getTypes = this.getTypes.bind(this);
 
-	return client
-}
+	return client;
+};
 
 appbaseClient.prototype.performWsRequest = function performWsRequest(args) {
-	return new wsRequest(this, args)
-}
+	return new wsRequest(this, args);
+};
 
 appbaseClient.prototype.performStreamingRequest = function performStreamingRequest(args) {
-	return new streamingRequest(this, args)
-}
+	return new streamingRequest(this, args);
+};
 
 appbaseClient.prototype.index = function index(args) {
-	return new indexService(this, args)
-}
+	return new indexService(this, args);
+};
 
 appbaseClient.prototype.update = function update(args) {
-	return new updateService(this, args)
-}
+	return new updateService(this, args);
+};
 
-appbaseClient.prototype.delete = function deleteDocument(args) {
-	return new deleteService(this, args)
-}
+appbaseClient.prototype['delete'] = function deleteDocument(args) {
+	return new deleteService(this, args);
+};
 
 appbaseClient.prototype.bulk = function bulk(args) {
-	return new bulkService(this, args)
-}
+	return new bulkService(this, args);
+};
 
 appbaseClient.prototype.search = function search(args) {
-	return new searchService(this, args)
-}
+	return new searchService(this, args);
+};
 
 appbaseClient.prototype.streamDocument = function streamDocument(args) {
-	return new streamDocumentService(this, args)
-}
+	return new streamDocumentService(this, args);
+};
 
 appbaseClient.prototype.streamSearch = function streamSearch(args) {
-	return new streamSearchService(this, args)
+	return new streamSearchService(this, args);
+};
+
+appbaseClient.prototype.getTypes = function getTypes() {
+	return new getTypesService(this);
+};
+
+if (typeof window !== 'undefined') {
+	window.Appbase = appbaseClient;
 }
 
-if(typeof window !== 'undefined') {
-	window.Appbase = appbaseClient
-}
+module.exports = appbaseClient;
 
-module.exports = appbaseClient
-},{"./actions/bulk.js":1,"./actions/delete.js":2,"./actions/index.js":3,"./actions/search.js":4,"./actions/stream_document.js":5,"./actions/stream_search.js":6,"./actions/update.js":7,"./better_websocket.js":9,"./streaming_request.js":86,"./websocket_request.js":87,"url":43}],9:[function(require,module,exports){
-var WebSocket = require('ws')
-var EventEmitter = require('events').EventEmitter
+},{"./actions/bulk.js":1,"./actions/delete.js":2,"./actions/get_types.js":3,"./actions/index.js":4,"./actions/search.js":5,"./actions/stream_document.js":6,"./actions/stream_search.js":7,"./actions/update.js":8,"./better_websocket.js":10,"./streaming_request.js":11,"./websocket_request.js":12,"url":46}],10:[function(require,module,exports){
+'use strict';
+
+var WebSocket = require('ws');
+var EventEmitter = require('events').EventEmitter;
 
 var betterWs = function betterWs(url) {
-	var conn = new WebSocket(url)
-	var ee = new EventEmitter()
+	var conn = new WebSocket(url);
+	var ee = new EventEmitter();
 
-	ee.setMaxListeners(0)
+	ee.setMaxListeners(0);
 
-	ee.send = function(dataObj) {
-		if(conn.readyState !== 1) {
+	ee.send = function (dataObj) {
+		if (conn.readyState !== 1) {
 			ee.on('open', function sender() {
-				conn.send(JSON.stringify(dataObj))
-				ee.removeListener('open', sender)
-			})
+				conn.send(JSON.stringify(dataObj));
+				ee.removeListener('open', sender);
+			});
 		} else {
-			conn.send(JSON.stringify(dataObj))
-			return this
+			conn.send(JSON.stringify(dataObj));
+			return this;
+		}
+	};
+
+	conn.onopen = function () {
+		ee.emit('open');
+	};
+
+	conn.onmessage = function (message) {
+		var dataObj = JSON.parse(message.data);
+		ee.emit('message', dataObj);
+	};
+
+	conn.onerror = function (err) {
+		ee.emit('error', err);
+	};
+
+	conn.onclose = function (close) {
+		ee.emit('close', close);
+	};
+
+	return ee;
+};
+
+module.exports = betterWs;
+
+},{"events":20,"ws":88}],11:[function(require,module,exports){
+(function (process){
+'use strict';
+
+var hyperquest = require('hyperquest');
+var JSONStream = require('JSONStream');
+var querystring = require('querystring');
+var through2 = require('through2');
+
+var streamingRequest = function streamingRequest(client, args) {
+	this.client = client;
+	this.args = args;
+
+	this.method = args.method;
+	this.path = args.path;
+	this.params = args.params;
+	this.body = args.body;
+	if (!this.body || !(typeof this.body === 'object' || this.body.constructor === Array)) {
+		this.body = {};
+	}
+	if (this.body.constructor === Array) {
+		var arrayBody = this.body;
+		this.body = '';
+		for (var i = 0; i < arrayBody.length; i++) {
+			this.body += JSON.stringify(arrayBody[i]);
+			this.body += '\n';
 		}
 	}
 
-	conn.onopen = function() {
-		ee.emit('open')
+	var resultStream = this.init();
+
+	return resultStream;
+};
+
+streamingRequest.prototype.init = function init() {
+	var that = this;
+
+	this.requestStream = hyperquest({
+		method: this.method,
+		uri: this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
+		auth: this.client.credentials
+	});
+	this.requestStream.on('response', function (res) {
+		that.response = res;
+	});
+	this.requestStream.on('request', function (req) {
+		that.request = req;
+	});
+
+	var resultStream = this.requestStream.pipe(JSONStream.parse()).pipe(through2.obj());
+
+	this.requestStream.on('end', function () {
+		that.stop.apply(that);
+	});
+
+	resultStream.on('end', function () {
+		that.stop.apply(that);
+	});
+
+	this.requestStream.on('error', function (err) {
+		that.stop.apply(that);
+		process.nextTick(function () {
+			resultStream.emit('error', err);
+		});
+	});
+
+	resultStream.stop = this.stop.bind(this);
+	//resultStream.getId = this.getId.bind(this)
+	resultStream.reconnect = this.reconnect.bind(this);
+	if (this.requestStream.writable) {
+		if (typeof this.body === 'string') {
+			this.requestStream.end(this.body);
+		} else {
+			this.requestStream.end(JSON.stringify(this.body));
+		}
 	}
 
-	conn.onmessage = function(message) {
-		var dataObj = JSON.parse(message.data)
-		ee.emit('message', dataObj)
+	return resultStream;
+};
+
+streamingRequest.prototype.getId = function getId(callback) {
+	if (this.response) {
+		callback(this.response.headers['query-id']);
+	} else {
+		this.requestStream.on('response', function (res) {
+			callback(res.headers['query-id']);
+		});
+	}
+};
+
+streamingRequest.prototype.stop = function stop() {
+	if (this.request) {
+		this.request.destroy();
+	} else {
+		this.requestStream.on('request', function (req) {
+			req.destroy();
+		});
+	}
+};
+
+streamingRequest.prototype.reconnect = function reconnect() {
+	this.stop();
+	return new streamingRequest(this.client, this.args);
+};
+
+module.exports = streamingRequest;
+
+}).call(this,require('_process'))
+},{"JSONStream":13,"_process":28,"hyperquest":50,"querystring":32,"through2":87}],12:[function(require,module,exports){
+(function (Buffer){
+'use strict';
+
+var Readable = require('stream').Readable;
+var Guid = require('guid');
+var querystring = require('querystring');
+var through2 = require('through2');
+var immutable = require('immutable');
+var EventEmitter = require('events').EventEmitter;
+
+var wsRequest = function wsRequest(client, args) {
+	this.client = client;
+	this.args = args;
+
+	this.method = args.method;
+	this.path = args.path;
+	this.params = args.params;
+	this.body = args.body;
+	if (!this.body || typeof this.body !== 'object') {
+		this.body = {};
 	}
 
-	conn.onerror = function(err) {
-		ee.emit('error', err)
+	var resultStream = this.init();
+
+	return resultStream;
+};
+
+wsRequest.prototype.init = function init() {
+	var that = this;
+
+	this.id = Guid.raw();
+
+	this.request = immutable.fromJS({
+		id: this.id,
+		path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
+		method: this.method,
+		body: this.body,
+		authorization: 'Basic ' + new Buffer(this.client.credentials).toString('base64')
+	});
+
+	this.resultStream = through2.obj();
+	this.resultStream.writable = false;
+
+	this.closeHandler = function () {
+		that.wsClosed.apply(that);
+	};
+	this.errorHandler = function (err) {
+		that.processError.apply(that, [err]);
+	};
+	this.messageHandler = function (dataObj) {
+		that.processMessage.apply(that, [dataObj]);
+	};
+
+	this.client.ws.on('close', this.closeHandler);
+	this.client.ws.on('error', this.errorHandler);
+	this.client.ws.on('message', this.messageHandler);
+
+	this.client.ws.send(this.request);
+
+	this.resultStream.on('end', function () {
+		that.resultStream.readable = false;
+		that.stop.apply(that);
+	});
+
+	this.resultStream.stop = this.stop.bind(this);
+	//this.resultStream.getId = this.getId.bind(this)
+	this.resultStream.reconnect = this.reconnect.bind(this);
+
+	return this.resultStream;
+};
+
+wsRequest.prototype.wsClosed = function wsClosed() {
+	this.resultStream.push(null);
+};
+
+wsRequest.prototype.processError = function processError(err) {
+	this.resultStream.emit('error', err);
+};
+
+wsRequest.prototype.processMessage = function processMessage(dataObj) {
+	if (!dataObj.id && dataObj.message) {
+		this.resultStream.emit('error', dataObj);
+		return;
 	}
 
-	conn.onclose = function(close) {
-		ee.emit('close', close)
+	if (dataObj.id === this.id) {
+		if (dataObj.message) {
+			delete dataObj.id;
+			this.resultStream.emit('error', dataObj);
+			return;
+		}
+
+		if (dataObj.query_id) {
+			this.query_id = dataObj.query_id;
+		}
+
+		if (dataObj.channel) {
+			this.channel = dataObj.channel;
+		}
+
+		if (dataObj.body && dataObj.body !== "") {
+			this.resultStream.push(dataObj.body);
+		}
+
+		return;
 	}
 
-	return ee
-}
+	if (!dataObj.id && dataObj.channel && dataObj.channel === this.channel) {
+		this.resultStream.push(dataObj.event);
+		return;
+	}
+};
 
-module.exports = betterWs
-},{"events":17,"ws":85}],10:[function(require,module,exports){
+wsRequest.prototype.getId = function getId(callback) {
+	if (this.query_id) {
+		callback(this.query_id);
+	} else {
+		this.client.ws.on('message', function gid(data) {
+			var dataObj = JSON.parse(data);
+			if (dataObj.id === that.id) {
+				if (dataObj.query_id) {
+					this.client.ws.removeListener('message', gid);
+					callback(query_id);
+				}
+			}
+		});
+	}
+};
+
+wsRequest.prototype.stop = function stop() {
+	this.client.ws.removeListener('close', this.closeHandler);
+	this.client.ws.removeListener('error', this.errorHandler);
+	this.client.ws.removeListener('message', this.messageHandler);
+	if (this.resultStream.readable) {
+		this.resultStream.push(null);
+	}
+	var unsubRequest = this.request.set('unsubscribe', true);
+	if (this.unsubscribed !== true) {
+		this.client.ws.send(unsubRequest);
+	}
+	this.unsubscribed = true;
+};
+
+wsRequest.prototype.reconnect = function reconnect() {
+	this.stop();
+	return new wsRequest(this.client, this.args);
+};
+
+module.exports = wsRequest;
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":16,"events":20,"guid":49,"immutable":73,"querystring":32,"stream":44,"through2":87}],13:[function(require,module,exports){
 (function (process,Buffer){
 
 
@@ -703,7 +1024,7 @@ if(!module.parent && process.title !== 'browser') {
 }
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":25,"buffer":13,"jsonparse":71,"through":11}],11:[function(require,module,exports){
+},{"_process":28,"buffer":16,"jsonparse":74,"through":14}],14:[function(require,module,exports){
 (function (process){
 var Stream = require('stream')
 
@@ -815,9 +1136,9 @@ function through (write, end, opts) {
 
 
 }).call(this,require('_process'))
-},{"_process":25,"stream":41}],12:[function(require,module,exports){
+},{"_process":28,"stream":44}],15:[function(require,module,exports){
 
-},{}],13:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -2256,7 +2577,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":14,"ieee754":15,"is-array":16}],14:[function(require,module,exports){
+},{"base64-js":17,"ieee754":18,"is-array":19}],17:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -2382,7 +2703,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],15:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -2468,7 +2789,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],16:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 
 /**
  * isArray
@@ -2503,7 +2824,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],17:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2806,7 +3127,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],18:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 var http = module.exports;
 var EventEmitter = require('events').EventEmitter;
 var Request = require('./lib/request');
@@ -2952,7 +3273,7 @@ http.STATUS_CODES = {
     510 : 'Not Extended',               // RFC 2774
     511 : 'Network Authentication Required' // RFC 6585
 };
-},{"./lib/request":19,"events":17,"url":43}],19:[function(require,module,exports){
+},{"./lib/request":22,"events":20,"url":46}],22:[function(require,module,exports){
 var Stream = require('stream');
 var Response = require('./response');
 var Base64 = require('Base64');
@@ -3163,7 +3484,7 @@ var isXHR2Compatible = function (obj) {
     if (typeof FormData !== 'undefined' && obj instanceof FormData) return true;
 };
 
-},{"./response":20,"Base64":21,"inherits":23,"stream":41}],20:[function(require,module,exports){
+},{"./response":23,"Base64":24,"inherits":26,"stream":44}],23:[function(require,module,exports){
 var Stream = require('stream');
 var util = require('util');
 
@@ -3285,7 +3606,7 @@ var isArray = Array.isArray || function (xs) {
     return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{"stream":41,"util":45}],21:[function(require,module,exports){
+},{"stream":44,"util":48}],24:[function(require,module,exports){
 ;(function () {
 
   var object = typeof exports != 'undefined' ? exports : this; // #8: web workers
@@ -3347,7 +3668,7 @@ var isArray = Array.isArray || function (xs) {
 
 }());
 
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var http = require('http');
 
 var https = module.exports;
@@ -3362,7 +3683,7 @@ https.request = function (params, cb) {
     return http.request.call(this, params, cb);
 }
 
-},{"http":18}],23:[function(require,module,exports){
+},{"http":21}],26:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -3387,12 +3708,12 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3484,7 +3805,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],26:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.3.2 by @mathias */
 ;(function(root) {
@@ -4018,7 +4339,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],27:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4104,7 +4425,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],28:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4191,16 +4512,16 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],29:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":27,"./encode":28}],30:[function(require,module,exports){
+},{"./decode":30,"./encode":31}],33:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":31}],31:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":34}],34:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -4293,7 +4614,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":33,"./_stream_writable":35,"_process":25,"core-util-is":36,"inherits":23}],32:[function(require,module,exports){
+},{"./_stream_readable":36,"./_stream_writable":38,"_process":28,"core-util-is":39,"inherits":26}],35:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4341,7 +4662,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":34,"core-util-is":36,"inherits":23}],33:[function(require,module,exports){
+},{"./_stream_transform":37,"core-util-is":39,"inherits":26}],36:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -5296,7 +5617,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":31,"_process":25,"buffer":13,"core-util-is":36,"events":17,"inherits":23,"isarray":24,"stream":41,"string_decoder/":42,"util":12}],34:[function(require,module,exports){
+},{"./_stream_duplex":34,"_process":28,"buffer":16,"core-util-is":39,"events":20,"inherits":26,"isarray":27,"stream":44,"string_decoder/":45,"util":15}],37:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5507,7 +5828,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":31,"core-util-is":36,"inherits":23}],35:[function(require,module,exports){
+},{"./_stream_duplex":34,"core-util-is":39,"inherits":26}],38:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -5988,7 +6309,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":31,"_process":25,"buffer":13,"core-util-is":36,"inherits":23,"stream":41}],36:[function(require,module,exports){
+},{"./_stream_duplex":34,"_process":28,"buffer":16,"core-util-is":39,"inherits":26,"stream":44}],39:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6098,10 +6419,10 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 }).call(this,require("buffer").Buffer)
-},{"buffer":13}],37:[function(require,module,exports){
+},{"buffer":16}],40:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":32}],38:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":35}],41:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
 exports.Readable = exports;
@@ -6110,13 +6431,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":31,"./lib/_stream_passthrough.js":32,"./lib/_stream_readable.js":33,"./lib/_stream_transform.js":34,"./lib/_stream_writable.js":35,"stream":41}],39:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":34,"./lib/_stream_passthrough.js":35,"./lib/_stream_readable.js":36,"./lib/_stream_transform.js":37,"./lib/_stream_writable.js":38,"stream":44}],42:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":34}],40:[function(require,module,exports){
+},{"./lib/_stream_transform.js":37}],43:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":35}],41:[function(require,module,exports){
+},{"./lib/_stream_writable.js":38}],44:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6245,7 +6566,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":17,"inherits":23,"readable-stream/duplex.js":30,"readable-stream/passthrough.js":37,"readable-stream/readable.js":38,"readable-stream/transform.js":39,"readable-stream/writable.js":40}],42:[function(require,module,exports){
+},{"events":20,"inherits":26,"readable-stream/duplex.js":33,"readable-stream/passthrough.js":40,"readable-stream/readable.js":41,"readable-stream/transform.js":42,"readable-stream/writable.js":43}],45:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6468,7 +6789,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":13}],43:[function(require,module,exports){
+},{"buffer":16}],46:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7177,14 +7498,14 @@ function isNullOrUndefined(arg) {
   return  arg == null;
 }
 
-},{"punycode":26,"querystring":29}],44:[function(require,module,exports){
+},{"punycode":29,"querystring":32}],47:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],45:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -7774,7 +8095,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":44,"_process":25,"inherits":23}],46:[function(require,module,exports){
+},{"./support/isBuffer":47,"_process":28,"inherits":26}],49:[function(require,module,exports){
 (function () {
   var validator = new RegExp("^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$", "i");
 
@@ -7839,7 +8160,7 @@ function hasOwnProperty(obj, prop) {
   }
 })();
 
-},{}],47:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 (function (process,Buffer){
 var url = require('url');
 var http = require('http');
@@ -7994,7 +8315,7 @@ Req.prototype.setLocation = function (uri) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":25,"buffer":13,"duplexer2":48,"http":18,"https":22,"through2":69,"url":43}],48:[function(require,module,exports){
+},{"_process":28,"buffer":16,"duplexer2":51,"http":21,"https":25,"through2":72,"url":46}],51:[function(require,module,exports){
 var stream = require("readable-stream");
 
 var duplex2 = module.exports = function duplex2(options, writable, readable) {
@@ -8058,29 +8379,29 @@ DuplexWrapper.prototype._read = function _read(n) {
   this._readable.resume();
 };
 
-},{"readable-stream":58}],49:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"./_stream_readable":51,"./_stream_writable":53,"_process":25,"core-util-is":54,"dup":31,"inherits":55}],50:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"./_stream_transform":52,"core-util-is":54,"dup":32,"inherits":55}],51:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"./_stream_duplex":49,"_process":25,"buffer":13,"core-util-is":54,"dup":33,"events":17,"inherits":55,"isarray":56,"stream":41,"string_decoder/":57,"util":12}],52:[function(require,module,exports){
+},{"readable-stream":61}],52:[function(require,module,exports){
 arguments[4][34][0].apply(exports,arguments)
-},{"./_stream_duplex":49,"core-util-is":54,"dup":34,"inherits":55}],53:[function(require,module,exports){
+},{"./_stream_readable":54,"./_stream_writable":56,"_process":28,"core-util-is":57,"dup":34,"inherits":58}],53:[function(require,module,exports){
 arguments[4][35][0].apply(exports,arguments)
-},{"./_stream_duplex":49,"_process":25,"buffer":13,"core-util-is":54,"dup":35,"inherits":55,"stream":41}],54:[function(require,module,exports){
+},{"./_stream_transform":55,"core-util-is":57,"dup":35,"inherits":58}],54:[function(require,module,exports){
 arguments[4][36][0].apply(exports,arguments)
-},{"buffer":13,"dup":36}],55:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"dup":23}],56:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"dup":24}],57:[function(require,module,exports){
-arguments[4][42][0].apply(exports,arguments)
-},{"buffer":13,"dup":42}],58:[function(require,module,exports){
+},{"./_stream_duplex":52,"_process":28,"buffer":16,"core-util-is":57,"dup":36,"events":20,"inherits":58,"isarray":59,"stream":44,"string_decoder/":60,"util":15}],55:[function(require,module,exports){
+arguments[4][37][0].apply(exports,arguments)
+},{"./_stream_duplex":52,"core-util-is":57,"dup":37,"inherits":58}],56:[function(require,module,exports){
 arguments[4][38][0].apply(exports,arguments)
-},{"./lib/_stream_duplex.js":49,"./lib/_stream_passthrough.js":50,"./lib/_stream_readable.js":51,"./lib/_stream_transform.js":52,"./lib/_stream_writable.js":53,"dup":38,"stream":41}],59:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"./_stream_readable":60,"./_stream_writable":62,"_process":25,"core-util-is":63,"dup":31,"inherits":64}],60:[function(require,module,exports){
+},{"./_stream_duplex":52,"_process":28,"buffer":16,"core-util-is":57,"dup":38,"inherits":58,"stream":44}],57:[function(require,module,exports){
+arguments[4][39][0].apply(exports,arguments)
+},{"buffer":16,"dup":39}],58:[function(require,module,exports){
+arguments[4][26][0].apply(exports,arguments)
+},{"dup":26}],59:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"dup":27}],60:[function(require,module,exports){
+arguments[4][45][0].apply(exports,arguments)
+},{"buffer":16,"dup":45}],61:[function(require,module,exports){
+arguments[4][41][0].apply(exports,arguments)
+},{"./lib/_stream_duplex.js":52,"./lib/_stream_passthrough.js":53,"./lib/_stream_readable.js":54,"./lib/_stream_transform.js":55,"./lib/_stream_writable.js":56,"dup":41,"stream":44}],62:[function(require,module,exports){
+arguments[4][34][0].apply(exports,arguments)
+},{"./_stream_readable":63,"./_stream_writable":65,"_process":28,"core-util-is":66,"dup":34,"inherits":67}],63:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -9066,7 +9387,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"_process":25,"buffer":13,"core-util-is":63,"events":17,"inherits":64,"isarray":65,"stream":41,"string_decoder/":66}],61:[function(require,module,exports){
+},{"_process":28,"buffer":16,"core-util-is":66,"events":20,"inherits":67,"isarray":68,"stream":44,"string_decoder/":69}],64:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9278,7 +9599,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":59,"core-util-is":63,"inherits":64}],62:[function(require,module,exports){
+},{"./_stream_duplex":62,"core-util-is":66,"inherits":67}],65:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -9668,17 +9989,17 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":59,"_process":25,"buffer":13,"core-util-is":63,"inherits":64,"stream":41}],63:[function(require,module,exports){
-arguments[4][36][0].apply(exports,arguments)
-},{"buffer":13,"dup":36}],64:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"dup":23}],65:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"dup":24}],66:[function(require,module,exports){
-arguments[4][42][0].apply(exports,arguments)
-},{"buffer":13,"dup":42}],67:[function(require,module,exports){
+},{"./_stream_duplex":62,"_process":28,"buffer":16,"core-util-is":66,"inherits":67,"stream":44}],66:[function(require,module,exports){
 arguments[4][39][0].apply(exports,arguments)
-},{"./lib/_stream_transform.js":61,"dup":39}],68:[function(require,module,exports){
+},{"buffer":16,"dup":39}],67:[function(require,module,exports){
+arguments[4][26][0].apply(exports,arguments)
+},{"dup":26}],68:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"dup":27}],69:[function(require,module,exports){
+arguments[4][45][0].apply(exports,arguments)
+},{"buffer":16,"dup":45}],70:[function(require,module,exports){
+arguments[4][42][0].apply(exports,arguments)
+},{"./lib/_stream_transform.js":64,"dup":42}],71:[function(require,module,exports){
 module.exports = extend
 
 function extend() {
@@ -9697,7 +10018,7 @@ function extend() {
     return target
 }
 
-},{}],69:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 (function (process){
 var Transform = require('readable-stream/transform')
   , inherits  = require('util').inherits
@@ -9797,7 +10118,7 @@ module.exports.obj = through2(function (options, transform, flush) {
 })
 
 }).call(this,require('_process'))
-},{"_process":25,"readable-stream/transform":67,"util":45,"xtend":68}],70:[function(require,module,exports){
+},{"_process":28,"readable-stream/transform":70,"util":48,"xtend":71}],73:[function(require,module,exports){
 /**
  *  Copyright (c) 2014-2015, Facebook, Inc.
  *  All rights reserved.
@@ -14758,7 +15079,7 @@ module.exports.obj = through2(function (options, transform, flush) {
   return Immutable;
 
 }));
-},{}],71:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 (function (Buffer){
 /*global Buffer*/
 // Named constants with unique integer values
@@ -15189,7 +15510,7 @@ Parser.C = C;
 module.exports = Parser;
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":13}],72:[function(require,module,exports){
+},{"buffer":16}],75:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -15273,7 +15594,7 @@ function forEach (xs, f) {
   }
 }
 
-},{"./_stream_readable":73,"./_stream_writable":75,"core-util-is":76,"inherits":77,"process-nextick-args":79}],73:[function(require,module,exports){
+},{"./_stream_readable":76,"./_stream_writable":78,"core-util-is":79,"inherits":80,"process-nextick-args":82}],76:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -16236,7 +16557,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":72,"_process":25,"buffer":13,"core-util-is":76,"events":17,"inherits":77,"isarray":78,"process-nextick-args":79,"string_decoder/":80,"util":12}],74:[function(require,module,exports){
+},{"./_stream_duplex":75,"_process":28,"buffer":16,"core-util-is":79,"events":20,"inherits":80,"isarray":81,"process-nextick-args":82,"string_decoder/":83,"util":15}],77:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -16435,7 +16756,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":72,"core-util-is":76,"inherits":77}],75:[function(require,module,exports){
+},{"./_stream_duplex":75,"core-util-is":79,"inherits":80}],78:[function(require,module,exports){
 // A bit simpler than readable streams.
 // Implement an async ._write(chunk, cb), and it'll handle all
 // the drain event emission and buffering.
@@ -16957,13 +17278,13 @@ function endWritable(stream, state, cb) {
   state.ended = true;
 }
 
-},{"./_stream_duplex":72,"buffer":13,"core-util-is":76,"events":17,"inherits":77,"process-nextick-args":79,"util-deprecate":81}],76:[function(require,module,exports){
-arguments[4][36][0].apply(exports,arguments)
-},{"buffer":13,"dup":36}],77:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"dup":23}],78:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"dup":24}],79:[function(require,module,exports){
+},{"./_stream_duplex":75,"buffer":16,"core-util-is":79,"events":20,"inherits":80,"process-nextick-args":82,"util-deprecate":84}],79:[function(require,module,exports){
+arguments[4][39][0].apply(exports,arguments)
+},{"buffer":16,"dup":39}],80:[function(require,module,exports){
+arguments[4][26][0].apply(exports,arguments)
+},{"dup":26}],81:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"dup":27}],82:[function(require,module,exports){
 (function (process){
 'use strict';
 module.exports = nextTick;
@@ -16980,9 +17301,9 @@ function nextTick(fn) {
 }
 
 }).call(this,require('_process'))
-},{"_process":25}],80:[function(require,module,exports){
-arguments[4][42][0].apply(exports,arguments)
-},{"buffer":13,"dup":42}],81:[function(require,module,exports){
+},{"_process":28}],83:[function(require,module,exports){
+arguments[4][45][0].apply(exports,arguments)
+},{"buffer":16,"dup":45}],84:[function(require,module,exports){
 (function (global){
 
 /**
@@ -17048,13 +17369,13 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],82:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"./lib/_stream_transform.js":74,"dup":39}],83:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"dup":68}],84:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"_process":25,"dup":69,"readable-stream/transform":82,"util":45,"xtend":83}],85:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
+arguments[4][42][0].apply(exports,arguments)
+},{"./lib/_stream_transform.js":77,"dup":42}],86:[function(require,module,exports){
+arguments[4][71][0].apply(exports,arguments)
+},{"dup":71}],87:[function(require,module,exports){
+arguments[4][72][0].apply(exports,arguments)
+},{"_process":28,"dup":72,"readable-stream/transform":85,"util":48,"xtend":86}],88:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -17099,258 +17420,4 @@ function ws(uri, protocols, opts) {
 
 if (WebSocket) ws.prototype = WebSocket.prototype;
 
-},{}],86:[function(require,module,exports){
-(function (process){
-var hyperquest = require('hyperquest')
-var JSONStream = require('JSONStream')
-var querystring = require('querystring')
-var through2 = require('through2')
-
-var streamingRequest = function streamingRequest(client, args) {
-	this.client = client
-	this.args = args
-
-	this.method = args.method
-	this.path = args.path
-	this.params = args.params
-	this.body = args.body
-	if(!this.body || !(typeof this.body === 'object' || this.body.constructor === Array) ) {
-		this.body = {}
-	}
-	if(this.body.constructor === Array) {
-		arrayBody = this.body
-		this.body = ''
-		for(var i=0; i<arrayBody.length; i++) {
-			this.body += JSON.stringify(arrayBody[i])
-			this.body += '\n'
-		}
-	}
-
-	var resultStream = this.init()
-
-	return resultStream
-}
-
-streamingRequest.prototype.init = function init() {
-	var that = this
-
-	this.requestStream = hyperquest({
-		method: this.method,
-		uri:  this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
-		auth: this.client.credentials
-	})
-	this.requestStream.on('response', function(res) {
-		that.response = res
-	})
-	this.requestStream.on('request', function(req) {
-		that.request = req
-	})
-
-	var resultStream = this.requestStream.pipe(JSONStream.parse()).pipe(through2.obj())
-
-	this.requestStream.on('end', function() {
-		that.stop.apply(that)
-	})
-
-	resultStream.on('end', function() {
-		that.stop.apply(that)
-	})
-
-	this.requestStream.on('error', function(err) {
-		that.stop.apply(that)
-		process.nextTick(function() {
-			resultStream.emit('error', err)
-		})
-	})
-
-	resultStream.stop = this.stop.bind(this)
-	//resultStream.getId = this.getId.bind(this)
-	resultStream.reconnect = this.reconnect.bind(this)
-	if(this.requestStream.writable) {
-		if(typeof this.body === 'string') {
-			this.requestStream.end(this.body)
-		} else {
-			this.requestStream.end(JSON.stringify(this.body))
-		}
-	}
-
-	return resultStream
-}
-
-streamingRequest.prototype.getId = function getId(callback) {
-	if(this.response) {
-		callback(this.response.headers['query-id'])
-	} else {
-		this.requestStream.on('response', function(res) {
-			callback(res.headers['query-id'])
-		})
-	}
-}
-
-streamingRequest.prototype.stop = function stop() {
-	if(this.request) {
-		this.request.destroy()
-	} else {
-		this.requestStream.on('request', function(req) {
-			req.destroy()
-		})
-	}
-}
-
-streamingRequest.prototype.reconnect = function reconnect() {
-	this.stop()
-	return new streamingRequest(this.client, this.args)
-}
-
-module.exports = streamingRequest
-}).call(this,require('_process'))
-},{"JSONStream":10,"_process":25,"hyperquest":47,"querystring":29,"through2":84}],87:[function(require,module,exports){
-(function (Buffer){
-var Readable = require('stream').Readable;
-var Guid = require('guid')
-var querystring = require('querystring')
-var through2 = require('through2')
-var immutable = require('immutable')
-var EventEmitter = require('events').EventEmitter
-
-var wsRequest = function wsRequest(client, args) {
-	this.client = client
-	this.args = args
-
-	this.method = args.method
-	this.path = args.path
-	this.params = args.params
-	this.body = args.body
-	if(!this.body || typeof this.body !== 'object') {
-		this.body = {}
-	}
-
-	var resultStream = this.init()
-
-	return resultStream
-}
-
-wsRequest.prototype.init = function init() {
-	var that = this
-
-	this.id = Guid.raw()
-
-	this.request = immutable.fromJS({
-		id: this.id,
-		path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
-		method: this.method,
-		body: this.body,
-		authorization: 'Basic ' + (new Buffer(this.client.credentials).toString('base64'))
-	})
-
-	this.resultStream = through2.obj()
-	this.resultStream.writable = false
-
-	this.closeHandler = function() {
-		that.wsClosed.apply(that)
-	}
-	this.errorHandler = function(err) {
-		that.processError.apply(that, [err])
-	}
-	this.messageHandler = function(dataObj) {
-		that.processMessage.apply(that, [dataObj])
-	}
-
-	this.client.ws.on('close', this.closeHandler)
-	this.client.ws.on('error', this.errorHandler)
-	this.client.ws.on('message', this.messageHandler)
-
-	this.client.ws.send(this.request)
-
-	this.resultStream.on('end', function() {
-		that.resultStream.readable = false
-		that.stop.apply(that)
-	})
-
-	this.resultStream.stop = this.stop.bind(this)
-	//this.resultStream.getId = this.getId.bind(this)
-	this.resultStream.reconnect = this.reconnect.bind(this)
-
-	return this.resultStream
-}
-
-wsRequest.prototype.wsClosed = function wsClosed() {
-	this.resultStream.push(null)
-}
-
-wsRequest.prototype.processError = function processError(err) {
-	this.resultStream.emit('error', err)
-}
-
-wsRequest.prototype.processMessage = function processMessage(dataObj) {
-	if(!dataObj.id && dataObj.message) {
-		this.resultStream.emit('error', dataObj)
-		return
-	}
-
-	if(dataObj.id === this.id) {
-		if(dataObj.message) {
-			delete dataObj.id
-			this.resultStream.emit('error', dataObj)
-			return
-		}
-
-		if(dataObj.query_id) {
-			this.query_id = dataObj.query_id
-		}
-
-		if(dataObj.channel)  {
-			this.channel = dataObj.channel
-		}
-
-		if(dataObj.body && dataObj.body !== "") {
-			this.resultStream.push(dataObj.body)
-		}
-
-		return
-	}
-
-	if(!dataObj.id && dataObj.channel && dataObj.channel === this.channel) {
-		this.resultStream.push(dataObj.event)
-		return
-	}
-}
-
-wsRequest.prototype.getId = function getId(callback) {
-	if(this.query_id) {
-		callback(this.query_id)
-	} else {
-		this.client.ws.on('message', function gid(data) {
-			var dataObj = JSON.parse(data)
-			if(dataObj.id === that.id) {
-				if(dataObj.query_id) {
-					this.client.ws.removeListener('message', gid)
-					callback(query_id)
-				}
-			}
-		})
-	}
-}
-
-wsRequest.prototype.stop = function stop() {
-	this.client.ws.removeListener('close', this.closeHandler)
-	this.client.ws.removeListener('error', this.errorHandler)
-	this.client.ws.removeListener('message', this.messageHandler)
-	if(this.resultStream.readable) {
-		this.resultStream.push(null)
-	}
-	var unsubRequest = this.request.set('unsubscribe', true)
-	if(this.unsubscribed !== true) {
-		this.client.ws.send(unsubRequest)
-	}
-	this.unsubscribed = true
-}
-
-wsRequest.prototype.reconnect = function reconnect() {
-	this.stop()
-	return new wsRequest(this.client, this.args)
-}
-
-module.exports = wsRequest
-}).call(this,require("buffer").Buffer)
-},{"buffer":13,"events":17,"guid":46,"immutable":70,"querystring":29,"stream":41,"through2":84}]},{},[8]);
+},{}]},{},[9]);

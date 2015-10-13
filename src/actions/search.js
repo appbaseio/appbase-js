@@ -1,4 +1,4 @@
-var bulkService = function bulkService(client, args) {
+var searchService = function searchService(client, args) {
 	this.args = args
 
 	var valid = this.validate()
@@ -11,10 +11,11 @@ var bulkService = function bulkService(client, args) {
 	delete args.type
 	delete args.body
 
+	var path
 	if(type) {
-		path = type + '/_bulk'
+		path = type + '/_search'
 	} else {
-		path = '/_bulk'
+		path = '/_search'
 	}
 
 	return client.performStreamingRequest({
@@ -25,7 +26,7 @@ var bulkService = function bulkService(client, args) {
 	})
 }
 
-bulkService.prototype.validate = function validate() {
+searchService.prototype.validate = function validate() {
 	var invalid = []
 	if(typeof this.args.body !== 'object' || this.args.body === null) {
 		invalid.push('body')
@@ -43,4 +44,4 @@ bulkService.prototype.validate = function validate() {
 	return true
 }
 
-module.exports = bulkService
+module.exports = searchService

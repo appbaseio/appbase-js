@@ -1,4 +1,4 @@
-var searchService = function searchService(client, args) {
+var indexService = function indexService(client, args) {
 	this.args = args
 
 	var valid = this.validate()
@@ -7,14 +7,17 @@ var searchService = function searchService(client, args) {
 		return
 	}
 	var type = args.type
+	var id = args.id
 	var body = args.body
 	delete args.type
+	delete args.id
 	delete args.body
 
-	if(type) {
-		path = type + '/_search'
+	var path
+	if(id) {
+		path = type + '/' + id
 	} else {
-		path = '/_search'
+		path = type
 	}
 
 	return client.performStreamingRequest({
@@ -25,8 +28,11 @@ var searchService = function searchService(client, args) {
 	})
 }
 
-searchService.prototype.validate = function validate() {
+indexService.prototype.validate = function validate() {
 	var invalid = []
+	if(typeof this.args.type !== 'string' || this.args.type === '') {
+		invalid.push('type')
+	}
 	if(typeof this.args.body !== 'object' || this.args.body === null) {
 		invalid.push('body')
 	}
@@ -43,4 +49,4 @@ searchService.prototype.validate = function validate() {
 	return true
 }
 
-module.exports = searchService
+module.exports = indexService
