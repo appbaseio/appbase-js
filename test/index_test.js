@@ -12,7 +12,7 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 	.on('error', done)
 	.on('data', function(res) {
 		var first = true
-		var responseStream = streamingClient.streamDocument({
+		var responseStream = streamingClient.readStream({
 			type: 'tweet',
 			id: '1'
 		})

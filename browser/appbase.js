@@ -460,8 +460,8 @@ var appbaseClient = function appbaseClient(args) {
 	client['delete'] = this['delete'].bind(this);
 	client.bulk = this.bulk.bind(this);
 	client.search = this.search.bind(this);
-	client.streamDocument = this.streamDocument.bind(this);
-	client.streamSearch = this.streamSearch.bind(this);
+	client.readStream = this.readStream.bind(this);
+	client.searchStream = this.searchStream.bind(this);
 	client.getTypes = this.getTypes.bind(this);
 
 	return client;
@@ -495,11 +495,11 @@ appbaseClient.prototype.search = function search(args) {
 	return new searchService(this, args);
 };
 
-appbaseClient.prototype.streamDocument = function streamDocument(args) {
+appbaseClient.prototype.readStream = function readStream(args) {
 	return new streamDocumentService(this, args);
 };
 
-appbaseClient.prototype.streamSearch = function streamSearch(args) {
+appbaseClient.prototype.searchStream = function searchStream(args) {
 	return new streamSearchService(this, args);
 };
 

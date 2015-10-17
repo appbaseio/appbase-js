@@ -16,7 +16,7 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 		}
 
 		var first = true
-		var responseStream = streamingClient.streamSearch({
+		var responseStream = streamingClient.searchStream({
 			type: 'tweet',
 			body: {
 				query: {

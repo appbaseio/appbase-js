@@ -16,7 +16,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 		}
 
 		var first = true
-		var responseStream = streamingClient.streamDocument({
+		var responseStream = streamingClient.readStream({
 			type: 'tweet',
 			id: '1'
 		})
@@ -73,7 +73,7 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 		}
 
 		var first = true
-		var responseStream = streamingClient.streamDocument({
+		var responseStream = streamingClient.readStream({
 			type: 'tweet',
 			id: '1',
 			streamonly: true
@@ -129,7 +129,7 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 		}
 
 		var first = true
-		var responseStream = streamingClient.streamDocument({
+		var responseStream = streamingClient.readStream({
 			type: 'tweet',
 			id: '1'
 		})
