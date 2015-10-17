@@ -121,17 +121,17 @@ Optionally (and like in the quick example above), ``url`` can contain username a
 
 ### Reference
 
-**[reference.streamDocument(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L99)** 
+**[reference.readStream(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L99)** 
 
-Get all the document updates as a continuous event stream. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
+Get continuous updates on a JSON document with a ``type`` and ``id``. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
 
 > **args** - A set of key/value pairs that makes the document URL  
 &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string  
 &nbsp;&nbsp;&nbsp;&nbsp;id: Valid Document ID
 
-**[reference.streamSearch(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L103)** 
+**[reference.searchStream(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L103)** 
 
-Get all the query results as a continuous event stream. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
+Query the entire DB data stream via the ElasticSearch Query DSL. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
 
 > **args** - A set of key/value pairs that makes the document URL  
 &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string  
