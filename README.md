@@ -131,7 +131,7 @@ Get continuous updates on a JSON document with a ``type`` and ``id``. Returns a 
 
 **[reference.searchStream(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L103)** 
 
-Query the entire DB data stream via the ElasticSearch Query DSL. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
+Get continuous updates on search queries (fuzzy, boolean, geolocation, range, full-text). Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
 
 > **args** - A set of key/value pairs that makes the document URL  
 &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string  
