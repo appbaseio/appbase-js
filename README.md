@@ -105,6 +105,8 @@ searchStream() also returns a ``stream.Readable`` object, which can be convenien
 
 ## API Reference
 
+For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/scalr/javascript/api-reference.html).
+
 ### Global
 
 **[new Appbase(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L16)**  
