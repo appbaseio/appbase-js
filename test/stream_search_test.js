@@ -62,6 +62,18 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 				done()
 			}
 		})
+
+		client.index({
+			index: 'createnewtestapp01',
+			type: 'tweet',
+			id: '1',
+			body: tweet
+		}, function(err, res) {
+			if(err) {
+				done(err)
+				return
+			}
+		})
 	})
 }
 

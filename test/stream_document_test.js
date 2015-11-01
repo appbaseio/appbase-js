@@ -15,8 +15,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 			return
 		}
 
-		var first = true
-		var responseStream = streamingClient.readStream({
+		var responseStream = streamingClient.getStream({
 			type: 'tweet',
 			id: '1'
 		})
@@ -27,33 +26,30 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 			}
 		})
 		responseStream.on('data', function(res) {
-			if(first) {
-				client.index({
-					index: 'createnewtestapp01',
-					type: 'tweet',
-					id: '1',
-					body: tweet
-				}, function(err, res) {
-					if(err) {
-						done(err)
-						return
-					}
-				})
-				first = false
-			} else {
-				try {
-					assert.deepEqual(res, {
-						_type: 'tweet',
-						_id: '1',
-						_source: tweet
-					}, 'event not as expected')
-				} catch(e) {
-					responseStream.stop()
-					return done(e)
-				}
-
+			try {
+				assert.deepEqual(res, {
+					_type: 'tweet',
+					_id: '1',
+					_source: tweet
+				}, 'event not as expected')
+			} catch(e) {
 				responseStream.stop()
-				done()
+				return done(e)
+			}
+
+			responseStream.stop()
+			done()
+		})
+
+		client.index({
+			index: 'createnewtestapp01',
+			type: 'tweet',
+			id: '1',
+			body: tweet
+		}, function(err, res) {
+			if(err) {
+				done(err)
+				return
 			}
 		})
 	})
@@ -73,7 +69,7 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 		}
 
 		var first = true
-		var responseStream = streamingClient.readStream({
+		var responseStream = streamingClient.getStream({
 			type: 'tweet',
 			id: '1',
 			streamonly: true
@@ -129,7 +125,7 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 		}
 
 		var first = true
-		var responseStream = streamingClient.readStream({
+		var responseStream = streamingClient.getStream({
 			type: 'tweet',
 			id: '1'
 		})
@@ -160,6 +156,18 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 			} else {
 				console.log("further events:", res)
 				done(new Error('Received second event'))
+			}
+		})
+
+		client.index({
+			index: 'createnewtestapp01',
+			type: 'tweet',
+			id: '1',
+			body: tweet
+		}, function(err, res) {
+			if(err) {
+				done(err)
+				return
 			}
 		})
 	})

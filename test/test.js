@@ -2,6 +2,7 @@ var elasticsearch = require('elasticsearch')
 var appbase = require('../')
 
 var indexTest = require('./index_test.js')
+var getTest = require('./get_test.js')
 var searchTest = require('./search_test.js')
 var bulkTest = require('./bulk_test.js')
 var streamDocumentTests = require('./stream_document_test.js')
@@ -28,6 +29,12 @@ describe('Appbase', function() {
 	describe('#index()', function() {
 		it('should index one document', function(done) {
 			indexTest.indexOneDocument(streamingClient, done)
+		})
+	})
+
+	describe('#get()', function() {
+		it('should get one document', function(done) {
+			getTest.getOneDoc(streamingClient, done)
 		})
 	})
 

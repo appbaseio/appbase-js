@@ -7,6 +7,7 @@ var streamingRequest = require('./streaming_request.js');
 var wsRequest = require('./websocket_request.js');
 
 var indexService = require('./actions/index.js');
+var getService = require('./actions/get.js');
 var updateService = require('./actions/update.js');
 var deleteService = require('./actions/delete.js');
 var bulkService = require('./actions/bulk.js');
@@ -61,11 +62,12 @@ var appbaseClient = function appbaseClient(args) {
 	var client = {};
 
 	client.index = this.index.bind(this);
+	client.get = this.get.bind(this);
 	client.update = this.update.bind(this);
 	client['delete'] = this['delete'].bind(this);
 	client.bulk = this.bulk.bind(this);
 	client.search = this.search.bind(this);
-	client.readStream = this.readStream.bind(this);
+	client.getStream = this.getStream.bind(this);
 	client.searchStream = this.searchStream.bind(this);
 	client.getTypes = this.getTypes.bind(this);
 
@@ -84,6 +86,10 @@ appbaseClient.prototype.index = function index(args) {
 	return new indexService(this, args);
 };
 
+appbaseClient.prototype.get = function get(args) {
+	return new getService(this, args);
+};
+
 appbaseClient.prototype.update = function update(args) {
 	return new updateService(this, args);
 };
@@ -100,7 +106,7 @@ appbaseClient.prototype.search = function search(args) {
 	return new searchService(this, args);
 };
 
-appbaseClient.prototype.readStream = function readStream(args) {
+appbaseClient.prototype.getStream = function getStream(args) {
 	return new streamDocumentService(this, args);
 };
 

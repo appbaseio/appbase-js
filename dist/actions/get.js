@@ -1,6 +1,6 @@
 'use strict';
 
-var streamDocumentService = function streamDocumentService(client, args) {
+var getService = function getService(client, args) {
 	this.args = args;
 
 	var valid = this.validate();
@@ -12,28 +12,22 @@ var streamDocumentService = function streamDocumentService(client, args) {
 	var id = args.id;
 	delete args.type;
 	delete args.id;
-	delete args.stream;
 
-	if (args.stream === true || args.stream === 'true') {
-		args.stream = 'true';
-	} else {
-		delete args.stream;
-		args.streamonly = 'true';
-	}
+	var path = type + '/' + id;
 
-	return client.performWsRequest({
+	return client.performStreamingRequest({
 		method: 'GET',
-		path: type + '/' + id,
+		path: path,
 		params: args
 	});
 };
 
-streamDocumentService.prototype.validate = function validate() {
+getService.prototype.validate = function validate() {
 	var invalid = [];
 	if (typeof this.args.type !== 'string' || this.args.type === '') {
 		invalid.push('type');
 	}
-	if (typeof this.args.id !== 'string' || this.args.id === '') {
+	if (typeof this.args.id !== 'string' || this.args.type === '') {
 		invalid.push('id');
 	}
 
@@ -49,4 +43,4 @@ streamDocumentService.prototype.validate = function validate() {
 	return true;
 };
 
-module.exports = streamDocumentService;
+module.exports = getService;

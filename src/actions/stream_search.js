@@ -12,11 +12,11 @@ var streamSearchService = function streamSearchService(client, args) {
 	delete args.body
 	delete args.stream
 
-	if(args.streamonly === true || args.streamonly === 'true') {
-		args.streamonly = 'true'
-	} else {
-		delete args.streamonly
+	if(args.stream === true || args.stream === 'true') {
 		args.stream = 'true'
+	} else {
+		delete args.stream
+		args.streamonly = 'true'
 	}
 
 	return client.performWsRequest({

@@ -15,7 +15,7 @@ bulkTests.bulkIndexOneDocument = function bulkIndexOneDocument(streamingClient, 
 	.on('error', done)
 	.on('data', function(res) {
 		var first = true
-		var responseStream = streamingClient.readStream({
+		var responseStream = streamingClient.getStream({
 			type: 'tweet',
 			id: '2'
 		})
