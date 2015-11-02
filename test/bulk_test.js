@@ -14,8 +14,7 @@ bulkTests.bulkIndexOneDocument = function bulkIndexOneDocument(streamingClient, 
 	})
 	.on('error', done)
 	.on('data', function(res) {
-		var first = true
-		var responseStream = streamingClient.getStream({
+		var responseStream = streamingClient.get({
 			type: 'tweet',
 			id: '2'
 		})
@@ -26,41 +25,32 @@ bulkTests.bulkIndexOneDocument = function bulkIndexOneDocument(streamingClient, 
 			}
 		})
 		responseStream.on('data', function(res) {
-			if(first) {
-				delete res._version
-				delete res._index
-				try {
-					assert.deepEqual(res, {
-						_type: 'tweet',
-						_id: '2',
-						found: true,
-						_source: tweet
-					}, 'document not as expected')
-				} catch(e) {
-					responseStream.stop()
-					return done(e)
-				}
-				streamingClient.delete({
-					type: 'tweet',
-					id: '2'
-				}).on('error', done)
-				first = false
-			} else {
-				try {
-					assert.deepEqual(res, {
-						_type: 'tweet',
-						_id: '2',
-						_source: tweet,
-						_deleted: true
-					}, 'event not as expected')
-				} catch(e) {
-					responseStream.stop()
-					return done(e)
-				}
-
+			delete res._version
+			delete res._index
+			try {
+				assert.deepEqual(res, {
+					_type: 'tweet',
+					_id: '2',
+					found: true,
+					_source: tweet
+				}, 'document not as expected')
+			} catch(e) {
 				responseStream.stop()
-				done()
+				return done(e)
 			}
+
+			streamingClient.delete({
+				type: 'tweet',
+				id: '2'
+			})
+			.on('error', done)
+			.on('data', function(res) {
+				if(res && res.found) {
+					done()
+				} else {
+					done(new Error('Unable to delete data because it was not found'))
+				}
+			})
 		})
 	})
 }

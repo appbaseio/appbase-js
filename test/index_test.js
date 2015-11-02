@@ -11,7 +11,6 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 	})
 	.on('error', done)
 	.on('data', function(res) {
-		var first = true
 		var responseStream = streamingClient.getStream({
 			type: 'tweet',
 			id: '1'
@@ -23,29 +22,26 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 			}
 		})
 		responseStream.on('data', function(res) {
-			if(first) {
-				streamingClient.index({
+			try {
+				assert.deepEqual(res, {
+					_type: 'tweet',
+					_id: '1',
+					_source: tweet
+				}, 'event not as expected')
+			} catch(e) {
+				responseStream.stop()
+				return done(e)
+			}
+
+			responseStream.stop()
+			done()
+		})
+
+		streamingClient.index({
 					type: 'tweet',
 					id: '1',
 					body: tweet
 				}).on('error', done)
-				first = false
-			} else {
-				try {
-					assert.deepEqual(res, {
-						_type: 'tweet',
-						_id: '1',
-						_source: tweet
-					}, 'event not as expected')
-				} catch(e) {
-					responseStream.stop()
-					return done(e)
-				}
-
-				responseStream.stop()
-				done()
-			}
-		})
 	})
 }
 
