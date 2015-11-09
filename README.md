@@ -2,6 +2,8 @@
 
 Appbase.io is a data streams library for Node.JS and Javascript (browser build is in the [browser/](https://github.com/appbaseio/appbase-js/tree/master/browser) directory); compatible with [elasticsearch.js](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html).
 
+An up-to-date documentation for Node.JS API is available at http://docs.appbase.io/scalr/javascript/nodejs-intro.html.
+
 ## Quick Example
 
 Working code snippets where each step builds on the previous ones.
