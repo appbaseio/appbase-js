@@ -1,7 +1,11 @@
+var helper = require('../helpers');
 var deleteService = function deleteService(client, args) {
 	this.args = args
 
-	var valid = this.validate()
+	var valid = helper.validate(args,{
+		'type':'string',
+		'id':'string'
+	});
 	if(valid !== true) {
 		throw valid
 		return
@@ -20,25 +24,5 @@ var deleteService = function deleteService(client, args) {
 	})
 }
 
-deleteService.prototype.validate = function validate() {
-	var invalid = []
-	if(typeof this.args.type !== 'string' || this.args.type === '') {
-		invalid.push('type')
-	}
-	if(typeof this.args.id !== 'string' || this.args.type === '') {
-		invalid.push('id')
-	}
-
-	var missing = ''
-	for(var i=0;i<invalid.length;i++) {
-		missing += (invalid[i] + ', ')
-	}
-
-	if(invalid.length > 0) {
-		return new Error('fields missing: ' + missing)
-	}
-
-	return true
-}
 
 module.exports = deleteService
