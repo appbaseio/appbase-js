@@ -1,9 +1,13 @@
 'use strict';
 
+var helper = require('../helpers');
 var searchService = function searchService(client, args) {
 	this.args = args;
 
-	var valid = this.validate();
+	var valid = helper.validate(args, {
+		'body': 'object'
+	});
+
 	if (valid !== true) {
 		throw valid;
 		return;
@@ -26,24 +30,6 @@ var searchService = function searchService(client, args) {
 		params: args,
 		body: body
 	});
-};
-
-searchService.prototype.validate = function validate() {
-	var invalid = [];
-	if (typeof this.args.body !== 'object' || this.args.body === null) {
-		invalid.push('body');
-	}
-
-	var missing = '';
-	for (var i = 0; i < invalid.length; i++) {
-		missing += invalid[i] + ', ';
-	}
-
-	if (invalid.length > 0) {
-		return new Error('fields missing: ' + missing);
-	}
-
-	return true;
 };
 
 module.exports = searchService;

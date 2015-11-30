@@ -8,9 +8,9 @@ var bulkTest = require('./bulk_test.js')
 var streamDocumentTests = require('./stream_document_test.js')
 var streamSearchTests = require('./stream_search_test.js')
 var getTypesTest = require('./get_types_test.js')
-
+var helpers = require("../src/helpers");
 describe('Appbase', function() {
-	this.timeout(5000)
+	this.timeout(10000)
 
 	var client, streamingClient
 
@@ -72,5 +72,22 @@ describe('Appbase', function() {
 		it('should receive an array of types', function(done) {
 			getTypesTest.getAllTypes(streamingClient, done)
 		})
-	})
-})
+	});
+
+	describe('#helpers',function(){
+		it('validate() : should check for body and type',function(done){
+			var mock = {
+    'body':{test:'test'},
+    'type':"test"
+			};
+
+			var e = helpers.validate(mock,{'body':'object','type':'string'});
+			if(e !== true){
+				done(e);
+			}
+			else{
+				done();
+			}
+		})
+});
+});
