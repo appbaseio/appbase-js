@@ -1,6 +1,7 @@
 'use strict';
 
-var helper = require('../helpers');
+var helpers = require('../helpers');
+
 var updateService = function updateService(client, args) {
 	this.args = args;
 

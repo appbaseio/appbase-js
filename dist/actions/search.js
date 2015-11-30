@@ -1,10 +1,11 @@
 'use strict';
 
-var helper = require('../helpers');
+var helpers = require('../helpers');
+
 var searchService = function searchService(client, args) {
 	this.args = args;
 
-	var valid = helper.validate(args, {
+	var valid = helpers.validate(args, {
 		'body': 'object'
 	});
 

@@ -72,22 +72,21 @@ describe('Appbase', function() {
 		it('should receive an array of types', function(done) {
 			getTypesTest.getAllTypes(streamingClient, done)
 		})
-	});
+	})
 
 	describe('#helpers',function(){
 		it('validate() : should check for body and type',function(done){
 			var mock = {
-    'body':{test:'test'},
-    'type':"test"
-			};
-
-			var e = helpers.validate(mock,{'body':'object','type':'string'});
-			if(e !== true){
-				done(e);
+			    'body': { test: 'test' },
+			    'type': "test"
 			}
-			else{
-				done();
+
+			var e = helpers.validate(mock,{ 'body': 'object', 'type': 'string' })
+			if(e !== true) {
+				done(e)
+			} else {
+				done()
 			}
 		})
-});
-});
+	})
+})

@@ -1,11 +1,11 @@
-var helper = require('../helpers');
+var helpers = require('../helpers')
 
 var bulkService = function bulkService(client, args) {
 	this.args = args
 
-	var valid = helper.validate(args,{
-		'body':'object'
-	});
+	var valid = helpers.validate(args, {
+		'body': 'object'
+	})
 	if(valid !== true) {
 		throw valid
 		return

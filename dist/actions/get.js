@@ -1,10 +1,11 @@
 'use strict';
 
-var helper = require('../helpers');
+var helpers = require('../helpers');
+
 var getService = function getService(client, args) {
 	this.args = args;
 
-	var valid = helper.validate(args, {
+	var valid = helpers.validate(args, {
 		'type': 'string',
 		'id': 'string'
 	});

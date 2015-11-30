@@ -1,12 +1,13 @@
-var helper = require('../helpers');
+var helpers = require('../helpers')
+
 var updateService = function updateService(client, args) {
 	this.args = args
 
-	var valid = helper.validate(args,{
-		'type':'string',
-		'id':'string',
-		'body':'object'
-	});
+	var valid = helper.validate(args, {
+		'type': 'string',
+		'id': 'string',
+		'body': 'object'
+	})
 	if(valid !== true) {
 		throw valid
 		return
