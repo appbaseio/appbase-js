@@ -31,11 +31,23 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			'browser/appbase.min.js': ['browser/appbase.js']
+		},
+		mochaTest: {
+			test: {
+				options: {
+					reporter: 'spec'
+				},
+				src: ['test/**/*.js']
+			}
 		}
 	})
+
 	grunt.loadNpmTasks('grunt-babel')
 	grunt.loadNpmTasks('grunt-contrib-watch')
 	grunt.loadNpmTasks('grunt-browserify')
 	grunt.loadNpmTasks('grunt-contrib-uglify')
+	grunt.loadNpmTasks('grunt-mocha-test')
+
 	grunt.registerTask('default', [ 'babel', 'browserify', 'uglify' ])
+	grunt.registerTask('test', [ 'mochaTest' ])
 }
