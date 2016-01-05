@@ -1,6 +1,6 @@
 {
   "name": "appbase-js",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Appbase.io streaming client lib for Javascript",
   "main": "dist/appbase.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "guid": "0.0.12",
     "hyperquest": "^1.2.0",
     "immutable": "^3.7.5",
+    "murmur": "0.0.2",
     "through2": "^2.0.0",
     "ws": "^0.8.0"
   },
