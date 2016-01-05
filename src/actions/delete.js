@@ -1,8 +1,6 @@
 var helpers = require('../helpers')
 
 var deleteService = function deleteService(client, args) {
-	this.args = args
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'id': 'string'

@@ -11,7 +11,7 @@ var deleteService = require('./actions/delete.js')
 var bulkService = require('./actions/bulk.js')
 var searchService = require('./actions/search.js')
 var getTypesService = require('./actions/get_types.js')
-var webhookServices = require('./actions/webhook.js')
+var addWebhookService = require('./actions/webhook.js')
 
 var streamDocumentService = require('./actions/stream_document.js')
 var streamSearchService = require('./actions/stream_search.js')
@@ -69,8 +69,6 @@ var appbaseClient = function appbaseClient(args) {
 	client.getStream = this.getStream.bind(this)
 	client.searchStream = this.searchStream.bind(this)
 	client.getTypes = this.getTypes.bind(this)
-	client.addWebhook = this.addWebhook.bind(this)
-	client.deleteWebhook = this.deleteWebhook.bind(this)
 
 	return client
 }
@@ -112,19 +110,15 @@ appbaseClient.prototype.getStream = function getStream(args) {
 }
 
 appbaseClient.prototype.searchStream = function searchStream(args) {
-	return new streamSearchService(this, args)
+	if(args.url !== undefined || args.webhook !== undefined) {
+		return new addWebhookService(this, args)
+	} else {
+		return new streamSearchService(this, args)
+	}
 }
 
 appbaseClient.prototype.getTypes = function getTypes() {
 	return new getTypesService(this)
-}
-
-appbaseClient.prototype.addWebhook = function addWebhook(args) {
-	return new webhookServices.addWebhook(this, args)
-}
-
-appbaseClient.prototype.deleteWebhook = function deleteWebhook(args) {
-	return new webhookServices.deleteWebhook(this, args)
 }
 
 if(typeof window !== 'undefined') {

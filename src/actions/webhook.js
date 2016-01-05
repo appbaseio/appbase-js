@@ -2,9 +2,7 @@ var murmur = require('murmur')
 
 var helpers = require('../helpers')
 
-var webhookServices = {}
-
-webhookServices.addWebhook = function addWebhook(client, args) {
+var addWebhookService = function addWebhook(client, args) {
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'query': 'object'
@@ -14,86 +12,81 @@ webhookServices.addWebhook = function addWebhook(client, args) {
 		return
 	}
 
-	var webhooks = []
-	var query = args.query
-	var id = args.id
-	var type = args.type
+	this.webhooks = []
+	this.client = client
+	this.query = args.query
+	this.type = args.type
 
 	if(typeof args.url === 'string') {
 		var webhook = {}
 		webhook.url = args.url
 		webhook.method = 'GET'
-		webhooks.push(webhook)
+		this.webhooks.push(webhook)
 	} else if(args.webhook.constructor === Array) {
-		webhooks = args.webhook
+		this.webhooks = args.webhook
 	} else if(args.webhook === Object(args.webhook)) {
-		webhooks.push(args.webhook)
+		this.webhooks.push(args.webhook)
 	} else {
 		throw new Error('fields missing: one of webhook or url fields is required')
 		return
 	}
 
-	delete args.url
-	delete args.webhook
-	delete args.query
-	delete args.id
-	delete args.type
+	this.populateBody()
 
-	var body = {}
-	body.webhooks = webhooks
-	body.query = query
-	body.type = type
+	var hash = murmur.hash128(JSON.stringify(this.query)).hex()
+	var path = '.percolator/webhooks-0-' + this.type + '-0-' + hash
 
-	var path = '.percolator/webhooks-0-' + type + '-0-'
-	if(id) {
-		path = path + id
-	} else {
-		var hash = murmur.hash128(JSON.stringify(query)).hex()
-		path = path + hash
-	}
+	this.path = path
 
-	return client.performStreamingRequest({
-		method: 'POST',
-		path: path,
-		params: args,
-		body: body
-	})
+	return this.performRequest('POST') 
 }
 
-webhookServices.deleteWebhook = function deleteWebhook(client, args) {
-	var valid = helpers.validate(args, {
-		'type': 'string'
+addWebhookService.prototype.populateBody = function populateBody() {
+	this.body = {}
+	this.body.webhooks = this.webhooks
+	this.body.query = this.query
+	this.body.type = this.type
+}
+
+addWebhookService.prototype.performRequest = function performRequest(method){
+	var res = this.client.performStreamingRequest({
+		method: method,
+		path: this.path,
+		body: this.body
 	})
-	if(valid !== true) {
-		throw valid
+
+	res.change = this.change.bind(this)
+	res.stop = this.stop.bind(this)
+
+	return res
+}
+
+addWebhookService.prototype.change = function change(args){
+	this.webhooks = []
+
+	if(typeof args === 'string') {
+		var webhook = {}
+		webhook.url = args
+		webhook.method = 'GET'
+		this.webhooks.push(webhook)
+	} else if(args.constructor === Array) {
+		this.webhooks = args
+	} else if(args === Object(args)) {
+		this.webhooks.push(args)
+	} else {
+		throw new Error('fields missing: one of webhook or url fields is required')
 		return
 	}
 
-	var id = args.id
-	var type = args.type
-	var query = args.query
+	this.populateBody()
 
-	if( !(typeof id === 'string' || query === Object(query)) ) {
-		throw new Error('fields missing: id or query required')
-	}
-
-	var path = '.percolator/webhooks-0-' + type + '-0-'
-	if(id) {
-		path = path + id
-	} else {
-		var hash = murmur.hash128(JSON.stringify(query)).hex()
-		path = path + hash
-	}
-
-	delete args.query
-	delete args.id
-	delete args.type
-
-	return client.performStreamingRequest({
-		method: 'DELETE',
-		path: path,
-		params: args
-	})
+	return this.performRequest('POST')
 }
 
-module.exports=webhookServices
+addWebhookService.prototype.stop = function stop(){
+	delete this.body
+
+	return this.performRequest('DELETE')
+}
+
+module.exports=addWebhookService

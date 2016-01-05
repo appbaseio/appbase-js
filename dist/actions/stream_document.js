@@ -3,8 +3,6 @@
 var helpers = require('../helpers');
 
 var streamDocumentService = function streamDocumentService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'id': 'string'

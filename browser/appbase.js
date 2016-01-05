@@ -4,8 +4,6 @@
 var helpers = require('../helpers');
 
 var bulkService = function bulkService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'body': 'object'
 	});
@@ -41,8 +39,6 @@ module.exports = bulkService;
 var helpers = require('../helpers');
 
 var deleteService = function deleteService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'id': 'string'
@@ -73,8 +69,6 @@ module.exports = deleteService;
 var helpers = require('../helpers');
 
 var getService = function getService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'id': 'string'
@@ -131,8 +125,6 @@ module.exports = getTypesService;
 var helpers = require('../helpers');
 
 var indexService = function indexService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'body': 'object'
@@ -171,8 +163,6 @@ module.exports = indexService;
 var helpers = require('../helpers');
 
 var searchService = function searchService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'body': 'object'
 	});
@@ -209,8 +199,6 @@ module.exports = searchService;
 var helpers = require('../helpers');
 
 var streamDocumentService = function streamDocumentService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'id': 'string'
@@ -247,8 +235,6 @@ module.exports = streamDocumentService;
 var helpers = require('../helpers');
 
 var streamSearchService = function streamSearchService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'body': 'object'
@@ -263,12 +249,7 @@ var streamSearchService = function streamSearchService(client, args) {
 	delete args.body;
 	delete args.stream;
 
-	if (args.stream === true || args.stream === 'true') {
-		args.stream = 'true';
-	} else {
-		delete args.stream;
-		args.streamonly = 'true';
-	}
+	args.streamonly = 'true';
 
 	return client.performWsRequest({
 		method: 'POST',
@@ -286,8 +267,6 @@ module.exports = streamSearchService;
 var helpers = require('../helpers');
 
 var updateService = function updateService(client, args) {
-	this.args = args;
-
 	var valid = helper.validate(args, {
 		'type': 'string',
 		'id': 'string',
@@ -323,9 +302,7 @@ var murmur = require('murmur');
 
 var helpers = require('../helpers');
 
-var webhookServices = {};
-
-webhookServices.addWebhook = function addWebhook(client, args) {
+var addWebhookService = function addWebhook(client, args) {
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'query': 'object'
@@ -335,89 +312,84 @@ webhookServices.addWebhook = function addWebhook(client, args) {
 		return;
 	}
 
-	var webhooks = [];
-	var query = args.query;
-	var id = args.id;
-	var type = args.type;
+	this.webhooks = [];
+	this.client = client;
+	this.query = args.query;
+	this.type = args.type;
 
 	if (typeof args.url === 'string') {
 		var webhook = {};
 		webhook.url = args.url;
 		webhook.method = 'GET';
-		webhooks.push(webhook);
+		this.webhooks.push(webhook);
 	} else if (args.webhook.constructor === Array) {
-		webhooks = args.webhook;
+		this.webhooks = args.webhook;
 	} else if (args.webhook === Object(args.webhook)) {
-		webhooks.push(args.webhook);
+		this.webhooks.push(args.webhook);
 	} else {
 		throw new Error('fields missing: one of webhook or url fields is required');
 		return;
 	}
 
-	delete args.url;
-	delete args.webhook;
-	delete args.query;
-	delete args.id;
-	delete args.type;
+	this.populateBody();
 
-	var body = {};
-	body.webhooks = webhooks;
-	body.query = query;
-	body.type = type;
+	var hash = murmur.hash128(JSON.stringify(this.query)).hex();
+	var path = '.percolator/webhooks-0-' + this.type + '-0-' + hash;
 
-	var path = '.percolator/webhooks-0-' + type + '-0-';
-	if (id) {
-		path = path + id;
-	} else {
-		var hash = murmur.hash128(JSON.stringify(query)).hex();
-		path = path + hash;
-	}
+	this.path = path;
 
-	return client.performStreamingRequest({
-		method: 'POST',
-		path: path,
-		params: args,
-		body: body
-	});
+	return this.performRequest('POST');
 };
 
-webhookServices.deleteWebhook = function deleteWebhook(client, args) {
-	var valid = helpers.validate(args, {
-		'type': 'string'
+addWebhookService.prototype.populateBody = function populateBody() {
+	this.body = {};
+	this.body.webhooks = this.webhooks;
+	this.body.query = this.query;
+	this.body.type = this.type;
+};
+
+addWebhookService.prototype.performRequest = function performRequest(method) {
+	var res = this.client.performStreamingRequest({
+		method: method,
+		path: this.path,
+		body: this.body
 	});
-	if (valid !== true) {
-		throw valid;
+
+	res.change = this.change.bind(this);
+	res.stop = this.stop.bind(this);
+
+	return res;
+};
+
+addWebhookService.prototype.change = function change(args) {
+	this.webhooks = [];
+
+	if (typeof args === 'string') {
+		var webhook = {};
+		webhook.url = args;
+		webhook.method = 'GET';
+		this.webhooks.push(webhook);
+	} else if (args.constructor === Array) {
+		this.webhooks = args;
+	} else if (args === Object(args)) {
+		this.webhooks.push(args);
+	} else {
+		throw new Error('fields missing: one of webhook or url fields is required');
 		return;
 	}
 
-	var id = args.id;
-	var type = args.type;
-	var query = args.query;
+	this.populateBody();
 
-	if (!(typeof id === 'string' || query === Object(query))) {
-		throw new Error('fields missing: id or query required');
-	}
-
-	var path = '.percolator/webhooks-0-' + type + '-0-';
-	if (id) {
-		path = path + id;
-	} else {
-		var hash = murmur.hash128(JSON.stringify(query)).hex();
-		path = path + hash;
-	}
-
-	delete args.query;
-	delete args.id;
-	delete args.type;
-
-	return client.performStreamingRequest({
-		method: 'DELETE',
-		path: path,
-		params: args
-	});
+	return this.performRequest('POST');
 };
 
-module.exports = webhookServices;
+addWebhookService.prototype.stop = function stop() {
+	delete this.body;
+
+	return this.performRequest('DELETE');
+};
+
+module.exports = addWebhookService;
 
 },{"../helpers":13,"murmur":78}],11:[function(require,module,exports){
 'use strict';
@@ -435,7 +407,7 @@ var deleteService = require('./actions/delete.js');
 var bulkService = require('./actions/bulk.js');
 var searchService = require('./actions/search.js');
 var getTypesService = require('./actions/get_types.js');
-var webhookServices = require('./actions/webhook.js');
+var addWebhookService = require('./actions/webhook.js');
 
 var streamDocumentService = require('./actions/stream_document.js');
 var streamSearchService = require('./actions/stream_search.js');
@@ -493,8 +465,6 @@ var appbaseClient = function appbaseClient(args) {
 	client.getStream = this.getStream.bind(this);
 	client.searchStream = this.searchStream.bind(this);
 	client.getTypes = this.getTypes.bind(this);
-	client.addWebhook = this.addWebhook.bind(this);
-	client.deleteWebhook = this.deleteWebhook.bind(this);
 
 	return client;
 };
@@ -536,19 +506,15 @@ appbaseClient.prototype.getStream = function getStream(args) {
 };
 
 appbaseClient.prototype.searchStream = function searchStream(args) {
-	return new streamSearchService(this, args);
+	if (args.url !== undefined || args.webhook !== undefined) {
+		return new addWebhookService(this, args);
+	} else {
+		return new streamSearchService(this, args);
+	}
 };
 
 appbaseClient.prototype.getTypes = function getTypes() {
 	return new getTypesService(this);
-};
-
-appbaseClient.prototype.addWebhook = function addWebhook(args) {
-	return new webhookServices.addWebhook(this, args);
-};
-
-appbaseClient.prototype.deleteWebhook = function deleteWebhook(args) {
-	return new webhookServices.deleteWebhook(this, args);
 };
 
 if (typeof window !== 'undefined') {

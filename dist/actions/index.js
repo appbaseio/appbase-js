@@ -3,8 +3,6 @@
 var helpers = require('../helpers');
 
 var indexService = function indexService(client, args) {
-	this.args = args;
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'body': 'object'

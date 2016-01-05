@@ -1,8 +1,6 @@
 var helpers = require('../helpers')
 
 var streamSearchService = function streamSearchService(client, args) {
-	this.args = args
-
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'body': 'object'
@@ -17,12 +15,7 @@ var streamSearchService = function streamSearchService(client, args) {
 	delete args.body
 	delete args.stream
 
-	if(args.stream === true || args.stream === 'true') {
-		args.stream = 'true'
-	} else {
-		delete args.stream
-		args.streamonly = 'true'
-	}
+	args.streamonly = 'true'
 
 	return client.performWsRequest({
 		method: 'POST',
