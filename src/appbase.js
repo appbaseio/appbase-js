@@ -68,6 +68,7 @@ var appbaseClient = function appbaseClient(args) {
 	client.search = this.search.bind(this)
 	client.getStream = this.getStream.bind(this)
 	client.searchStream = this.searchStream.bind(this)
+	client.searchStreamToURL = this.searchStreamToURL.bind(this)
 	client.getTypes = this.getTypes.bind(this)
 
 	return client
@@ -110,11 +111,11 @@ appbaseClient.prototype.getStream = function getStream(args) {
 }
 
 appbaseClient.prototype.searchStream = function searchStream(args) {
-	if(args.url !== undefined || args.webhook !== undefined) {
-		return new addWebhookService(this, args)
-	} else {
-		return new streamSearchService(this, args)
-	}
+	return new streamSearchService(this, args)
+}
+
+appbaseClient.prototype.searchStreamToURL = function searchStreamToURL(args, webhook) {
+	return new addWebhookService(this, args, webhook)
 }
 
 appbaseClient.prototype.getTypes = function getTypes() {

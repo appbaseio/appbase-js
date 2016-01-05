@@ -302,7 +302,7 @@ var murmur = require('murmur');
 
 var helpers = require('../helpers');
 
-var addWebhookService = function addWebhook(client, args) {
+var addWebhookService = function addWebhook(client, args, webhook) {
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'query': 'object'
@@ -317,17 +317,17 @@ var addWebhookService = function addWebhook(client, args) {
 	this.query = args.query;
 	this.type = args.type;
 
-	if (typeof args.url === 'string') {
-		var webhook = {};
-		webhook.url = args.url;
-		webhook.method = 'GET';
+	if (typeof webhook === 'string') {
+		var webhook_obj = {};
+		webhook_obj.url = webhook;
+		webhook_obj.method = 'GET';
+		this.webhooks.push(webhook_obj);
+	} else if (webhook.constructor === Array) {
+		this.webhooks = webhook;
+	} else if (webhook === Object(webhook)) {
 		this.webhooks.push(webhook);
-	} else if (args.webhook.constructor === Array) {
-		this.webhooks = args.webhook;
-	} else if (args.webhook === Object(args.webhook)) {
-		this.webhooks.push(args.webhook);
 	} else {
-		throw new Error('fields missing: one of webhook or url fields is required');
+		throw new Error('fields missing: second argument(webhook) is necessary');
 		return;
 	}
 
@@ -464,6 +464,7 @@ var appbaseClient = function appbaseClient(args) {
 	client.search = this.search.bind(this);
 	client.getStream = this.getStream.bind(this);
 	client.searchStream = this.searchStream.bind(this);
+	client.searchStreamToURL = this.searchStreamToURL.bind(this);
 	client.getTypes = this.getTypes.bind(this);
 
 	return client;
@@ -506,11 +507,11 @@ appbaseClient.prototype.getStream = function getStream(args) {
 };
 
 appbaseClient.prototype.searchStream = function searchStream(args) {
-	if (args.url !== undefined || args.webhook !== undefined) {
-		return new addWebhookService(this, args);
-	} else {
-		return new streamSearchService(this, args);
-	}
+	return new streamSearchService(this, args);
+};
+
+appbaseClient.prototype.searchStreamToURL = function searchStreamToURL(args, webhook) {
+	return new addWebhookService(this, args, webhook);
 };
 
 appbaseClient.prototype.getTypes = function getTypes() {

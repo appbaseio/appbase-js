@@ -2,7 +2,7 @@ var murmur = require('murmur')
 
 var helpers = require('../helpers')
 
-var addWebhookService = function addWebhook(client, args) {
+var addWebhookService = function addWebhook(client, args, webhook) {
 	var valid = helpers.validate(args, {
 		'type': 'string',
 		'query': 'object'
@@ -17,17 +17,17 @@ var addWebhookService = function addWebhook(client, args) {
 	this.query = args.query
 	this.type = args.type
 
-	if(typeof args.url === 'string') {
-		var webhook = {}
-		webhook.url = args.url
-		webhook.method = 'GET'
+	if(typeof webhook === 'string') {
+		var webhook_obj = {}
+		webhook_obj.url = webhook
+		webhook_obj.method = 'GET'
+		this.webhooks.push(webhook_obj)
+	} else if(webhook.constructor === Array) {
+		this.webhooks = webhook
+	} else if(webhook === Object(webhook)) {
 		this.webhooks.push(webhook)
-	} else if(args.webhook.constructor === Array) {
-		this.webhooks = args.webhook
-	} else if(args.webhook === Object(args.webhook)) {
-		this.webhooks.push(args.webhook)
 	} else {
-		throw new Error('fields missing: one of webhook or url fields is required')
+		throw new Error('fields missing: second argument(webhook) is necessary')
 		return
 	}
 
