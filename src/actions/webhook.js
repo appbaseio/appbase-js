@@ -5,6 +5,14 @@ var helpers = require('../helpers')
 var addWebhookService = function addWebhook(client, args, webhook) {
 	var valid = helpers.validate(args, {
 		'type': 'string',
+		'body': 'object'
+	})
+	if(valid !== true) {
+		throw valid
+		return
+	}
+
+	valid = helpers.validate(args.body, {
 		'query': 'object'
 	})
 	if(valid !== true) {
@@ -14,7 +22,7 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 
 	this.webhooks = []
 	this.client = client
-	this.query = args.query
+	this.query = args.body.query
 	this.type = args.type
 
 	if(typeof webhook === 'string') {
