@@ -75,7 +75,7 @@ addWebhookService.prototype.change = function change(args){
 	if(typeof args === 'string') {
 		var webhook = {}
 		webhook.url = args
-		webhook.method = 'GET'
+		webhook.method = 'POST'
 		this.webhooks.push(webhook)
 	} else if(args.constructor === Array) {
 		this.webhooks = args
