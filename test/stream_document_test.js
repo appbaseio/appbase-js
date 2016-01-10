@@ -5,7 +5,7 @@ var streamDocumentTests = {}
 streamDocumentTests.streamOneDocument = function streamOneDocument(client, streamingClient, done) {
 	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
 	client.index({
-		index: 'createnewtestapp01',
+		index: 'es2test1',
 		type: 'tweet',
 		id: '1',
 		body: tweet
@@ -42,7 +42,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 		})
 
 		client.index({
-			index: 'createnewtestapp01',
+			index: 'es2test1',
 			type: 'tweet',
 			id: '1',
 			body: tweet
@@ -58,7 +58,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(client, streamingClient, done) {
 	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
 	client.index({
-		index: 'createnewtestapp01',
+		index: 'es2test1',
 		type: 'tweet',
 		id: '1',
 		body: tweet
@@ -82,7 +82,7 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 		})
 
 		client.index({
-			index: 'createnewtestapp01',
+			index: 'es2test1',
 			type: 'tweet',
 			id: '1',
 			body: tweet
@@ -114,7 +114,7 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(client, streamingClient, done) {
 	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
 	client.index({
-		index: 'createnewtestapp01',
+		index: 'es2test1',
 		type: 'tweet',
 		id: '1',
 		body: tweet
@@ -138,7 +138,7 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 		responseStream.on('data', function(res) {
 			if(first) {
 				client.index({
-					index: 'createnewtestapp01',
+					index: 'es2test1',
 					type: 'tweet',
 					id: '1',
 					body: tweet
@@ -160,7 +160,7 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 		})
 
 		client.index({
-			index: 'createnewtestapp01',
+			index: 'es2test1',
 			type: 'tweet',
 			id: '1',
 			body: tweet

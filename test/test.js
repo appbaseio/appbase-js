@@ -16,13 +16,13 @@ describe('Appbase', function() {
 
 	before(function() {
 		client = new elasticsearch.Client({
-			host: 'http://RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f@scalr.api.appbase.io',
+			host: 'http://qQo5ks1e3:8ebad324-f93a-48ca-aca8-d57d2e71779c@scalr.api.appbase.io',
 			apiVersion: '1.6'
 		});
 
 		streamingClient = new appbase({
-			url: 'http://RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f@scalr.api.appbase.io',
-			appname: 'createnewtestapp01'
+			url: 'http://qQo5ks1e3:8ebad324-f93a-48ca-aca8-d57d2e71779c@scalr.api.appbase.io',
+			appname: 'es2test1'
 		})
 	})
 
