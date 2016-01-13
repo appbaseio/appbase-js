@@ -6,11 +6,15 @@ var helpers = require('../helpers');
 
 var addWebhookService = function addWebhook(client, args, webhook) {
 	var valid = helpers.validate(args, {
-		'type': 'string',
 		'body': 'object'
 	});
 	if (valid !== true) {
 		throw valid;
+		return;
+	}
+
+	if (args.type === undefined || !(typeof args.type === 'string' || args.type.constructor === Array) || (args.type === '' || args.type.length === 0)) {
+		throw new Error("fields missing: type");
 		return;
 	}
 
@@ -22,10 +26,15 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 		return;
 	}
 
+	if (args.type.constructor === Array) {
+		this.type = args.type.join();
+	} else {
+		this.type = args.type;
+	}
+
 	this.webhooks = [];
 	this.client = client;
 	this.query = args.body.query;
-	this.type = args.type;
 
 	if (typeof webhook === 'string') {
 		var webhook_obj = {};
@@ -77,7 +86,7 @@ addWebhookService.prototype.change = function change(args) {
 	if (typeof args === 'string') {
 		var webhook = {};
 		webhook.url = args;
-		webhook.method = 'GET';
+		webhook.method = 'POST';
 		this.webhooks.push(webhook);
 	} else if (args.constructor === Array) {
 		this.webhooks = args;

@@ -6,12 +6,18 @@ var searchService = function searchService(client, args) {
 	var valid = helpers.validate(args, {
 		'body': 'object'
 	});
-
 	if (valid !== true) {
 		throw valid;
 		return;
 	}
-	var type = args.type;
+
+	var type;
+	if (args.type.constructor === Array) {
+		type = args.type.join();
+	} else {
+		type = args.type;
+	}
+
 	var body = args.body;
 	delete args.type;
 	delete args.body;
