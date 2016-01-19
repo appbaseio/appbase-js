@@ -343,9 +343,11 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 	}
 
 	if (args.type.constructor === Array) {
-		this.type = args.type.join();
+		this.type = args.type;
+		this.type_string = args.type.join();
 	} else {
 		this.type = [args.type];
+		this.type_string = args.type;
 	}
 
 	this.webhooks = [];
@@ -369,7 +371,7 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 	this.populateBody();
 
 	var hash = murmur.hash128(JSON.stringify(this.query)).hex();
-	var path = '.percolator/webhooks-0-' + this.type + '-0-' + hash;
+	var path = '.percolator/webhooks-0-' + this.type_string + '-0-' + hash;
 
 	this.path = path;
 
