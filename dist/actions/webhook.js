@@ -29,7 +29,7 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 	if (args.type.constructor === Array) {
 		this.type = args.type.join();
 	} else {
-		this.type = args.type;
+		this.type = [args.type];
 	}
 
 	this.webhooks = [];
