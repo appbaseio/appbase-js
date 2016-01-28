@@ -16,12 +16,12 @@ describe('Appbase', function() {
 
 	before(function() {
 		client = new elasticsearch.Client({
-			host: 'http://qQo5ks1e3:8ebad324-f93a-48ca-aca8-d57d2e71779c@scalr.api.appbase.io',
+			host: 'http://QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb@scalr.api.appbase.io',
 			apiVersion: '1.6'
 		});
 
 		streamingClient = new appbase({
-			url: 'http://qQo5ks1e3:8ebad324-f93a-48ca-aca8-d57d2e71779c@scalr.api.appbase.io',
+			url: 'http://QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb@scalr.api.appbase.io',
 			appname: 'es2test1'
 		})
 	})
@@ -50,7 +50,7 @@ describe('Appbase', function() {
 		})
 	})
 
-	describe('#streamDocument()', function () {
+	describe('#streamDocument()', function() {
 		it('should receive event when new document is inserted', function(done) {
 			streamDocumentTests.streamOneDocument(client, streamingClient, done)
 		})
@@ -62,27 +62,32 @@ describe('Appbase', function() {
 		})
 	})
 
-	describe('#streamSearch()', function () {
+	describe('#streamSearch()', function() {
 		it('should receive event when new document is inserted', function(done) {
 			streamSearchTests.streamMatchAll(client, streamingClient, done)
 		})
 	})
 
-	describe('#getTypes()', function () {
+	describe('#getTypes()', function() {
 		it('should receive an array of types', function(done) {
 			getTypesTest.getAllTypes(streamingClient, done)
 		})
 	})
 
-	describe('#helpers',function(){
-		it('validate() : should check for body and type',function(done){
+	describe('#helpers', function() {
+		it('validate() : should check for body and type', function(done) {
 			var mock = {
-			    'body': { test: 'test' },
-			    'type': "test"
+				'body': {
+					test: 'test'
+				},
+				'type': "test"
 			}
 
-			var e = helpers.validate(mock,{ 'body': 'object', 'type': 'string' })
-			if(e !== true) {
+			var e = helpers.validate(mock, {
+				'body': 'object',
+				'type': 'string'
+			})
+			if (e !== true) {
 				done(e)
 			} else {
 				done()
