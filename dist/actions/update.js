@@ -3,7 +3,7 @@
 var helpers = require('../helpers');
 
 var updateService = function updateService(client, args) {
-	var valid = helper.validate(args, {
+	var valid = helpers.validate(args, {
 		'type': 'string',
 		'id': 'string',
 		'body': 'object'
