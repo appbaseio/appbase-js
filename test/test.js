@@ -1,4 +1,3 @@
-var elasticsearch = require('elasticsearch')
 var appbase = require('../')
 
 var indexTest = require('./index_test.js')
@@ -15,11 +14,6 @@ describe('Appbase', function() {
 	var client, streamingClient
 
 	before(function() {
-		client = new elasticsearch.Client({
-			host: 'http://QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb@scalr.api.appbase.io',
-			apiVersion: '1.6'
-		});
-
 		streamingClient = new appbase({
 			url: 'http://QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb@scalr.api.appbase.io',
 			appname: 'es2test1'
@@ -52,19 +46,19 @@ describe('Appbase', function() {
 
 	describe('#streamDocument()', function() {
 		it('should receive event when new document is inserted', function(done) {
-			streamDocumentTests.streamOneDocument(client, streamingClient, done)
+			streamDocumentTests.streamOneDocument(streamingClient, done)
 		})
 		it('should not receive initial data', function(done) {
-			streamDocumentTests.onlyStreamOneDocument(client, streamingClient, done)
+			streamDocumentTests.onlyStreamOneDocument(streamingClient, done)
 		})
 		it('should receive only one event', function(done) {
-			streamDocumentTests.stopStreamingDocument(client, streamingClient, done)
+			streamDocumentTests.stopStreamingDocument(streamingClient, done)
 		})
 	})
 
 	describe('#streamSearch()', function() {
 		it('should receive event when new document is inserted', function(done) {
-			streamSearchTests.streamMatchAll(client, streamingClient, done)
+			streamSearchTests.streamMatchAll(streamingClient, done)
 		})
 	})
 

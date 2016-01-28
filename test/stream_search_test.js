@@ -3,14 +3,16 @@ var assert = require('assert')
 var streamSearchTests = {}
 
 streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClient, done) {
-	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
-	client.index({
-		index: 'es2test1',
+	var tweet = {
+		"user": "olivere",
+		"message": "Welcome to Golang and Elasticsearch."
+	}
+	streamingClient.index({
 		type: 'tweet',
 		id: '1',
 		body: tweet
 	}, function(err, res) {
-		if(err) {
+		if (err) {
 			done(err)
 			return
 		}
@@ -25,21 +27,20 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 			}
 		})
 		responseStream.on('error', function(err) {
-			if(err) {
+			if (err) {
 				done(err)
 				return
 			}
 		})
 		responseStream.on('data', function(res) {
-			if(first) {
+			if (first) {
 				setTimeout(function() {
-					client.index({
-						index: 'es2test1',
+					streamingClient.index({
 						type: 'tweet',
 						id: '1',
 						body: tweet
 					}, function(err, res) {
-						if(err) {
+						if (err) {
 							done(err)
 							return
 						}
@@ -53,7 +54,7 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 						_id: '1',
 						_source: tweet
 					}, 'event not as expected')
-				} catch(e) {
+				} catch (e) {
 					responseStream.stop()
 					return done(e)
 				}
@@ -63,13 +64,12 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 			}
 		})
 
-		client.index({
-			index: 'es2test1',
+		streamingClient.index({
 			type: 'tweet',
 			id: '1',
 			body: tweet
 		}, function(err, res) {
-			if(err) {
+			if (err) {
 				done(err)
 				return
 			}

@@ -20,7 +20,7 @@ var streamSearchService = require('./actions/stream_search.js');
 
 var appbaseClient = function appbaseClient(args) {
 	if (!(this instanceof appbaseClient)) {
-		return new appbaseClient();
+		return new appbaseClient(args);
 	}
 
 	if (typeof args.appname !== 'string' || args.appname === '') {
@@ -77,47 +77,47 @@ var appbaseClient = function appbaseClient(args) {
 };
 
 appbaseClient.prototype.performWsRequest = function performWsRequest(args) {
-	return new wsRequest(this, args);
+	return new wsRequest(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.performStreamingRequest = function performStreamingRequest(args) {
-	return new streamingRequest(this, args);
+	return new streamingRequest(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.index = function index(args) {
-	return new indexService(this, args);
+	return new indexService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.get = function get(args) {
-	return new getService(this, args);
+	return new getService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.update = function update(args) {
-	return new updateService(this, args);
+	return new updateService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype['delete'] = function deleteDocument(args) {
-	return new deleteService(this, args);
+	return new deleteService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.bulk = function bulk(args) {
-	return new bulkService(this, args);
+	return new bulkService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.search = function search(args) {
-	return new searchService(this, args);
+	return new searchService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.getStream = function getStream(args) {
-	return new streamDocumentService(this, args);
+	return new streamDocumentService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.searchStream = function searchStream(args) {
-	return new streamSearchService(this, args);
+	return new streamSearchService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.searchStreamToURL = function searchStreamToURL(args, webhook) {
-	return new addWebhookService(this, args, webhook);
+	return new addWebhookService(this, JSON.parse(JSON.stringify(args)), JSON.parse(JSON.stringify(webhook)));
 };
 
 appbaseClient.prototype.getTypes = function getTypes() {

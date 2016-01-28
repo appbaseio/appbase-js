@@ -3,14 +3,16 @@ var assert = require('assert')
 var streamDocumentTests = {}
 
 streamDocumentTests.streamOneDocument = function streamOneDocument(client, streamingClient, done) {
-	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
-	client.index({
-		index: 'es2test1',
+	var tweet = {
+		"user": "olivere",
+		"message": "Welcome to Golang and Elasticsearch."
+	}
+	streamingClient.index({
 		type: 'tweet',
 		id: '1',
 		body: tweet
 	}, function(err, res) {
-		if(err) {
+		if (err) {
 			done(err)
 			return
 		}
@@ -20,7 +22,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 			id: '1'
 		})
 		responseStream.on('error', function(err) {
-			if(err) {
+			if (err) {
 				done(err)
 				return
 			}
@@ -32,7 +34,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 					_id: '1',
 					_source: tweet
 				}, 'event not as expected')
-			} catch(e) {
+			} catch (e) {
 				responseStream.stop()
 				return done(e)
 			}
@@ -41,13 +43,12 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 			done()
 		})
 
-		client.index({
-			index: 'es2test1',
+		streamingClient.index({
 			type: 'tweet',
 			id: '1',
 			body: tweet
 		}, function(err, res) {
-			if(err) {
+			if (err) {
 				done(err)
 				return
 			}
@@ -56,14 +57,16 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 }
 
 streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(client, streamingClient, done) {
-	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
-	client.index({
-		index: 'es2test1',
+	var tweet = {
+		"user": "olivere",
+		"message": "Welcome to Golang and Elasticsearch."
+	}
+	streamingClient.index({
 		type: 'tweet',
 		id: '1',
 		body: tweet
 	}, function(err, res) {
-		if(err) {
+		if (err) {
 			done(err)
 			return
 		}
@@ -75,19 +78,18 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 			streamonly: true
 		})
 		responseStream.on('error', function(err) {
-			if(err) {
+			if (err) {
 				done(err)
 				return
 			}
 		})
 
-		client.index({
-			index: 'es2test1',
+		streamingClient.index({
 			type: 'tweet',
 			id: '1',
 			body: tweet
 		}, function(err, res) {
-			if(err) {
+			if (err) {
 				done(err)
 				return
 			}
@@ -100,7 +102,7 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 					_id: '1',
 					_source: tweet
 				}, 'event not as expected')
-			} catch(e) {
+			} catch (e) {
 				responseStream.stop()
 				return done(e)
 			}
@@ -112,14 +114,16 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 }
 
 streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(client, streamingClient, done) {
-	var tweet = {"user": "olivere", "message": "Welcome to Golang and Elasticsearch."}
-	client.index({
-		index: 'es2test1',
+	var tweet = {
+		"user": "olivere",
+		"message": "Welcome to Golang and Elasticsearch."
+	}
+	streamingClient.index({
 		type: 'tweet',
 		id: '1',
 		body: tweet
 	}, function(err, res) {
-		if(err) {
+		if (err) {
 			done(err)
 			return
 		}
@@ -130,26 +134,25 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 			id: '1'
 		})
 		responseStream.on('error', function(err) {
-			if(err) {
+			if (err) {
 				done(err)
 				return
 			}
 		})
 		responseStream.on('data', function(res) {
-			if(first) {
-				client.index({
-					index: 'es2test1',
+			if (first) {
+				streamingClient.index({
 					type: 'tweet',
 					id: '1',
 					body: tweet
 				}, function(err, res) {
-					if(err) {
+					if (err) {
 						done(err)
 						return
 					}
 				})
 				responseStream.stop()
-				var waitForEvent = setTimeout(function () {
+				var waitForEvent = setTimeout(function() {
 					done();
 				}, 1000);
 				first = false
@@ -159,13 +162,12 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 			}
 		})
 
-		client.index({
-			index: 'es2test1',
+		streamingClient.index({
 			type: 'tweet',
 			id: '1',
 			body: tweet
 		}, function(err, res) {
-			if(err) {
+			if (err) {
 				done(err)
 				return
 			}
