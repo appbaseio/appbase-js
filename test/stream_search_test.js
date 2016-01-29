@@ -2,7 +2,7 @@ var assert = require('assert')
 
 var streamSearchTests = {}
 
-streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClient, done) {
+streamSearchTests.streamMatchAll = function streamMatchAll(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -11,12 +11,7 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 		type: 'tweet',
 		id: '1',
 		body: tweet
-	}, function(err, res) {
-		if (err) {
-			done(err)
-			return
-		}
-
+	}).on('data', function(res) {
 		var first = true
 		var responseStream = streamingClient.searchStream({
 			type: 'tweet',
@@ -39,7 +34,7 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 						type: 'tweet',
 						id: '1',
 						body: tweet
-					}, function(err, res) {
+					}).on('error', function(err) {
 						if (err) {
 							done(err)
 							return
@@ -68,12 +63,17 @@ streamSearchTests.streamMatchAll = function streamMatchAll(client, streamingClie
 			type: 'tweet',
 			id: '1',
 			body: tweet
-		}, function(err, res) {
+		}).on('error', function(err) {
 			if (err) {
 				done(err)
 				return
 			}
 		})
+	}).on('error', function(err) {
+		if (err) {
+			done(err)
+			return
+		}
 	})
 }
 

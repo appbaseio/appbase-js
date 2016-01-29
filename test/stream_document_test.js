@@ -2,7 +2,7 @@ var assert = require('assert')
 
 var streamDocumentTests = {}
 
-streamDocumentTests.streamOneDocument = function streamOneDocument(client, streamingClient, done) {
+streamDocumentTests.streamOneDocument = function streamOneDocument(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -11,12 +11,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 		type: 'tweet',
 		id: '1',
 		body: tweet
-	}, function(err, res) {
-		if (err) {
-			done(err)
-			return
-		}
-
+	}).on('data', function(res) {
 		var responseStream = streamingClient.getStream({
 			type: 'tweet',
 			id: '1'
@@ -47,16 +42,21 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(client, strea
 			type: 'tweet',
 			id: '1',
 			body: tweet
-		}, function(err, res) {
+		}).on('error', function(err) {
 			if (err) {
 				done(err)
 				return
 			}
 		})
+	}).on('error', function(err) {
+		if (err) {
+			done(err)
+			return
+		}
 	})
 }
 
-streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(client, streamingClient, done) {
+streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -65,12 +65,7 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 		type: 'tweet',
 		id: '1',
 		body: tweet
-	}, function(err, res) {
-		if (err) {
-			done(err)
-			return
-		}
-
+	}).on('data', function(res) {
 		var first = true
 		var responseStream = streamingClient.getStream({
 			type: 'tweet',
@@ -88,7 +83,7 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 			type: 'tweet',
 			id: '1',
 			body: tweet
-		}, function(err, res) {
+		}).on('error', function(err) {
 			if (err) {
 				done(err)
 				return
@@ -110,10 +105,15 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(clien
 			responseStream.stop()
 			done()
 		})
+	}).on('error', function(err) {
+		if (err) {
+			done(err)
+			return
+		}
 	})
 }
 
-streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(client, streamingClient, done) {
+streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -122,12 +122,7 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 		type: 'tweet',
 		id: '1',
 		body: tweet
-	}, function(err, res) {
-		if (err) {
-			done(err)
-			return
-		}
-
+	}).on('data', function(res) {
 		var first = true
 		var responseStream = streamingClient.getStream({
 			type: 'tweet',
@@ -145,7 +140,7 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 					type: 'tweet',
 					id: '1',
 					body: tweet
-				}, function(err, res) {
+				}).on('error', function(err) {
 					if (err) {
 						done(err)
 						return
@@ -166,12 +161,17 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(clien
 			type: 'tweet',
 			id: '1',
 			body: tweet
-		}, function(err, res) {
+		}).on('error', function(err) {
 			if (err) {
 				done(err)
 				return
 			}
 		})
+	}).on('error', function(err) {
+		if (err) {
+			done(err)
+			return
+		}
 	})
 }
 

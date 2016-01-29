@@ -73,7 +73,9 @@ wsRequest.prototype.processError = function processError(err) {
 	this.resultStream.emit('error', err)
 }
 
-wsRequest.prototype.processMessage = function processMessage(dataObj) {
+wsRequest.prototype.processMessage = function processMessage(origDataObj) {
+	var dataObj = JSON.parse(JSON.stringify(origDataObj))
+
 	if (!dataObj.id && dataObj.message) {
 		this.resultStream.emit('error', dataObj)
 		return
@@ -130,7 +132,8 @@ wsRequest.prototype.stop = function stop() {
 	if (this.resultStream.readable) {
 		this.resultStream.push(null)
 	}
-	var unsubRequest = this.request.set('unsubscribe', true)
+	var unsubRequest = JSON.parse(JSON.stringify(this.request))
+	unsubRequest.unsubscribe = true
 	if (this.unsubscribed !== true) {
 		this.client.ws.send(unsubRequest)
 	}
