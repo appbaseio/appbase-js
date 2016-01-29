@@ -49,6 +49,7 @@ Tinytest.add('searchStream', function(test) {
 	var first = true
 	Tracker.autorun(function(c) {
 		if (first) {
+			first = false
 			return
 		}
 
