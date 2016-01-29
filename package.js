@@ -17,15 +17,16 @@ Package.onUse(function(api) {
 	api.use('reactive-var');
 
 	api.addFiles('meteor/appbase.js', 'server');
-	//api.addFiles('browser/appbase.js', ['client']);
+	api.addFiles('browser/appbase.min.js', 'client');
 
 	api.export('Appbase', 'server');
+	api.export('appbase', 'client');
 });
 
 Package.onTest(function(api) {
 	api.use('ecmascript');
 	api.use('tinytest');
-	api.use('tracker');
 	api.use('appbaseio:appbase');
-	api.addFiles('meteor/appbase-tests.js', 'server');
+	api.addFiles('meteor/appbase-server-tests.js', 'server');
+	api.addFiles('meteor/appbase-client-tests.js', 'client');
 });

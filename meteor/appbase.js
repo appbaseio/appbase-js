@@ -19,8 +19,8 @@ Appbase = function Appbase(args) {
 	client.searchStreamToURL = this.varReturn.bind(this)("searchStreamToURL")
 	client.getTypes = this.varReturn.bind(this)("getTypes")
 
-	//client.getStream = this.reactiveVarReturn.bind(this)("get", "getStream")
-	client.searchStream = this.searchStream.bind(this)
+	client.getStream = this.ajsClient.getStream
+	client.searchStream = this.ajsClient.searchStream
 
 	return client
 }
@@ -38,31 +38,4 @@ Appbase.prototype.varReturn = function varReturn(name) {
 
 		return future.wait()
 	}).bind(this)
-}
-
-Appbase.prototype.searchStream = function searchStream(...args) {
-	var applyUpdate = function applyUpdate(res, d) {
-		for (var i = 0; i < res.length; i++) {
-			if (res[i]._type === d._type && res[i]._id === d._id) {
-				res.splice(i)
-				if (!d._deleted) {
-					delete d._updated
-					res.push(d)
-				}
-			}
-		}
-	}
-
-	var res = this.varReturn.bind(this)("search")(...args).hits.hits
-	var rvar = new ReactiveVar(JSON.parse(JSON.stringify(res)))
-	this.ajsClient.searchStream(...args)
-		.on('data', Meteor.bindEnvironment(function(d) {
-			applyUpdate(res, d)
-			rvar.set(JSON.parse(JSON.stringify(res)))
-		}))
-		.on('error', Meteor.bindEnvironment(function(e) {
-			throw e
-		}))
-
-	return rvar
 }

@@ -15,7 +15,7 @@ Tinytest.add('index', function(test) {
 	test.equal(r._id, '1')
 })
 
-Tinytest.add('searchStream', function(test) {
+Tinytest.addAsync('searchStream', function(test, next) {
 	var c = new Appbase({
 		url: 'http://QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb@scalr.api.appbase.io',
 		appname: 'es2test1'
@@ -37,6 +37,11 @@ Tinytest.add('searchStream', function(test) {
 			}
 		}
 	})
+	r.on('data', Meteor.bindEnvironment(function(data) {
+		r.stop()
+		test.equal(data._source.foo, 'boo')
+		next()
+	}))
 
 	c.index({
 		type: 'tweet',
@@ -45,26 +50,4 @@ Tinytest.add('searchStream', function(test) {
 			foo: 'boo'
 		}
 	})
-
-	var first = true
-	Tracker.autorun(function(c) {
-		if (first) {
-			first = false
-			return
-		}
-
-		var res = r.get()
-		for (var i = 0; i < res.length; i++) {
-			if (res[i]._id === '1') {
-				test.equal(res[i]._source.foo, 'boo')
-				c.stop()
-				return
-			}
-		}
-
-		c.stop()
-		throw new Error('Did not receive desired object')
-	})
-
-	//setTimeout(, 5000)
 })
