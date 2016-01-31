@@ -3,7 +3,7 @@ Package.describe({
 	version: '0.10.6',
 	summary: 'Appbase.io streaming client library for Meteor',
 	git: 'https://github.com/appbaseio/appbase-js',
-	documentation: 'README.md'
+	documentation: 'meteor/README.md'
 });
 
 Npm.depends({
