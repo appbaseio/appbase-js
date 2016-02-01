@@ -38,16 +38,18 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(streamingClie
 			done()
 		})
 
-		streamingClient.index({
-			type: 'tweet',
-			id: '1',
-			body: tweet
-		}).on('error', function(err) {
-			if (err) {
-				done(err)
-				return
-			}
-		})
+		setTimeout(function() {
+			streamingClient.index({
+				type: 'tweet',
+				id: '1',
+				body: tweet
+			}).on('error', function(err) {
+				if (err) {
+					done(err)
+					return
+				}
+			})
+		}, 2000)
 	}).on('error', function(err) {
 		if (err) {
 			done(err)
@@ -79,17 +81,6 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(strea
 			}
 		})
 
-		streamingClient.index({
-			type: 'tweet',
-			id: '1',
-			body: tweet
-		}).on('error', function(err) {
-			if (err) {
-				done(err)
-				return
-			}
-		})
-
 		responseStream.on('data', function(res) {
 			try {
 				assert.deepEqual(res, {
@@ -105,6 +96,19 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(strea
 			responseStream.stop()
 			done()
 		})
+
+		setTimeout(function() {
+			streamingClient.index({
+				type: 'tweet',
+				id: '1',
+				body: tweet
+			}).on('error', function(err) {
+				if (err) {
+					done(err)
+					return
+				}
+			})
+		}, 2000)
 	}).on('error', function(err) {
 		if (err) {
 			done(err)
@@ -146,10 +150,11 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(strea
 						return
 					}
 				})
+
 				responseStream.stop()
 				var waitForEvent = setTimeout(function() {
 					done();
-				}, 1000);
+				}, 2000);
 				first = false
 			} else {
 				console.log("further events:", res)
@@ -157,16 +162,18 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(strea
 			}
 		})
 
-		streamingClient.index({
-			type: 'tweet',
-			id: '1',
-			body: tweet
-		}).on('error', function(err) {
-			if (err) {
-				done(err)
-				return
-			}
-		})
+		setTimeout(function() {
+			streamingClient.index({
+				type: 'tweet',
+				id: '1',
+				body: tweet
+			}).on('error', function(err) {
+				if (err) {
+					done(err)
+					return
+				}
+			})
+		}, 2000)
 	}).on('error', function(err) {
 		if (err) {
 			done(err)

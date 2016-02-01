@@ -15,8 +15,8 @@ describe('Appbase', function() {
 
 	before(function() {
 		streamingClient = new appbase({
-			url: 'http://QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb@scalr.api.appbase.io',
-			appname: 'es2test1'
+			url: 'http://testuser:testpass@localhost:8000',
+			appname: 'testindex'
 		})
 	})
 
@@ -58,7 +58,11 @@ describe('Appbase', function() {
 
 	describe('#streamSearch()', function() {
 		it('should receive event when new document is inserted', function(done) {
-			streamSearchTests.streamMatchAll(streamingClient, done)
+			streamSearchTests.streamMatchAllSingleType(streamingClient, done)
+		})
+
+		it('should receive event when new document is inserted while querying multiple types', function(done) {
+			streamSearchTests.streamMatchAllMultipleTypes(streamingClient, done)
 		})
 	})
 
