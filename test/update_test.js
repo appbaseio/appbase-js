@@ -1,11 +1,15 @@
 var assert = require('assert')
 
-var indexTests = {}
+var updateTests = {}
 
-indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
+updateTests.updateOneDocument = function updateOneDocument(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
+	}
+	var tweet2 = {
+		"user": "olivere",
+		"message": "This is a new tweet."
 	}
 	streamingClient.index({
 			type: 'tweet',
@@ -29,7 +33,8 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 					assert.deepEqual(res, {
 						_type: 'tweet',
 						_id: '1',
-						_source: tweet
+						_source: tweet2,
+						_updated: true
 					}, 'event not as expected')
 				} catch (e) {
 					responseStream.stop()
@@ -41,13 +46,15 @@ indexTests.indexOneDocument = function indexOneDocument(streamingClient, done) {
 			})
 
 			setTimeout(function() {
-				streamingClient.index({
+				streamingClient.update({
 					type: 'tweet',
 					id: '1',
-					body: tweet
+					body: {
+						doc: tweet2
+					}
 				}).on('error', done)
 			}, 2000)
 		})
 }
 
-module.exports = indexTests
+module.exports = updateTests

@@ -1,6 +1,7 @@
 var appbase = require('../')
 
 var indexTest = require('./index_test.js')
+var updateTest = require('./update_test.js')
 var getTest = require('./get_test.js')
 var searchTest = require('./search_test.js')
 var bulkTest = require('./bulk_test.js')
@@ -23,6 +24,12 @@ describe('Appbase', function() {
 	describe('#index()', function() {
 		it('should index one document', function(done) {
 			indexTest.indexOneDocument(streamingClient, done)
+		})
+	})
+
+	describe('#update()', function() {
+		it('should update one document', function(done) {
+			updateTest.updateOneDocument(streamingClient, done)
 		})
 	})
 
