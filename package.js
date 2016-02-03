@@ -1,6 +1,6 @@
 Package.describe({
 	name: 'appbaseio:appbase',
-	version: '0.10.7',
+	version: '0.10.8',
 	summary: 'Appbase.io streaming client library for Meteor',
 	git: 'https://github.com/appbaseio/appbase-js',
 	documentation: 'meteor/README.md'
