@@ -43,11 +43,13 @@ Tinytest.addAsync('searchStream', function(test, next) {
 		next()
 	}))
 
-	c.index({
-		type: 'tweet',
-		id: '1',
-		body: {
-			foo: 'boo'
-		}
-	})
+	setTimeout(Meteor.bindEnvironment(function() {
+		c.index({
+			type: 'tweet',
+			id: '1',
+			body: {
+				foo: 'boo'
+			}
+		})
+	}), 2000)
 })

@@ -15,8 +15,8 @@ describe('Appbase', function() {
 
 	before(function() {
 		streamingClient = new appbase({
-			url: 'http://testuser:testpass@localhost:8000',
-			appname: 'testindex'
+			url: 'http://QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb@scalr.api.appbase.io',
+			appname: 'es2test1'
 		})
 	})
 

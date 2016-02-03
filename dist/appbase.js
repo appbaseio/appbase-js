@@ -51,9 +51,9 @@ var appbaseClient = function appbaseClient(args) {
 	}
 
 	if (parsedUrl.protocol === 'https:') {
-		this.ws = new betterWs('wss://' + parsedUrl.host);
+		this.ws = new betterWs('wss://' + parsedUrl.host + '/' + this.appname);
 	} else {
-		this.ws = new betterWs('ws://' + parsedUrl.host);
+		this.ws = new betterWs('ws://' + parsedUrl.host + '/' + this.appname);
 	}
 
 	if (this.url.slice(-1) === "/") {

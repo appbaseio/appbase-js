@@ -28,15 +28,17 @@ Tinytest.addAsync('searchStream', function(test, next) {
 			throw err
 		})
 
-		c.index({
-			type: 'tweetx',
-			id: '1',
-			body: {
-				foo: 'boo'
-			}
-		}).on('error', function(err) {
-			throw err
-		})
+		setTimeout(function() {
+			c.index({
+				type: 'tweetx',
+				id: '1',
+				body: {
+					foo: 'boo'
+				}
+			}).on('error', function(err) {
+				throw err
+			})
+		}, 2000)
 	}).on('error', function(err) {
 		throw err
 	})
