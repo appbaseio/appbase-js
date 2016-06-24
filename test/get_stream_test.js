@@ -1,8 +1,8 @@
 var assert = require('assert')
 
-var streamDocumentTests = {}
+var getStreamTests = {}
 
-streamDocumentTests.streamOneDocument = function streamOneDocument(streamingClient, done) {
+getStreamTests.streamOneDocument = function streamOneDocument(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -58,7 +58,7 @@ streamDocumentTests.streamOneDocument = function streamOneDocument(streamingClie
 	})
 }
 
-streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(streamingClient, done) {
+getStreamTests.onlyStreamOneDocument = function onlyStreamOneDocument(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -117,7 +117,7 @@ streamDocumentTests.onlyStreamOneDocument = function onlyStreamOneDocument(strea
 	})
 }
 
-streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(streamingClient, done) {
+getStreamTests.stopStreamingDocument = function stopStreamingDocument(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -182,4 +182,4 @@ streamDocumentTests.stopStreamingDocument = function stopStreamingDocument(strea
 	})
 }
 
-module.exports = streamDocumentTests
+module.exports = getStreamTests

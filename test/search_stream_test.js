@@ -1,8 +1,8 @@
 var assert = require('assert')
 
-var streamSearchTests = {}
+var searchStreamTests = {}
 
-streamSearchTests.streamMatchAllSingleType = function streamMatchAll(streamingClient, done) {
+searchStreamTests.streamMatchAllSingleType = function streamMatchAll(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -55,7 +55,7 @@ streamSearchTests.streamMatchAllSingleType = function streamMatchAll(streamingCl
 	})
 }
 
-streamSearchTests.streamMatchAllMultipleTypes = function streamMatchAll(streamingClient, done) {
+searchStreamTests.streamMatchAllMultipleTypes = function streamMatchAll(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
@@ -131,4 +131,4 @@ streamSearchTests.streamMatchAllMultipleTypes = function streamMatchAll(streamin
 	})
 }
 
-module.exports = streamSearchTests
+module.exports = searchStreamTests
