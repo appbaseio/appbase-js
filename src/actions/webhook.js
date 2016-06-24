@@ -1,4 +1,5 @@
-var murmur = require('murmur')
+var murmur = require('murmurhash3js');
+var stringify = require('json-stable-stringify');
 
 var helpers = require('../helpers')
 
@@ -35,7 +36,7 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 
 	this.webhooks = []
 	this.client = client
-	this.query = args.body.query
+	this.query = Object.freeze(args.body.query)
 
 	if(typeof webhook === 'string') {
 		var webhook_obj = {}
@@ -53,7 +54,7 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 
 	this.populateBody()
 
-	var hash = murmur.hash128(JSON.stringify(this.query)).hex()
+	var hash = murmur.x86.hash128(stringify(this.query));
 	var path = '.percolator/webhooks-0-' + this.type_string + '-0-' + hash
 
 	this.path = path
