@@ -18,7 +18,8 @@
 		"JSONStream": "^1.0.4",
 		"guid": "0.0.12",
 		"hyperquest": "^1.2.0",
-		"murmur": "0.0.2",
+		"json-stable-stringify": "^1.0.1",
+		"murmurhash3js": "^3.0.1",
 		"through2": "^2.0.0",
 		"ws": "^0.8.0"
 	},
