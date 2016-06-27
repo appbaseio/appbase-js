@@ -1,6 +1,6 @@
 'use strict';
 
-var murmur = require('murmur');
+var stringify = require('json-stable-stringify');
 
 var helpers = require('../helpers');
 
@@ -13,7 +13,7 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 		return;
 	}
 
-	if (args.type === undefined || !(typeof args.type === 'string' || args.type.constructor === Array) || (args.type === '' || args.type.length === 0)) {
+	if (args.type === undefined || !(typeof args.type === 'string' || args.type.constructor === Array) || args.type === '' || args.type.length === 0) {
 		throw new Error("fields missing: type");
 		return;
 	}
@@ -54,8 +54,8 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 
 	this.populateBody();
 
-	var hash = murmur.hash128(JSON.stringify(this.query)).hex();
-	var path = '.percolator/webhooks-0-' + this.type_string + '-0-' + hash;
+	var encode64 = btoa(stringify(this.query));
+	var path = '.percolator/webhooks-0-' + this.type_string + '-0-' + encode64;
 
 	this.path = path;
 

@@ -11,7 +11,7 @@ var streamSearchService = function streamSearchService(client, args) {
 		return;
 	}
 
-	if (args.type === undefined || !(typeof args.type === 'string' || args.type.constructor === Array) || (args.type === '' || args.type.length === 0)) {
+	if (args.type === undefined || !(typeof args.type === 'string' || args.type.constructor === Array) || args.type === '' || args.type.length === 0) {
 		throw new Error("fields missing: type");
 		return;
 	}
