@@ -13,7 +13,7 @@
 		"search"
 	],
 	"author": "Sacheendra Talluri",
-	"license": "ISC",
+	"license": "MIT",
 	"dependencies": {
 		"JSONStream": "^1.0.4",
 		"guid": "0.0.12",
