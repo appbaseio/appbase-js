@@ -1,3 +1,5 @@
+![Build Status Image](https://img.shields.io/badge/build-passing-brightgreen.svg) [![Code Climate](https://codeclimate.com/github/appbaseio/appbase-js/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/appbase-js)
+
 # appbase-js
 
 Appbase.io is a data streams library for Node.JS and Javascript (browser build is in the [browser/](https://github.com/appbaseio/appbase-js/tree/master/browser) directory); compatible with [elasticsearch.js](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html).
@@ -11,16 +13,16 @@ Working code snippets where each step builds on the previous ones.
 #### Step 1: Add some data into the app (uses elasticsearch.js)
 ```js
 // app and authentication configurations 
-const HOSTNAME = "scalr.api.appbase.io"
+const HOST_URL = "https://scalr.api.appbase.io"
 const APPNAME = "createnewtestapp01"
-const USERNAME = "RIvfxo1u1"
-const PASSWORD = "dee8ee52-8b75-4b5b-be4f-9df3c364f59f"
+const CREDENTIALS = "RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f"
 
 // Add data into our ES "app index"
 var Appbase = require('appbase-js')
 var appbase = new Appbase({
-		url: 'https://'+USERNAME+":"+PASSWORD+"@"+HOSTNAME,
-		appname: APPNAME
+		url: HOST_URL,
+		app: APPNAME,
+		credentials: CREDENTIALS
 	});
 appbase.index({
     type: "product",
@@ -119,11 +121,10 @@ Returns a **reference** object on which streaming requests can be performed.
 
 > **args** - A set of key/value pairs that configures the ElasticSearch Index  
 &nbsp;&nbsp;&nbsp;&nbsp;url: "https://scalr.api.appbase.io"  
-&nbsp;&nbsp;&nbsp;&nbsp;appname: App name (equivalent to an ElasticSearch Index)  
-&nbsp;&nbsp;&nbsp;&nbsp;username: App's username  
-&nbsp;&nbsp;&nbsp;&nbsp;password: App's password key
+&nbsp;&nbsp;&nbsp;&nbsp;app: App name (equivalent to an ElasticSearch Index)  
+&nbsp;&nbsp;&nbsp;&nbsp;credentials: A `username:password` combination used for Basic Auth.
 
-Optionally (and like in the quick example above), ``url`` can contain username and password fields in the format: https://&lt;USERNAME>:&lt;PASSWORD>@scalr.appbase.io.
+Optionally (and like in the quick example above), ``url`` can contain the credentials field in the format: https://&lt;credentials>@scalr.appbase.io.
 
 ### Reference
 
