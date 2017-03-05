@@ -1,4 +1,4 @@
-var WebSocket = require('ws')
+var WebSocket = (typeof window !== 'undefined') ? window.WebSocket : require('ws')
 var EventEmitter = require('events').EventEmitter
 
 var betterWs = function betterWs(url) {

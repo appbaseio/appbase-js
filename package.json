@@ -1,10 +1,11 @@
 {
 	"name": "appbase-js",
-	"version": "0.10.8",
+	"version": "0.11.0",
 	"description": "Appbase.io streaming client lib for Javascript",
 	"main": "dist/appbase.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"build": "grunt",
+		"test": "grunt test"
 	},
 	"keywords": [
 		"appbase",
@@ -20,7 +21,7 @@
 		"hyperquest": "^1.2.0",
 		"json-stable-stringify": "^1.0.1",
 		"through2": "^2.0.0",
-		"ws": "^0.8.0"
+		"ws": "^2.2.0"
 	},
 	"devDependencies": {
 		"grunt": "^0.4.5",

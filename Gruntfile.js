@@ -23,6 +23,9 @@ module.exports = function(grunt) {
 			}
 		},
 		browserify: {
+			options: {
+				exclude: ['ws']
+			},
 			dist: {
 				files: {
 					'browser/appbase.js': ['dist/appbase.js']
