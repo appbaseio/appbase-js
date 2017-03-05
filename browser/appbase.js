@@ -326,12 +326,10 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 	});
 	if (valid !== true) {
 		throw valid;
-		return;
 	}
 
 	if (args.type === undefined || !(typeof args.type === 'string' || args.type.constructor === Array) || args.type === '' || args.type.length === 0) {
 		throw new Error("fields missing: type");
-		return;
 	}
 
 	valid = helpers.validate(args.body, {
@@ -339,7 +337,6 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 	});
 	if (valid !== true) {
 		throw valid;
-		return;
 	}
 
 	if (args.type.constructor === Array) {
@@ -365,7 +362,6 @@ var addWebhookService = function addWebhook(client, args, webhook) {
 		this.webhooks.push(webhook);
 	} else {
 		throw new Error('fields missing: second argument(webhook) is necessary');
-		return;
 	}
 
 	this.populateBody();
