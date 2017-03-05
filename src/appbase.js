@@ -22,11 +22,11 @@ var appbaseClient = function appbaseClient(args) {
 	}
 
 	if (typeof args.appname !== 'string' || args.appname === '') {
-		throw new Error('Appname not present is options.')
+		throw new Error('Appname not present in options.')
 	}
 
 	if (typeof args.url !== 'string' || args.url === '') {
-		throw new Error('URL not present is options.')
+		throw new Error('URL not present in options.')
 	}
 
 	var parsedUrl = URL.parse(args.url)
