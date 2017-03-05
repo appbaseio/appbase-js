@@ -23,10 +23,6 @@ var appbaseClient = function appbaseClient(args) {
 		return new appbaseClient(args);
 	}
 
-	if (typeof args.appname !== 'string' || args.appname === '') {
-		throw new Error('Appname not present in options.');
-	}
-
 	if (typeof args.url !== 'string' || args.url === '') {
 		throw new Error('URL not present in options.');
 	}
@@ -36,18 +32,28 @@ var appbaseClient = function appbaseClient(args) {
 	this.url = parsedUrl.host;
 	this.protocol = parsedUrl.protocol;
 	this.credentials = parsedUrl.auth;
-	this.appname = args.appname;
+	this.appname = args.appname || args.app;
+
+	if (typeof this.appname !== 'string' || this.appname === '') {
+		throw new Error('App name is not present in options.');
+	}
 
 	if (typeof this.protocol !== 'string' || this.protocol === '') {
-		throw new Error('Protocol not present in url. URL should be of the form https://scalr.api.appbase.io');
+		throw new Error('Protocol is not present in url. URL should be of the form https://scalr.api.appbase.io');
 	}
 
 	if (typeof args.username === 'string' && args.username !== '' && typeof args.password === 'string' && args.password !== '') {
 		this.credentials = args.username + ':' + args.password;
 	}
 
+	// credentials can be provided as a part of the URL, as username, password args or
+	// as a credentials argument directly
+	if (typeof args.credentials === 'string' && args.credentials !== '') {
+		this.credentials = args.credentials;
+	}
+
 	if (typeof this.credentials !== 'string' || this.credentials === '') {
-		throw new Error('Authentication information not present.');
+		throw new Error('Authentication information is not present. Did you add credentials?');
 	}
 
 	if (parsedUrl.protocol === 'https:') {

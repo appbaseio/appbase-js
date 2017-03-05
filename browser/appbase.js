@@ -454,10 +454,6 @@ var appbaseClient = function appbaseClient(args) {
 		return new appbaseClient(args);
 	}
 
-	if (typeof args.appname !== 'string' || args.appname === '') {
-		throw new Error('Appname not present in options.');
-	}
-
 	if (typeof args.url !== 'string' || args.url === '') {
 		throw new Error('URL not present in options.');
 	}
@@ -467,18 +463,28 @@ var appbaseClient = function appbaseClient(args) {
 	this.url = parsedUrl.host;
 	this.protocol = parsedUrl.protocol;
 	this.credentials = parsedUrl.auth;
-	this.appname = args.appname;
+	this.appname = args.appname || args.app;
+
+	if (typeof this.appname !== 'string' || this.appname === '') {
+		throw new Error('App name is not present in options.');
+	}
 
 	if (typeof this.protocol !== 'string' || this.protocol === '') {
-		throw new Error('Protocol not present in url. URL should be of the form https://scalr.api.appbase.io');
+		throw new Error('Protocol is not present in url. URL should be of the form https://scalr.api.appbase.io');
 	}
 
 	if (typeof args.username === 'string' && args.username !== '' && typeof args.password === 'string' && args.password !== '') {
 		this.credentials = args.username + ':' + args.password;
 	}
 
+	// credentials can be provided as a part of the URL, as username, password args or
+	// as a credentials argument directly
+	if (typeof args.credentials === 'string' && args.credentials !== '') {
+		this.credentials = args.credentials;
+	}
+
 	if (typeof this.credentials !== 'string' || this.credentials === '') {
-		throw new Error('Authentication information not present.');
+		throw new Error('Authentication information is not present. Did you add credentials?');
 	}
 
 	if (parsedUrl.protocol === 'https:') {
@@ -564,7 +570,7 @@ module.exports = appbaseClient;
 },{"./actions/bulk.js":1,"./actions/delete.js":2,"./actions/get.js":3,"./actions/get_types.js":4,"./actions/index.js":5,"./actions/search.js":6,"./actions/stream_document.js":7,"./actions/stream_search.js":8,"./actions/update.js":9,"./actions/webhook.js":10,"./better_websocket.js":12,"./streaming_request.js":14,"./websocket_request.js":15,"url":74}],12:[function(require,module,exports){
 'use strict';
 
-var WebSocket = require('ws');
+var WebSocket = typeof window !== 'undefined' ? window.WebSocket : require('ws');
 var EventEmitter = require('events').EventEmitter;
 
 var betterWs = function betterWs(url) {
@@ -607,7 +613,7 @@ var betterWs = function betterWs(url) {
 
 module.exports = betterWs;
 
-},{"events":25,"ws":79}],13:[function(require,module,exports){
+},{"events":25,"ws":undefined}],13:[function(require,module,exports){
 'use strict';
 
 function validate(object, fields) {
@@ -6017,7 +6023,7 @@ module.exports.obj = through2(function (options, transform, flush) {
 })
 
 }).call(this,require('_process'))
-},{"_process":48,"readable-stream/transform":36,"util":78,"xtend":80}],38:[function(require,module,exports){
+},{"_process":48,"readable-stream/transform":36,"util":78,"xtend":79}],38:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -12043,7 +12049,7 @@ BufferList.prototype.concat = function (n) {
 arguments[4][36][0].apply(exports,arguments)
 },{"./lib/_stream_transform.js":69,"dup":36}],73:[function(require,module,exports){
 arguments[4][37][0].apply(exports,arguments)
-},{"_process":48,"dup":37,"readable-stream/transform":72,"util":78,"xtend":80}],74:[function(require,module,exports){
+},{"_process":48,"dup":37,"readable-stream/transform":72,"util":78,"xtend":79}],74:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -13423,51 +13429,6 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":77,"_process":48,"inherits":76}],79:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var global = (function() { return this; })();
-
-/**
- * WebSocket constructor.
- */
-
-var WebSocket = global.WebSocket || global.MozWebSocket;
-
-/**
- * Module exports.
- */
-
-module.exports = WebSocket ? ws : null;
-
-/**
- * WebSocket constructor.
- *
- * The third `opts` options object gets ignored in web browsers, since it's
- * non-standard, and throws a TypeError if passed to the constructor.
- * See: https://github.com/einaros/ws/issues/227
- *
- * @param {String} uri
- * @param {Array} protocols (optional)
- * @param {Object) opts (optional)
- * @api public
- */
-
-function ws(uri, protocols, opts) {
-  var instance;
-  if (protocols) {
-    instance = new WebSocket(uri, protocols);
-  } else {
-    instance = new WebSocket(uri);
-  }
-  return instance;
-}
-
-if (WebSocket) ws.prototype = WebSocket.prototype;
-
-},{}],80:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
