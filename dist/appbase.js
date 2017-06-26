@@ -1,7 +1,9 @@
 'use strict';
 
 var URL = require('url');
+var Guid = require('guid');
 
+var helpers = require('./helpers.js');
 var betterWs = require('./better_websocket.js');
 var streamingRequest = require('./streaming_request.js');
 var wsRequest = require('./websocket_request.js');
@@ -32,9 +34,12 @@ var appbaseClient = function appbaseClient(args) {
 	this.url = parsedUrl.host;
 	this.protocol = parsedUrl.protocol;
 	this.credentials = parsedUrl.auth;
-	this.appname = args.appname || args.app;
+	this.appname = args.appname || args.app || args.index;
+	this.channel_id = Guid.raw().replace(/-/g, '');
 
-	if (typeof this.appname !== 'string' || this.appname === '') {
+	/* appname is not required in Streams; there, it can be passed
+  * as index name and on each request */
+	if (helpers.isAppbase(this) && (typeof this.appname !== 'string' || this.appname === '')) {
 		throw new Error('App name is not present in options.');
 	}
 
@@ -52,14 +57,19 @@ var appbaseClient = function appbaseClient(args) {
 		this.credentials = args.credentials;
 	}
 
-	if (typeof this.credentials !== 'string' || this.credentials === '') {
+	/* credentials are not required for Streams */
+	if (helpers.isAppbase(this) && (typeof this.credentials !== 'string' || this.credentials === '')) {
 		throw new Error('Authentication information is not present. Did you add credentials?');
 	}
 
 	if (parsedUrl.protocol === 'https:') {
-		this.ws = new betterWs('wss://' + parsedUrl.host + '/' + this.appname);
+		var appname = helpers.isAppbase(this) ? this.appname : '';
+		var url = 'wss://' + this.credentials + '@' + parsedUrl.host + '/' + appname + '?sub_to_chan=' + this.channel_id;
+		this.ws = new betterWs(url);
 	} else {
-		this.ws = new betterWs('ws://' + parsedUrl.host + '/' + this.appname);
+		var appname = helpers.isAppbase(this) ? this.appname : '';
+		var url = 'ws://' + this.credentials + '@' + parsedUrl.host + '/' + appname + '?sub_to_chan=' + this.channel_id;
+		this.ws = new betterWs(url);
 	}
 
 	if (this.url.slice(-1) === "/") {
@@ -83,51 +93,87 @@ var appbaseClient = function appbaseClient(args) {
 };
 
 appbaseClient.prototype.performWsRequest = function performWsRequest(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new wsRequest(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.performStreamingRequest = function performStreamingRequest(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new streamingRequest(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.index = function index(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new indexService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.get = function get(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new getService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.update = function update(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new updateService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype['delete'] = function deleteDocument(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new deleteService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.bulk = function bulk(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new bulkService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.search = function search(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new searchService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.getStream = function getStream(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new streamDocumentService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.searchStream = function searchStream(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new streamSearchService(this, JSON.parse(JSON.stringify(args)));
 };
 
 appbaseClient.prototype.searchStreamToURL = function searchStreamToURL(args, webhook) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
 	return new addWebhookService(this, JSON.parse(JSON.stringify(args)), JSON.parse(JSON.stringify(webhook)));
 };
 
-appbaseClient.prototype.getTypes = function getTypes() {
-	return new getTypesService(this);
+appbaseClient.prototype.getTypes = function getTypes(args) {
+	if (!this.appname) {
+		this.appname = args.index;
+	}
+	return new getTypesService(this, JSON.parse(JSON.stringify(args)));
 };
 
 if (typeof window !== 'undefined') {

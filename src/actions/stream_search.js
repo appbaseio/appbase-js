@@ -30,12 +30,30 @@ var streamSearchService = function streamSearchService(client, args) {
 
 	args.streamonly = 'true'
 
-	return client.performWsRequest({
-		method: 'POST',
-		path: type + '/_search',
-		params: args,
-		body: body
-	})
+	/* if Streams, add required parameters */
+	if (!helpers.isAppbase(client)) {
+		args.stream = true
+		args.channel_id = client.channel_id
+	}
+
+	if (helpers.isAppbase(client)) {
+		return client.performWsRequest({
+			method: 'POST',
+			path: type + '/_search',
+			params: args,
+			body: body
+		})
+	} else {
+		/* first, subscribe to query */
+		client.performStreamingRequest({
+			method: 'POST',
+			path: type + '/' + '_search',
+			params: args,
+			body: body
+		})
+		/* return stream object */
+		return client.performWsRequest({})
+	}
 }
 
 module.exports = streamSearchService

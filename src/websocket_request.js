@@ -3,6 +3,7 @@ var Guid = require('guid')
 var querystring = require('querystring')
 var through2 = require('through2')
 var EventEmitter = require('events').EventEmitter
+var helpers = require('./helpers')
 
 var wsRequest = function wsRequest(client, args) {
 	this.client = client
@@ -26,12 +27,15 @@ wsRequest.prototype.init = function init() {
 
 	this.id = Guid.raw()
 
-	this.request = {
-		id: this.id,
-		path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
-		method: this.method,
-		body: this.body,
-		authorization: 'Basic ' + (new Buffer(this.client.credentials).toString('base64'))
+	/* Don't run if server is Streams */
+	if (helpers.isAppbase(that.client)) {
+		this.request = {
+			id: this.id,
+			path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
+			method: this.method,
+			body: this.body,
+			authorization: 'Basic ' + (new Buffer(this.client.credentials).toString('base64'))
+		}
 	}
 
 	this.resultStream = through2.obj()
@@ -51,7 +55,10 @@ wsRequest.prototype.init = function init() {
 	this.client.ws.on('error', this.errorHandler)
 	this.client.ws.on('message', this.messageHandler)
 
-	this.client.ws.send(this.request)
+	/* Don't run if server is Streams */
+	if (helpers.isAppbase(that.client)) {
+		this.client.ws.send(this.request)
+	}
 
 	this.resultStream.on('end', function() {
 		that.resultStream.readable = false
@@ -75,6 +82,11 @@ wsRequest.prototype.processError = function processError(err) {
 
 wsRequest.prototype.processMessage = function processMessage(origDataObj) {
 	var dataObj = JSON.parse(JSON.stringify(origDataObj))
+
+	if (!helpers.isAppbase(this.client)) {
+		this.resultStream.push(dataObj)
+		return
+	}
 
 	if (!dataObj.id && dataObj.message) {
 		this.resultStream.emit('error', dataObj)
