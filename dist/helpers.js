@@ -45,6 +45,16 @@ function validate(object, fields) {
 	return true;
 }
 
+function contains(string, substring) {
+	return string.indexOf(substring) !== -1;
+}
+
+function isAppbase(client) {
+	return contains(client.url, "scalr.api.appbase.io");
+}
+
 module.exports = {
-	validate: validate
+	validate: validate,
+	contains: contains,
+	isAppbase: isAppbase
 };

@@ -24,11 +24,28 @@ var streamDocumentService = function streamDocumentService(client, args) {
 		args.streamonly = 'true';
 	}
 
-	return client.performWsRequest({
-		method: 'GET',
-		path: type + '/' + id,
-		params: args
-	});
+	/* if Streams, add required parameters */
+	if (!helpers.isAppbase(client)) {
+		args.stream = true;
+		args.channel_id = client.channel_id;
+	}
+
+	if (helpers.isAppbase(client)) {
+		return client.performWsRequest({
+			method: 'GET',
+			path: type + '/' + id,
+			params: args
+		});
+	} else {
+		/* first, subscribe to document */
+		client.performStreamingRequest({
+			method: "GET",
+			path: type + '/' + id,
+			params: args
+		});
+		/* return stream object */
+		return client.performWsRequest({});
+	}
 };
 
 module.exports = streamDocumentService;

@@ -1,4 +1,4 @@
-var appbase = require('../')
+var appbase = require('../../')
 
 var indexTest = require('./index_test.js')
 var updateTest = require('./update_test.js')
@@ -8,7 +8,7 @@ var bulkTest = require('./bulk_test.js')
 var getStreamTests = require('./get_stream_test.js')
 var searchStreamTests = require('./search_stream_test.js')
 var getTypesTest = require('./get_types_test.js')
-var helpers = require("../src/helpers");
+var helpers = require("../../src/helpers");
 describe('Appbase', function() {
 	this.timeout(10000)
 
@@ -16,9 +16,9 @@ describe('Appbase', function() {
 
 	before(function() {
 		streamingClient = new appbase({
-			url: 'https://scalr.api.appbase.io',
+			url: 'http://localhost',
 			app: 'es2test1',
-			credentials: 'QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb'
+			credentials: 'user:pass'
 		})
 	})
 

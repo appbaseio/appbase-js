@@ -33,9 +33,11 @@ var streamingRequest = function streamingRequest(client, args) {
 streamingRequest.prototype.init = function init() {
 	var that = this;
 
+	var uri = this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params);
+
 	this.requestStream = hyperquest({
 		method: this.method,
-		uri: this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
+		uri: uri,
 		auth: this.client.credentials
 	});
 	this.requestStream.on('response', function (res) {
