@@ -73,11 +73,11 @@ appbase.getStream({
      stores: [ "Walmart", "Target" ] } }
 ```
 
-getStream() returns a ``stream.Readable`` object, which can be conveniently listened via the "on("data")" event listener. Check out the [stream_document_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_document_test.js) where we make an update to the document and see any further updates to it via the "data" event. 
+getStream() returns a ``stream.Readable`` object, which can be conveniently listened via the `on("data")` event listener. Check out the [stream_document_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_document_test.js) where we make an update to the document and see any further updates to it via the "data" event. 
 
 #### Step 3: Apply queries on data streams
 
-Get continuous results by searching across the database streams. A query can be written using the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - which supports composing boolean, regex, geo, fuzzy, range queries. Let"s stream the results of a simple **``match_all``** query on the ``product`` type:
+Get continuous results by searching across the database streams. A query can be written using the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - which supports composing boolean, regex, geo, fuzzy, range queries. Let's stream the results of a simple **``match_all``** query on the ``product`` type:
 
 ```js
 appbase.searchStream({
@@ -106,7 +106,7 @@ appbase.searchStream({
      hits: [ [Object], [Object], [Object], [Object] ] } }
 ```
 
-searchStream() also returns a ``stream.Readable`` object, which can be conveniently listened via the "on("data")" event listener. Check out the [stream_search_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_search_test.js) where we make an update that matches the query and see the results in the event stream. 
+searchStream() also returns a ``stream.Readable`` object, which can be conveniently listened via the `on("data")` event listener. Check out the [stream_search_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_search_test.js) where we make an update that matches the query and see the results in the event stream. 
 
 
 ## API Reference
