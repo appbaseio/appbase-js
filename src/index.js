@@ -1,4 +1,3 @@
-import "babel-polyfill";
 import URL from "url";
 import fetchRequest from "./browser/fetch_request.js"
 import betterWs from "./browser/better_websocket.js";
