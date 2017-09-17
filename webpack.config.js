@@ -28,11 +28,7 @@ const config = {
 		modules: [path.resolve("./node_modules"), path.resolve("./src")],
 		extensions: [".json", ".js"]
 	},
-	externals: {
-        "node-fetch": "fetch"
-    },
 	plugins: [
-		new webpack.IgnorePlugin(/node-fetch/),
 		new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, "node-noop")
 	]
 };

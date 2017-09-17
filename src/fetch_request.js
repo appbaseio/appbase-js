@@ -3,7 +3,9 @@ import Stream from "stream";
 import through2 from "through2";
 import { btoa } from "./helpers";
 
-const fetch = require("node-fetch");
+require("es6-promise").polyfill();
+require("fetch-everywhere");
+
 const JSONStream = require("json-stream");
 
 export default class fetchRequest {
