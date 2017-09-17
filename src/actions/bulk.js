@@ -1,6 +1,6 @@
-import validate from "../../helpers";
+import { validate } from "../helpers";
 
-const searchService = function searchService(client, args) {
+const bulkService = function bulkService(client, args) {
 	const valid = validate(args, {
 		"body": "object"
 	});
@@ -8,23 +8,16 @@ const searchService = function searchService(client, args) {
 		throw valid
 		return
 	}
-
-	let type;
-	if(args.type.constructor === Array) {
-		type = args.type.join()
-	} else {
-		type = args.type
-	}
-
+	const type = args.type;
 	const body = args.body;
 	delete args.type
 	delete args.body
 
 	let path;
 	if(type) {
-		path = `${type}/_search`
+		path = `${type}/_bulk`
 	} else {
-		path = "/_search"
+		path = "/_bulk"
 	}
 
 	return client.performFetchRequest({
@@ -35,4 +28,5 @@ const searchService = function searchService(client, args) {
 	})
 };
 
-export default searchService;
+
+export default bulkService;

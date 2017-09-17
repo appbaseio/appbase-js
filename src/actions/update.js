@@ -1,11 +1,12 @@
-import validate from "../../helpers";
+import { validate } from "../helpers";
 
-const indexService = function indexService(client, args) {
+const updateService = function updateService(client, args) {
 	const valid = validate(args, {
 		"type": "string",
+		"id": "string",
 		"body": "object"
 	});
-	if(valid !== true) {
+	if (valid !== true) {
 		throw valid
 		return
 	}
@@ -16,14 +17,9 @@ const indexService = function indexService(client, args) {
 	delete args.id
 	delete args.body
 
-	let path;
-	if(id) {
-		path = `${type}/${id}`
-	} else {
-		path = type
-	}
+	const path = `${type}/${id}/_update`;
 
-	return client.performStreamingRequest({
+	return client.performFetchRequest({
 		method: "POST",
 		path,
 		params: args,
@@ -31,4 +27,5 @@ const indexService = function indexService(client, args) {
 	})
 };
 
-export default indexService;
+
+export default updateService;

@@ -2,8 +2,8 @@ const webpack = require("webpack");
 const path = require("path");
 
 const config = {
+	target: "web",
 	entry: __dirname + "/src/index.js",
-	devtool: "source-map",
 	output: {
 		path: __dirname + "/dist",
 		filename: "appbase.js",
@@ -14,7 +14,11 @@ const config = {
 	module: {
 		rules: [
 			{
-				test: /(\.jsx|\.js)$/,
+				test: /\.json$/,
+				loader: "json-loader"
+			},
+			{
+				test: /(\.js)$/,
 				loader: "babel-loader",
 				exclude: /node_modules/
 			}
@@ -23,13 +27,14 @@ const config = {
 	resolve: {
 		modules: [path.resolve("./node_modules"), path.resolve("./src")],
 		extensions: [".json", ".js"]
-	}
-};
-
-if (process.env.NODE_ENV === "production") {
-	config.plugins = [
-		new webpack.optimize.UglifyJsPlugin({ minimize: true })
+	},
+	externals: {
+        "node-fetch": "fetch"
+    },
+	plugins: [
+		new webpack.IgnorePlugin(/node-fetch/),
+		new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, "node-noop")
 	]
-}
+};
 
 module.exports = config;

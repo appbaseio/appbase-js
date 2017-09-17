@@ -7,7 +7,10 @@ searchTests.searchForOneDoc = function searchForOneDoc(streamingClient, done) {
 		id: "1",
 		body: tweet
 	})
-	.on("error", done)
+	.on("error", function(e) {
+		console.log(e);
+		done();
+	})
 	.on("data", function(res) {
 		var first = true
 		var responseStream = streamingClient.search({

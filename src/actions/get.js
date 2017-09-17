@@ -1,10 +1,11 @@
-import validate from "../../helpers";
+import { validate } from "../helpers";
 
-const deleteService = function deleteService(client, args) {
+const getService = function getService(client, args) {
 	const valid = validate(args, {
 		"type": "string",
 		"id": "string"
 	});
+
 	if(valid !== true) {
 		throw valid
 		return
@@ -16,12 +17,12 @@ const deleteService = function deleteService(client, args) {
 
 	const path = `${type}/${id}`;
 
-	return client.performStreamingRequest({
-		method: "DELETE",
+	return client.performFetchRequest({
+		method: "GET",
 		path,
 		params: args
 	})
 };
 
 
-export default deleteService;
+export default getService;

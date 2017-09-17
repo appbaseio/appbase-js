@@ -1,4 +1,4 @@
-var appbase = require("../lib/node").default;
+var appbase = require("../lib").default;
 
 var indexTest = require("./index_test.js")
 var updateTest = require("./update_test.js")
@@ -8,17 +8,18 @@ var bulkTest = require("./bulk_test.js")
 var getStreamTests = require("./get_stream_test.js")
 var searchStreamTests = require("./search_stream_test.js")
 var getTypesTest = require("./get_types_test.js")
-var validate = require("../lib/helpers").default;
+var getMappingsTest = require("./get_mappings_test.js")
+var helper = require("../lib/helpers");
 describe("Appbase", function() {
 	this.timeout(10000)
 
-	var client, streamingClient
+	var client, streamingClient;
 
 	before(function() {
 		streamingClient = new appbase({
 			url: "https://scalr.api.appbase.io",
-			app: "es2test1",
-			credentials: "QEVrcElba:5c13d943-a5d1-4b05-92f3-42707d49fcbb"
+			app: "appbasejs-test-app",
+			credentials: "zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef"
 		})
 	})
 
@@ -80,6 +81,12 @@ describe("Appbase", function() {
 		})
 	})
 
+	describe("#getMappings()", function() {
+		it("should get mappings object", function(done) {
+			getMappingsTest.getAllMappings(streamingClient, done)
+		})
+	})
+
 	describe("#helpers", function() {
 		it("validate() : should check for body and type", function(done) {
 			var mock = {
@@ -89,7 +96,7 @@ describe("Appbase", function() {
 				"type": "test"
 			}
 
-			var e = validate(mock, {
+			var e = helper.validate(mock, {
 				"body": "object",
 				"type": "string"
 			})

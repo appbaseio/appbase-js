@@ -1,12 +1,11 @@
-import validate from "../../helpers";
+import { validate } from "../helpers";
 
-const updateService = function updateService(client, args) {
+const indexService = function indexService(client, args) {
 	const valid = validate(args, {
 		"type": "string",
-		"id": "string",
 		"body": "object"
 	});
-	if (valid !== true) {
+	if(valid !== true) {
 		throw valid
 		return
 	}
@@ -17,7 +16,12 @@ const updateService = function updateService(client, args) {
 	delete args.id
 	delete args.body
 
-	const path = `${type}/${id}/_update`;
+	let path;
+	if(id) {
+		path = `${type}/${id}`
+	} else {
+		path = type
+	}
 
 	return client.performFetchRequest({
 		method: "POST",
@@ -27,5 +31,4 @@ const updateService = function updateService(client, args) {
 	})
 };
 
-
-export default updateService;
+export default indexService;

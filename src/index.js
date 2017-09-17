@@ -1,17 +1,18 @@
 import URL from "url";
-import fetchRequest from "./browser/fetch_request.js"
-import betterWs from "./browser/better_websocket.js";
-import wsRequest from "./browser/websocket_request.js";
-import indexService from "./browser/actions/index.js";
-import getService from "./browser/actions/get.js";
-import updateService from "./browser/actions/update.js";
-import deleteService from "./browser/actions/delete.js";
-import bulkService from "./browser/actions/bulk.js";
-import searchService from "./browser/actions/search.js";
-import getTypesService from "./browser/actions/get_types.js";
-import addWebhookService from "./browser/actions/webhook.js";
-import streamDocumentService from "./browser/actions/stream_document.js";
-import streamSearchService from "./browser/actions/stream_search.js";
+import fetchRequest from "./fetch_request.js"
+import betterWs from "./better_websocket.js";
+import wsRequest from "./websocket_request.js";
+import indexService from "./actions/index.js";
+import getService from "./actions/get.js";
+import updateService from "./actions/update.js";
+import deleteService from "./actions/delete.js";
+import bulkService from "./actions/bulk.js";
+import searchService from "./actions/search.js";
+import getTypesService from "./actions/get_types.js";
+import getMappingsService from "./actions/get_mappings.js";
+import addWebhookService from "./actions/webhook.js";
+import streamDocumentService from "./actions/stream_document.js";
+import streamSearchService from "./actions/stream_search.js";
 
 let client = null;
 
@@ -117,6 +118,10 @@ class AppbaseClient {
 
 	getTypes() {
 		return new getTypesService(this)
+	}
+
+	getMappings() {
+		return new getMappingsService(this)
 	}
 }
 

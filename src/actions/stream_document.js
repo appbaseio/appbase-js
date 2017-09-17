@@ -1,4 +1,4 @@
-import validate from "../../helpers";
+import { validate } from "../helpers";
 
 const streamDocumentService = function streamDocumentService(client, args) {
 	const valid = validate(args, {

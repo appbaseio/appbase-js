@@ -1,5 +1,5 @@
 import stringify from "json-stable-stringify";
-import validate from "../../helpers";
+import { validate, btoa } from "../helpers";
 
 class addWebhookService {
     constructor(client, args, webhook) {
