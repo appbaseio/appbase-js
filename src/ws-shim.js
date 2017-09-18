@@ -1,4 +1,4 @@
-var ws;
+let ws;
 
 if (typeof WebSocket !== "undefined") {
 	ws = WebSocket;
