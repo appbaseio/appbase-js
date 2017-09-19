@@ -28,6 +28,7 @@ export default class fetchRequest {
 		}
 
 		this.resultStream = new Stream();
+		this.resultStream.readable = true;
 
 		fetch(`${this.client.protocol}//${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, {
 			method: this.method,
@@ -39,14 +40,13 @@ export default class fetchRequest {
 			body: this.body
 		})
 			.then(res => {
-				res.text().then((data) => {
-					try {
-						const value = JSON.parse(data);
-						this.resultStream.emit("data", value);
-					} catch (e) {
-						this.resultStream.emit("error", e);
-					}
+				res.json().then(data => {
+					this.resultStream.emit("data", data);
+					this.resultStream.emit("end");
 				})
+			})
+			.catch(e => {
+				this.resultStream.emit("error", e);
 			})
 
 		this.resultStream.on("data", res => {
