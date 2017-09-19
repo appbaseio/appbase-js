@@ -1,12 +1,9 @@
 import querystring from "querystring";
 import Stream from "stream";
-import through2 from "through2";
 import { btoa } from "./helpers";
 
 require("es6-promise").polyfill();
 require("fetch-everywhere");
-
-const JSONStream = require("json-stream");
 
 export default class fetchRequest {
 	constructor(client, args) {
@@ -43,49 +40,14 @@ export default class fetchRequest {
 			body: this.body
 		})
 			.then(res => {
-				if ("getReader" in res.body) {
-					const reader = res.body.getReader();
-					let array = [];
-
-					const readData = () => {
-						reader.read().then(data => {
-							array.push(...data.value);
-							if (isJson(array)) {
-								const string = Utf8ArrayToStr(array);
-								const value = JSON.parse(string);
-								array = [];
-								this.resultStream.emit("data", value);
-							} else {
-								if (data.done) {
-									this.resultStream.emit("error", "JSON Parsing error");
-								}
-							}
-
-							if (data.done) {
-								this.resultStream.emit("end");
-							} else {
-								readData();
-							}
-						});
-					};
-
-					readData();
-				} else {
-					this.requestStream = res.body.pipe(JSONStream()).pipe(through2.obj())
-					
-					this.requestStream.on("data", data => {
-						this.resultStream.emit("data", data);
-					});
-					
-					this.requestStream.on ("end", () => {
-						this.requestStream.destroy();
-						this.resultStream.emit("end");
-					});
-					
-					this.requestStream.on("error", (e) => {
+				res.text().then((data) => {
+					try {
+						const value = JSON.parse(data);
+						this.resultStream.emit("data", value);
+					} catch (e) {
 						this.resultStream.emit("error", e);
-					});
-				}
+					}
+				})
 			})
 
 		this.resultStream.on("data", res => {

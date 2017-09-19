@@ -1,4 +1,4 @@
-var appbase = require("../lib").default;
+var appbase = require("../lib");
 
 var indexTest = require("./index_test.js")
 var updateTest = require("./update_test.js")

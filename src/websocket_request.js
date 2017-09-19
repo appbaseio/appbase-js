@@ -39,13 +39,13 @@ class wsRequest {
         this.resultStream.writable = false
 
         this.closeHandler = () => {
-            that.wsClosed.apply(that)
+            this.wsClosed()
         }
         this.errorHandler = err => {
-            that.processError(...[err])
+            this.processError(...[err])
         }
         this.messageHandler = dataObj => {
-            that.processMessage(...[dataObj])
+            this.processMessage(...[dataObj])
         }
 
         this.client.ws.on("close", this.closeHandler)
@@ -55,8 +55,8 @@ class wsRequest {
         this.client.ws.send(this.request)
 
         this.resultStream.on("end", () => {
-            that.resultStream.readable = false
-            that.stop.apply(that)
+            this.resultStream.readable = false
+            this.stop()
         })
 
         this.resultStream.stop = this.stop.bind(this)
