@@ -2,7 +2,6 @@ import querystring from "querystring";
 import Stream from "stream";
 import { btoa } from "./helpers";
 
-require("es6-promise").polyfill();
 require("fetch-everywhere");
 
 export default class fetchRequest {
