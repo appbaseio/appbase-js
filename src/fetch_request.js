@@ -70,9 +70,7 @@ export default class fetchRequest {
 	}
 
 	stop() {
-		if (this.requestStream) {
-			this.requestStream.destroy();
-		}
+		this.resultStream.emit("end");
 	}
 
 	reconnect() {

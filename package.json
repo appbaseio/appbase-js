@@ -29,7 +29,6 @@
 		"json-stable-stringify": "^1.0.1",
 		"json-stream": "^1.0.0",
 		"stream": "^0.0.2",
-		"through2": "^2.0.0",
 		"url": "^0.11.0",
 		"ws": "^2.2.0"
 	},
@@ -46,6 +45,6 @@
 		"webpack": "^3.6.0"
 	},
 	"browser": {
-		"ws": "./src/ws-shim.js"
+		"ws": "./lib/ws-shim.js"
 	}
 }

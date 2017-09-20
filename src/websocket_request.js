@@ -1,6 +1,6 @@
 import Guid from "guid";
 import querystring from "querystring";
-import through2 from "through2";
+import Stream from "stream";
 
 const EventEmitter = require("eventemitter2").EventEmitter2;
 
@@ -35,42 +35,37 @@ class wsRequest {
             authorization: `Basic ${new Buffer(this.client.credentials).toString("base64")}`
         }
 
-        this.resultStream = through2.obj()
-        this.resultStream.writable = false
+        this.resultStream = new Stream();
+        this.resultStream.readable = true;
 
         this.closeHandler = () => {
-            this.wsClosed()
+            this.wsClosed();
         }
         this.errorHandler = err => {
-            this.processError(...[err])
+            this.processError(...[err]);
         }
         this.messageHandler = dataObj => {
-            this.processMessage(...[dataObj])
+            this.processMessage(...[dataObj]);
         }
 
-        this.client.ws.on("close", this.closeHandler)
-        this.client.ws.on("error", this.errorHandler)
-        this.client.ws.on("message", this.messageHandler)
+        this.client.ws.on("close", this.closeHandler);
+        this.client.ws.on("error", this.errorHandler);
+        this.client.ws.on("message", this.messageHandler);
 
-        this.client.ws.send(this.request)
+        this.client.ws.send(this.request);
 
-        this.resultStream.on("end", () => {
-            this.resultStream.readable = false
-            this.stop()
-        })
+        this.resultStream.stop = this.stop.bind(this);
+        this.resultStream.reconnect = this.reconnect.bind(this);
 
-        this.resultStream.stop = this.stop.bind(this)
-        this.resultStream.reconnect = this.reconnect.bind(this)
-
-        return this.resultStream
+        return this.resultStream;
     }
 
     wsClosed() {
-        this.resultStream.push(null)
+        this.resultStream.emit("end");
     }
 
     processError(err) {
-        this.resultStream.emit("error", err)
+        this.resultStream.emit("error", err);
     }
 
     processMessage(origDataObj) {
@@ -97,28 +92,28 @@ class wsRequest {
             }
 
             if (dataObj.body && dataObj.body !== "") {
-                this.resultStream.push(dataObj.body)
+                this.resultStream.emit("data", dataObj.body);
             }
 
             return
         }
 
         if (!dataObj.id && dataObj.channel && dataObj.channel === this.channel) {
-            this.resultStream.push(dataObj.event)
+            this.resultStream.emit("data", dataObj.event);
             return
         }
     }
 
     getId(callback) {
         if (this.query_id) {
-            callback(this.query_id)
+            callback(this.query_id);
         } else {
-            this.client.ws.on("message", function gid(data) {
+            this.client.ws.on("message", data => {
                 const dataObj = JSON.parse(data);
-                if (dataObj.id === that.id) {
+                if (dataObj.id === this.id) {
                     if (dataObj.query_id) {
-                        this.client.ws.removeListener("message", gid)
-                        callback(query_id)
+                        this.client.ws.removeListener("message", this.id);
+                        callback(this.id);
                     }
                 }
             })
@@ -126,23 +121,24 @@ class wsRequest {
     }
 
     stop() {
-        this.client.ws.removeListener("close", this.closeHandler)
-        this.client.ws.removeListener("error", this.errorHandler)
-        this.client.ws.removeListener("message", this.messageHandler)
-        if (this.resultStream.readable) {
-            this.resultStream.push(null)
-        }
+        this.client.ws.removeListener("close", this.closeHandler);
+        this.client.ws.removeListener("error", this.errorHandler);
+        this.client.ws.removeListener("message", this.messageHandler);
+        this.resultStream.emit("end");
+
         const unsubRequest = JSON.parse(JSON.stringify(this.request));
-        unsubRequest.unsubscribe = true
+        unsubRequest.unsubscribe = true;
+        
         if (this.unsubscribed !== true) {
-            this.client.ws.send(unsubRequest)
+            this.client.ws.send(unsubRequest);
         }
-        this.unsubscribed = true
+        
+        this.unsubscribed = true;
     }
 
     reconnect() {
-        this.stop()
-        return new wsRequest(this.client, this.args)
+        this.stop();
+        return new wsRequest(this.client, this.args);
     }
 }
 
