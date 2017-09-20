@@ -6,27 +6,28 @@ const streamDocumentService = function streamDocumentService(client, args) {
 		"id": "string"
 	});
 	if(valid !== true) {
-		throw valid
-		return
+		throw valid;
+		return;
 	}
-	const type = args.type;
-	const id = args.id;
-	delete args.type
-	delete args.id
-	delete args.stream
+
+	const { type, id } = args;
+
+	delete args.type;
+	delete args.id;
+	delete args.stream;
 
 	if(args.stream === true || args.stream === "true") {
-		args.stream = "true"
+		args.stream = "true";
 	} else {
-		delete args.stream
-		args.streamonly = "true"
+		delete args.stream;
+		args.streamonly = "true";
 	}
 
 	return client.performWsRequest({
 		method: "GET",
 		path: `${type}/${id}`,
-		params: args,
-	})
+		params: args
+	});
 };
 
 

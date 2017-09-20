@@ -6,21 +6,21 @@ const indexService = function indexService(client, args) {
 		"body": "object"
 	});
 	if(valid !== true) {
-		throw valid
-		return
+		throw valid;
+		return;
 	}
-	const type = args.type;
-	const id = args.id;
-	const body = args.body;
-	delete args.type
-	delete args.id
-	delete args.body
+
+	const { type, id, body } = args;
+
+	delete args.type;
+	delete args.id;
+	delete args.body;
 
 	let path;
 	if(id) {
-		path = `${type}/${id}`
+		path = `${type}/${id}`;
 	} else {
-		path = type
+		path = type;
 	}
 
 	return client.performFetchRequest({
@@ -28,7 +28,7 @@ const indexService = function indexService(client, args) {
 		path,
 		params: args,
 		body
-	})
+	});
 };
 
 export default indexService;

@@ -7,15 +7,15 @@ const updateService = function updateService(client, args) {
 		"body": "object"
 	});
 	if (valid !== true) {
-		throw valid
-		return
+		throw valid;
+		return;
 	}
-	const type = args.type;
-	const id = args.id;
-	const body = args.body;
-	delete args.type
-	delete args.id
-	delete args.body
+
+	const { type, id, body } = args;
+
+	delete args.type;
+	delete args.id;
+	delete args.body;
 
 	const path = `${type}/${id}/_update`;
 
@@ -24,7 +24,7 @@ const updateService = function updateService(client, args) {
 		path,
 		params: args,
 		body
-	})
+	});
 };
 
 

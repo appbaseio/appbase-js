@@ -6,13 +6,14 @@ const deleteService = function deleteService(client, args) {
 		"id": "string"
 	});
 	if(valid !== true) {
-		throw valid
-		return
+		throw valid;
+		return;
 	}
-	const type = args.type;
-	const id = args.id;
-	delete args.type
-	delete args.id
+
+	const { type, id } = args;
+
+	delete args.type;
+	delete args.id;
 
 	const path = `${type}/${id}`;
 
@@ -20,7 +21,7 @@ const deleteService = function deleteService(client, args) {
 		method: "DELETE",
 		path,
 		params: args
-	})
+	});
 };
 
 

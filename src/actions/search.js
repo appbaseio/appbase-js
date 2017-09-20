@@ -5,26 +5,27 @@ const searchService = function searchService(client, args) {
 		"body": "object"
 	});
 	if(valid !== true) {
-		throw valid
-		return
+		throw valid;
+		return;
 	}
 
 	let type;
 	if(Array.isArray(args.type)) {
-		type = args.type.join()
+		type = args.type.join();
 	} else {
-		type = args.type
+		type = args.type;
 	}
 
-	const body = args.body;
-	delete args.type
-	delete args.body
+	const { body } = args;
+
+	delete args.type;
+	delete args.body;
 
 	let path;
 	if(type) {
-		path = `${type}/_search`
+		path = `${type}/_search`;
 	} else {
-		path = "/_search"
+		path = "/_search";
 	}
 
 	return client.performFetchRequest({
@@ -32,7 +33,7 @@ const searchService = function searchService(client, args) {
 		path,
 		params: args,
 		body
-	})
+	});
 };
 
 export default searchService;

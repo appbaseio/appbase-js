@@ -5,19 +5,20 @@ const bulkService = function bulkService(client, args) {
 		"body": "object"
 	});
 	if(valid !== true) {
-		throw valid
-		return
+		throw valid;
+		return;
 	}
-	const type = args.type;
-	const body = args.body;
-	delete args.type
-	delete args.body
+
+	const { type, body } = args;
+
+	delete args.type;
+	delete args.body;
 
 	let path;
 	if(type) {
-		path = `${type}/_bulk`
+		path = `${type}/_bulk`;
 	} else {
-		path = "/_bulk"
+		path = "/_bulk";
 	}
 
 	return client.performFetchRequest({
@@ -25,7 +26,7 @@ const bulkService = function bulkService(client, args) {
 		path,
 		params: args,
 		body
-	})
+	});
 };
 
 

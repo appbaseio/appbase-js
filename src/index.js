@@ -1,7 +1,7 @@
 import "babel-polyfill";
 
 import URL from "url";
-import fetchRequest from "./fetch_request.js"
+import fetchRequest from "./fetch_request.js";
 import betterWs from "./better_websocket.js";
 import wsRequest from "./websocket_request.js";
 import indexService from "./actions/index.js";
@@ -71,59 +71,59 @@ class AppbaseClient {
 	}
 
 	performWsRequest(args) {
-		return new wsRequest(this, JSON.parse(JSON.stringify(args)))
+		return new wsRequest(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	performStreamingRequest(args) {
-		return new wsRequest(this, JSON.parse(JSON.stringify(args)))
+		return new wsRequest(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	performFetchRequest(args) {
-		return new fetchRequest(this, JSON.parse(JSON.stringify(args)))
+		return new fetchRequest(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	index(args) {
-		return new indexService(this, JSON.parse(JSON.stringify(args)))
+		return new indexService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	get(args) {
-		return new getService(this, JSON.parse(JSON.stringify(args)))
+		return new getService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	update(args) {
-		return new updateService(this, JSON.parse(JSON.stringify(args)))
+		return new updateService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	delete(args) {
-		return new deleteService(this, JSON.parse(JSON.stringify(args)))
+		return new deleteService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	bulk(args) {
-		return new bulkService(this, JSON.parse(JSON.stringify(args)))
+		return new bulkService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	search(args) {
-		return new searchService(this, JSON.parse(JSON.stringify(args)))
+		return new searchService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	getStream(args) {
-		return new streamDocumentService(this, JSON.parse(JSON.stringify(args)))
+		return new streamDocumentService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	searchStream(args) {
-		return new streamSearchService(this, JSON.parse(JSON.stringify(args)))
+		return new streamSearchService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	searchStreamToURL(args, webhook) {
-		return new addWebhookService(this, JSON.parse(JSON.stringify(args)), JSON.parse(JSON.stringify(webhook)))
+		return new addWebhookService(this, JSON.parse(JSON.stringify(args)), JSON.parse(JSON.stringify(webhook)));
 	}
 
 	getTypes() {
-		return new getTypesService(this)
+		return new getTypesService(this);
 	}
 
 	getMappings() {
-		return new getMappingsService(this)
+		return new getMappingsService(this);
 	}
 }
 

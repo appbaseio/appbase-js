@@ -12,29 +12,29 @@ const betterWs = function betterWs(url) {
 			ee.on("open", function sender() {
 				conn.send(JSON.stringify(dataObj));
 				ee.removeListener("open", sender);
-			})
+			});
 		} else {
 			conn.send(JSON.stringify(dataObj));
 			return this;
 		}
-	}
+	};
 
 	conn.onopen = () => {
 		ee.emit("open");
-	}
+	};
 
 	conn.onmessage = message => {
 		const dataObj = JSON.parse(message.data);
 		ee.emit("message", dataObj);
-	}
+	};
 
 	conn.onerror = err => {
 		ee.emit("error", err);
-	}
+	};
 
 	conn.onclose = close => {
 		ee.emit("close", close);
-	}
+	};
 
 	return ee;
 };

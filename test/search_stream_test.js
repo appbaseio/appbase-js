@@ -1,13 +1,13 @@
-var assert = require("assert")
+var assert = require("assert");
 
-var searchStreamTests = {}
+var searchStreamTests = {};
 
 searchStreamTests.streamMatchAllSingleType = function streamMatchAll(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
-	}
-	var first = true
+	};
+	var first = true;
 	var indexFunc = function() {
 		streamingClient.index({
 			type: "tweet",
@@ -15,11 +15,11 @@ searchStreamTests.streamMatchAllSingleType = function streamMatchAll(streamingCl
 			body: tweet
 		}).on("error", function(err) {
 			if (err) {
-				done(err)
-				return
+				done(err);
+				return;
 			}
-		})
-	}
+		});
+	};
 	var responseStream = streamingClient.searchStream({
 		type: "tweet",
 		body: {
@@ -27,45 +27,45 @@ searchStreamTests.streamMatchAllSingleType = function streamMatchAll(streamingCl
 				match_all: {}
 			}
 		}
-	})
-	setTimeout(indexFunc, 100)
+	});
+	setTimeout(indexFunc, 100);
 	responseStream.on("data", function(res) {
 		if (first) {
-			indexFunc()
-			first = false
+			indexFunc();
+			first = false;
 		} else {
 			try {
 				assert.deepEqual(res, {
 					_type: "tweet",
 					_id: "1",
 					_source: tweet
-				}, "event not as expected")
+				}, "event not as expected");
 			} catch (e) {
-				responseStream.stop()
-				return done(e)
+				responseStream.stop();
+				return done(e);
 			}
-			responseStream.stop()
-			done()
+			responseStream.stop();
+			done();
 		}
 	}).on("error", function(err) {
 		if (err) {
-			done(err)
-			return
+			done(err);
+			return;
 		}
-	})
-}
+	});
+};
 
 searchStreamTests.streamMatchAllMultipleTypes = function streamMatchAll(streamingClient, done) {
 	var tweet = {
 		"user": "olivere",
 		"message": "Welcome to Golang and Elasticsearch."
-	}
+	};
 	streamingClient.index({
 		type: "tweet",
 		id: "1",
 		body: tweet
 	}).on("data", function(res) {
-		var first = true
+		var first = true;
 		var responseStream = streamingClient.searchStream({
 			type: ["tweet", "tweet2"],
 			body: {
@@ -73,13 +73,13 @@ searchStreamTests.streamMatchAllMultipleTypes = function streamMatchAll(streamin
 					match_all: {}
 				}
 			}
-		})
+		});
 		responseStream.on("error", function(err) {
 			if (err) {
-				done(err)
-				return
+				done(err);
+				return;
 			}
-		})
+		});
 		responseStream.on("data", function(res) {
 			if (first) {
 				streamingClient.index({
@@ -88,28 +88,28 @@ searchStreamTests.streamMatchAllMultipleTypes = function streamMatchAll(streamin
 					body: tweet
 				}).on("error", function(err) {
 					if (err) {
-						done(err)
-						return
+						done(err);
+						return;
 					}
-				})
+				});
 
-				first = false
+				first = false;
 			} else {
 				try {
 					assert.deepEqual(res, {
 						_type: "tweet",
 						_id: "1",
 						_source: tweet
-					}, "event not as expected")
+					}, "event not as expected");
 				} catch (e) {
-					responseStream.stop()
-					return done(e)
+					responseStream.stop();
+					return done(e);
 				}
 
-				responseStream.stop()
-				done()
+				responseStream.stop();
+				done();
 			}
-		})
+		});
 
 		setTimeout(function() {
 			streamingClient.index({
@@ -118,17 +118,17 @@ searchStreamTests.streamMatchAllMultipleTypes = function streamMatchAll(streamin
 				body: tweet
 			}).on("error", function(err) {
 				if (err) {
-					done(err)
-					return
+					done(err);
+					return;
 				}
-			})
-		}, 2000)
+			});
+		}, 2000);
 	}).on("error", function(err) {
 		if (err) {
-			done(err)
-			return
+			done(err);
+			return;
 		}
-	})
-}
+	});
+};
 
-module.exports = searchStreamTests
+module.exports = searchStreamTests;

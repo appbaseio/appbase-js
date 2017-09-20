@@ -7,13 +7,14 @@ const getService = function getService(client, args) {
 	});
 
 	if(valid !== true) {
-		throw valid
-		return
+		throw valid;
+		return;
 	}
-	const type = args.type;
-	const id = args.id;
-	delete args.type
-	delete args.id
+
+	const { type, id } = args;
+
+	delete args.type;
+	delete args.id;
 
 	const path = `${type}/${id}`;
 
@@ -21,7 +22,7 @@ const getService = function getService(client, args) {
 		method: "GET",
 		path,
 		params: args
-	})
+	});
 };
 
 

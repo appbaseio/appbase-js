@@ -1,16 +1,16 @@
 module.exports = function(grunt) {
 	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
+		pkg: grunt.file.readJSON("package.json"),
 		mochaTest: {
 			test: {
 				options: {
-					reporter: 'spec'
+					reporter: "spec"
 				},
-				src: ['test/**/*.js']
+				src: ["test/**/*.js"]
 			}
 		}
-	})
-	grunt.loadNpmTasks('grunt-mocha-test')
+	});
+	grunt.loadNpmTasks("grunt-mocha-test");
 
-	grunt.registerTask('test', [ 'mochaTest' ])
-}
+	grunt.registerTask("test", [ "mochaTest" ]);
+};
