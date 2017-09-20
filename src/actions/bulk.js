@@ -4,7 +4,7 @@ const bulkService = function bulkService(client, args) {
 	const valid = validate(args, {
 		"body": "object"
 	});
-	if(valid !== true) {
+	if (valid !== true) {
 		throw valid;
 		return;
 	}
@@ -15,7 +15,7 @@ const bulkService = function bulkService(client, args) {
 	delete args.body;
 
 	let path;
-	if(type) {
+	if (type) {
 		path = `${type}/_bulk`;
 	} else {
 		path = "/_bulk";

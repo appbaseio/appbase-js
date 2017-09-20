@@ -4,13 +4,13 @@ const searchService = function searchService(client, args) {
 	const valid = validate(args, {
 		"body": "object"
 	});
-	if(valid !== true) {
+	if (valid !== true) {
 		throw valid;
 		return;
 	}
 
 	let type;
-	if(Array.isArray(args.type)) {
+	if (Array.isArray(args.type)) {
 		type = args.type.join();
 	} else {
 		type = args.type;
@@ -22,7 +22,7 @@ const searchService = function searchService(client, args) {
 	delete args.body;
 
 	let path;
-	if(type) {
+	if (type) {
 		path = `${type}/_search`;
 	} else {
 		path = "/_search";

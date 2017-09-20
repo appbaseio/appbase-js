@@ -6,11 +6,11 @@ class addWebhookService {
 		let valid = validate(args, {
 			"body": "object"
 		});
-		if(valid !== true) {
+		if (valid !== true) {
 			throw valid;
 		}
 
-		if(args.type === undefined || !(typeof args.type === "string" || Array.isArray(args.type))
+		if (args.type === undefined || !(typeof args.type === "string" || Array.isArray(args.type))
 												|| (args.type === "" || args.type.length === 0) ) {
 			throw new Error("fields missing: type");
 		}
@@ -18,11 +18,11 @@ class addWebhookService {
 		valid = validate(args.body, {
 			"query": "object"
 		});
-		if(valid !== true) {
+		if (valid !== true) {
 			throw valid;
 		}
 
-		if(Array.isArray(args.type)) {
+		if (Array.isArray(args.type)) {
 			this.type = args.type;
 			this.type_string = args.type.join();
 		} else {
@@ -34,14 +34,14 @@ class addWebhookService {
 		this.client = client;
 		this.query = args.body.query;
 
-		if(typeof webhook === "string") {
+		if (typeof webhook === "string") {
 			const webhook_obj = {};
 			webhook_obj.url = webhook;
 			webhook_obj.method = "GET";
 			this.webhooks.push(webhook_obj);
-		} else if(webhook.constructor === Array) {
+		} else if (webhook.constructor === Array) {
 			this.webhooks = webhook;
-		} else if(webhook === Object(webhook)) {
+		} else if (webhook === Object(webhook)) {
 			this.webhooks.push(webhook);
 		} else {
 			throw new Error("fields missing: second argument(webhook) is necessary");
@@ -80,14 +80,14 @@ class addWebhookService {
 	change(args) {
 		this.webhooks = [];
 
-		if(typeof args === "string") {
+		if (typeof args === "string") {
 			const webhook = {};
 			webhook.url = args;
 			webhook.method = "POST";
 			this.webhooks.push(webhook);
-		} else if(args.constructor === Array) {
+		} else if (args.constructor === Array) {
 			this.webhooks = args;
-		} else if(args === Object(args)) {
+		} else if (args === Object(args)) {
 			this.webhooks.push(args);
 		} else {
 			throw new Error("fields missing: one of webhook or url fields is required");

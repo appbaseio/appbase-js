@@ -20,7 +20,7 @@ let client = null;
 
 class AppbaseClient {
 	constructor(args) {
-		if(!client){
+		if (!client) {
 			client = this;
 		}
 

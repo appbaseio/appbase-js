@@ -4,19 +4,19 @@ const streamSearchService = function streamSearchService(client, args) {
 	const valid = validate(args, {
 		"body": "object"
 	});
-	if(valid !== true) {
+	if (valid !== true) {
 		throw valid;
 		return;
 	}
 
-	if(args.type === undefined || !(typeof args.type === "string" || Array.isArray(args.type))
+	if (args.type === undefined || !(typeof args.type === "string" || Array.isArray(args.type))
 		|| (args.type === "" || args.type.length === 0) ) {
 		throw new Error("fields missing: type");
 		return;
 	}
 
 	let type;
-	if(Array.isArray(args.type)) {
+	if (Array.isArray(args.type)) {
 		type = args.type.join();
 	} else {
 		type = args.type;

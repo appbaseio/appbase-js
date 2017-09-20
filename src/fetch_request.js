@@ -60,7 +60,7 @@ export default class fetchRequest {
 	}
 
 	getId(callback) {
-		if(this.response) {
+		if (this.response) {
 			callback(this.response.headers["query-id"]);
 		} else {
 			this.resultStream.on("data", res => {

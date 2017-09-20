@@ -5,7 +5,7 @@ const deleteService = function deleteService(client, args) {
 		"type": "string",
 		"id": "string"
 	});
-	if(valid !== true) {
+	if (valid !== true) {
 		throw valid;
 		return;
 	}

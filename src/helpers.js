@@ -7,18 +7,18 @@ export function validate(object,fields) {
 
 	const keys = Object.keys(fields);
 
-	for(const key of keys) {
+	for (const key of keys) {
 		const type = fields[key];
-		if(typeof object[key] !== type || object[key] === empty_for[type]) {
+		if (typeof object[key] !== type || object[key] === empty_for[type]) {
 			invalid.push(key);
 		}
 	}
 
 	let missing = "";
-	for(let i = 0; i < invalid.length; i++) {
+	for (let i = 0; i < invalid.length; i++) {
 		missing += `${invalid[i]}, `;
 	}
-	if(invalid.length > 0) {
+	if (invalid.length > 0) {
 		return new Error(`fields missing: ${missing}`);
 	}
 

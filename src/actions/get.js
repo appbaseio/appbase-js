@@ -6,7 +6,7 @@ const getService = function getService(client, args) {
 		"id": "string"
 	});
 
-	if(valid !== true) {
+	if (valid !== true) {
 		throw valid;
 		return;
 	}

@@ -5,7 +5,7 @@ const indexService = function indexService(client, args) {
 		"type": "string",
 		"body": "object"
 	});
-	if(valid !== true) {
+	if (valid !== true) {
 		throw valid;
 		return;
 	}
@@ -17,7 +17,7 @@ const indexService = function indexService(client, args) {
 	delete args.body;
 
 	let path;
-	if(id) {
+	if (id) {
 		path = `${type}/${id}`;
 	} else {
 		path = type;

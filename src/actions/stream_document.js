@@ -5,7 +5,7 @@ const streamDocumentService = function streamDocumentService(client, args) {
 		"type": "string",
 		"id": "string"
 	});
-	if(valid !== true) {
+	if (valid !== true) {
 		throw valid;
 		return;
 	}
@@ -16,7 +16,7 @@ const streamDocumentService = function streamDocumentService(client, args) {
 	delete args.id;
 	delete args.stream;
 
-	if(args.stream === true || args.stream === "true") {
+	if (args.stream === true || args.stream === "true") {
 		args.stream = "true";
 	} else {
 		delete args.stream;
