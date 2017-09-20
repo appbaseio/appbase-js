@@ -9,14 +9,14 @@ const streamSearchService = function streamSearchService(client, args) {
 		return
 	}
 
-	if(args.type === undefined || !(typeof args.type === "string" || args.type.constructor === Array)
+	if(args.type === undefined || !(typeof args.type === "string" || Array.isArray(args.type))
 		|| (args.type === "" || args.type.length === 0) ) {
 		throw new Error("fields missing: type")
 		return
 	}
 
 	var type
-	if(args.type.constructor === Array) {
+	if(Array.isArray(args.type)) {
 		type = args.type.join()
 	} else {
 		type = args.type

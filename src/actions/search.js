@@ -10,7 +10,7 @@ const searchService = function searchService(client, args) {
 	}
 
 	let type;
-	if(args.type.constructor === Array) {
+	if(Array.isArray(args.type)) {
 		type = args.type.join()
 	} else {
 		type = args.type

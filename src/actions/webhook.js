@@ -10,7 +10,7 @@ class addWebhookService {
             throw valid
         }
 
-        if(args.type === undefined || !(typeof args.type === "string" || args.type.constructor === Array)
+        if(args.type === undefined || !(typeof args.type === "string" || Array.isArray(args.type))
             || (args.type === "" || args.type.length === 0) ) {
             throw new Error("fields missing: type")
         }
@@ -22,7 +22,7 @@ class addWebhookService {
             throw valid
         }
 
-        if(args.type.constructor === Array) {
+        if(Array.isArray(args.type)) {
             this.type = args.type
             this.type_string = args.type.join()
         } else {
