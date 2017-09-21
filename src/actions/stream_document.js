@@ -1,4 +1,4 @@
-import { validate } from "../helpers";
+import { validate, isAppbase } from "../helpers";
 
 const streamDocumentService = function streamDocumentService(client, args) {
 	const valid = validate(args, {
@@ -23,11 +23,29 @@ const streamDocumentService = function streamDocumentService(client, args) {
 		args.streamonly = "true";
 	}
 
-	return client.performWsRequest({
-		method: "GET",
-		path: `${type}/${id}`,
-		params: args
-	});
+	/* if Streams, add required parameters */
+	if (!isAppbase(client)) {
+		args.stream = true;
+		args.channel_id = client.channel_id;
+	}
+
+	if (isAppbase(client)) {
+		return client.performWsRequest({
+			method: "GET",
+			path: `${type}/${id}`,
+			params: args
+		});
+	} else {
+		/* first, subscribe to document */
+		client.performStreamingRequest({
+			method: "GET",
+			path: `${type}/${id}`,
+			params: args
+		});
+
+		/* return stream object */
+		return client.performWsRequest({});
+	}
 };
 
 

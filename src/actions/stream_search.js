@@ -1,4 +1,4 @@
-import { validate } from "../helpers";
+import { validate, isAppbase } from "../helpers";
 
 const streamSearchService = function streamSearchService(client, args) {
 	const valid = validate(args, {
@@ -30,12 +30,31 @@ const streamSearchService = function streamSearchService(client, args) {
 
 	args.streamonly = "true";
 
-	return client.performWsRequest({
-		method: "POST",
-		path: `${type}/_search`,
-		params: args,
-		body
-	});
+	/* if Streams, add required parameters */
+	if (!isAppbase(client)) {
+		args.stream = true;
+		args.channel_id = client.channel_id;
+	}
+
+	if (isAppbase(client)) {
+		return client.performWsRequest({
+			method: "POST",
+			path: `${type}/_search`,
+			params: args,
+			body
+		});
+	} else {
+		/* first, subscribe to document */
+		client.performStreamingRequest({
+			method: "POST",
+			path: `${type}/_search`,
+			params: args,
+			body
+		});
+
+		/* return stream object */
+		return client.performWsRequest({});
+	}
 };
 
 export default streamSearchService;

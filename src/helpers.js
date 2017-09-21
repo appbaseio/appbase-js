@@ -45,3 +45,11 @@ export function btoa(input = "") {
 
 	return output;
 }
+
+export function isAppbase(client) {
+	return contains(client.url, "scalr.api.appbase.io");
+}
+
+function contains(string, substring) {
+	return string.indexOf(substring) !== -1;
+}

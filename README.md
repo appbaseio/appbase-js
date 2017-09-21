@@ -6,6 +6,10 @@ Appbase.io is a data streams library for Node.JS and Javascript (browser build i
 
 An up-to-date documentation for Node.JS API is available at http://docs.appbase.io/scalr/javascript/nodejs-intro.html.
 
+## Streams
+
+`appbase-js` works transparently in both hosted Appbase.io and Streams, our dedicated version of Appbase. The basic difference is that, while in Appbase the user is expected to pass an `app` field in lib object instantiation, in Streams you can pass `app` (or `index`) on each request.
+
 ## Quick Example
 
 Working code snippets where each step builds on the previous ones.

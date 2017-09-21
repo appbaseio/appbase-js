@@ -1,6 +1,8 @@
 import Guid from "guid";
 import querystring from "querystring";
 import Stream from "stream";
+import { isAppbase } from "./helpers";
+import { btoa } from "./helpers";
 
 const EventEmitter = require("eventemitter2").EventEmitter2;
 
@@ -23,17 +25,18 @@ class wsRequest {
 	}
 
 	init() {
-		const that = this;
-
 		this.id = Guid.raw();
 
-		this.request = {
-			id: this.id,
-			path: `${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`,
-			method: this.method,
-			body: this.body,
-			authorization: `Basic ${new Buffer(this.client.credentials).toString("base64")}`
-		};
+		/* Don't run if server is Streams */
+		if (isAppbase(this.client)) {
+			this.request = {
+				id: this.id,
+				path: `${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`,
+				method: this.method,
+				body: this.body,
+				authorization: `Basic ${btoa(this.client.credentials)}`
+			};
+		}
 
 		this.resultStream = new Stream();
 		this.resultStream.readable = true;
@@ -52,7 +55,10 @@ class wsRequest {
 		this.client.ws.on("error", this.errorHandler);
 		this.client.ws.on("message", this.messageHandler);
 
-		this.client.ws.send(this.request);
+		/* Don't run if server is Streams */
+		if (isAppbase(this.client)) {
+			this.client.ws.send(this.request);
+		}
 
 		this.resultStream.stop = this.stop.bind(this);
 		this.resultStream.reconnect = this.reconnect.bind(this);
@@ -70,6 +76,11 @@ class wsRequest {
 
 	processMessage(origDataObj) {
 		const dataObj = JSON.parse(JSON.stringify(origDataObj));
+
+		if (!isAppbase(this.client)) {
+			this.resultStream.emit("data", dataObj);
+			return;
+		}
 
 		if (!dataObj.id && dataObj.message) {
 			this.resultStream.emit("error", dataObj);

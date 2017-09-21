@@ -1,6 +1,7 @@
 import "babel-polyfill";
 
 import URL from "url";
+import Guid from "guid";
 import fetchRequest from "./fetch_request.js";
 import betterWs from "./better_websocket.js";
 import wsRequest from "./websocket_request.js";
@@ -15,6 +16,7 @@ import getMappingsService from "./actions/get_mappings.js";
 import addWebhookService from "./actions/webhook.js";
 import streamDocumentService from "./actions/stream_document.js";
 import streamSearchService from "./actions/stream_search.js";
+import { isAppbase } from "./helpers";
 
 let client = null;
 
@@ -33,9 +35,13 @@ class AppbaseClient {
 		this.url = parsedUrl.host;
 		this.protocol = parsedUrl.protocol;
 		this.credentials = parsedUrl.auth;
-		this.appname = args.appname || args.app;
+		this.appname = args.appname || args.app || args.index;
+		this.channel_id = Guid.raw().replace(/-/g, "");
 
-		if (typeof this.appname !== "string" || this.appname === "") {
+		/* appname is not required in Streams; there, it can be passed
+		   as index name and on each request*/
+
+		if (isAppbase(this) && (typeof this.appname !== "string" || this.appname === "")) {
 			throw new Error("App name is not present in options.");
 		}
 
@@ -53,14 +59,19 @@ class AppbaseClient {
 			this.credentials = args.credentials;
 		}
 
-		if (typeof this.credentials !== "string" || this.credentials === "") {
+		/* credentials are not required for Streams */
+		if (isAppbase(this) && (typeof this.credentials !== "string" || this.credentials === "")) {
 			throw new Error("Authentication information is not present. Did you add credentials?");
 		}
 
 		if (parsedUrl.protocol === "https:") {
-			this.ws = new betterWs(`wss://${parsedUrl.host}/${this.appname}`);
+			const appname = isAppbase(this) ? this.appname : "";
+			const url = `wss://${this.credentials}@${parsedUrl.host}/${appname}?sub_to_chan=${this.channel_id}`;
+			this.ws = new betterWs(url);
 		} else {
-			this.ws = new betterWs(`ws://${parsedUrl.host}/${this.appname}`);
+			const appname = isAppbase(this) ? this.appname : "";
+			const url = `ws://${this.credentials}@${parsedUrl.host}/${appname}?sub_to_chan=${this.channel_id}`;
+			this.ws = new betterWs(url);
 		}
 
 		if (this.url.slice(-1) === "/") {
@@ -71,58 +82,100 @@ class AppbaseClient {
 	}
 
 	performWsRequest(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new wsRequest(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	performStreamingRequest(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new wsRequest(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	performFetchRequest(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new fetchRequest(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	index(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new indexService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	get(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new getService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	update(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new updateService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	delete(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new deleteService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	bulk(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new bulkService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	search(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new searchService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	getStream(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new streamDocumentService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	searchStream(args) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new streamSearchService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	searchStreamToURL(args, webhook) {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new addWebhookService(this, JSON.parse(JSON.stringify(args)), JSON.parse(JSON.stringify(webhook)));
 	}
 
 	getTypes() {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new getTypesService(this);
 	}
 
 	getMappings() {
+		if (!this.appname) {
+			this.appname = args.index;
+		}
 		return new getMappingsService(this);
 	}
 }
