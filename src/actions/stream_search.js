@@ -32,11 +32,13 @@ const streamSearchService = function streamSearchService(client, args) {
 
 	/* if Streams, add required parameters */
 	if (!isAppbase(client)) {
+		console.log("setting args for non-appbase streaming source");
 		args.stream = true;
 		args.channel_id = client.channel_id;
 	}
 
 	if (isAppbase(client)) {
+		console.log("simple ws request with body");
 		return client.performWsRequest({
 			method: "POST",
 			path: `${type}/_search`,
@@ -44,6 +46,7 @@ const streamSearchService = function streamSearchService(client, args) {
 			body
 		});
 	} else {
+		console.log("fetch + ws request");
 		/* first, subscribe to document */
 		client.performStreamingRequest({
 			method: "POST",

@@ -25,19 +25,22 @@ const streamDocumentService = function streamDocumentService(client, args) {
 
 	/* if Streams, add required parameters */
 	if (!isAppbase(client)) {
+		console.log("setting args for non-appbase streaming source");
 		args.stream = true;
 		args.channel_id = client.channel_id;
 	}
 
 	if (isAppbase(client)) {
+		console.log("simple ws request");
 		return client.performWsRequest({
 			method: "GET",
 			path: `${type}/${id}`,
 			params: args
 		});
 	} else {
+		console.log("fetch + ws request");
 		/* first, subscribe to document */
-		client.performStreamingRequest({
+		client.performFetchRequest({
 			method: "GET",
 			path: `${type}/${id}`,
 			params: args

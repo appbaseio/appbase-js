@@ -64,13 +64,17 @@ class AppbaseClient {
 			throw new Error("Authentication information is not present. Did you add credentials?");
 		}
 
+		const streamPath = isAppbase(client) ? "" : `/_streams/sub/${this.channel_id}`;
+
 		if (parsedUrl.protocol === "https:") {
-			const appname = isAppbase(this) ? this.appname : "";
-			const url = `wss://${this.credentials}@${parsedUrl.host}/${appname}?sub_to_chan=${this.channel_id}`;
+			const appname = isAppbase(this) ? `/${this.appname}` : "";
+			const url = `wss://${this.credentials}@${parsedUrl.host}${appname}${streamPath}`;
+			console.log(url);
 			this.ws = new betterWs(url);
 		} else {
-			const appname = isAppbase(this) ? this.appname : "";
-			const url = `ws://${this.credentials}@${parsedUrl.host}/${appname}?sub_to_chan=${this.channel_id}`;
+			const appname = isAppbase(this) ? `/${this.appname}` : "";
+			const url = `ws://${this.credentials}@${parsedUrl.host}${appname}${streamPath}`;
+			console.log(url);
 			this.ws = new betterWs(url);
 		}
 

@@ -17,7 +17,7 @@ describe("Appbase", function() {
 
 	before(function() {
 		streamingClient = new appbase({
-			url: "https://scalr.api.appbase.io",
+			url: "http://scalr.api.appbase.io",
 			app: "appbasejs-test-app",
 			credentials: "zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef"
 		});

@@ -77,6 +77,8 @@ class wsRequest {
 	processMessage(origDataObj) {
 		const dataObj = JSON.parse(JSON.stringify(origDataObj));
 
+		console.log(JSON.stringify(dataObj, null, 4));
+
 		if (!isAppbase(this.client)) {
 			this.resultStream.emit("data", dataObj);
 			return;
