@@ -16,14 +16,8 @@ import addWebhookService from "./actions/webhook.js";
 import streamDocumentService from "./actions/stream_document.js";
 import streamSearchService from "./actions/stream_search.js";
 
-let client = null;
-
 class AppbaseClient {
 	constructor(args) {
-		if (!client) {
-			client = this;
-		}
-
 		if (typeof args.url !== "string" || args.url === "") {
 			throw new Error("URL not present in options.");
 		}
@@ -67,7 +61,7 @@ class AppbaseClient {
 			this.url = this.url.slice(0, -1);
 		}
 
-		return client;
+		return this;
 	}
 
 	performWsRequest(args) {
