@@ -15,6 +15,7 @@ import getMappingsService from "./actions/get_mappings.js";
 import addWebhookService from "./actions/webhook.js";
 import streamDocumentService from "./actions/stream_document.js";
 import streamSearchService from "./actions/stream_search.js";
+import { isAppbase } from "./helpers";
 
 class AppbaseClient {
 	constructor(args) {
@@ -26,7 +27,7 @@ class AppbaseClient {
 
 		this.url = parsedUrl.host;
 		this.protocol = parsedUrl.protocol;
-		this.credentials = parsedUrl.auth;
+		this.credentials = parsedUrl.auth || null;
 		this.appname = args.appname || args.app;
 
 		if (typeof this.appname !== "string" || this.appname === "") {
@@ -37,17 +38,15 @@ class AppbaseClient {
 			throw new Error("Protocol is not present in url. URL should be of the form https://scalr.api.appbase.io");
 		}
 
-		if (typeof args.username === "string" && args.username !== "" && typeof args.password === "string" && args.password !== "") {
-			this.credentials = `${args.username}:${args.password}`;
-		}
-
 		// credentials can be provided as a part of the URL, as username, password args or
 		// as a credentials argument directly
 		if (typeof args.credentials === "string" && args.credentials !== "") {
 			this.credentials = args.credentials;
+		} else if (typeof args.username === "string" && args.username !== "" && typeof args.password === "string" && args.password !== "") {
+			this.credentials = `${args.username}:${args.password}`;
 		}
 
-		if (typeof this.credentials !== "string" || this.credentials === "") {
+		if (isAppbase(this) && (this.credentials === null)) {
 			throw new Error("Authentication information is not present. Did you add credentials?");
 		}
 

@@ -31,9 +31,12 @@ class wsRequest {
 			id: this.id,
 			path: `${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`,
 			method: this.method,
-			body: this.body,
-			authorization: `Basic ${new Buffer(this.client.credentials).toString("base64")}`
+			body: this.body
 		};
+
+		if (this.client.credentials) {
+			this.request.authorization = `Basic ${new Buffer(this.client.credentials).toString("base64")}`;
+		}
 
 		this.resultStream = new Stream();
 		this.resultStream.readable = true;

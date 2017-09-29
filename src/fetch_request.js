@@ -13,7 +13,7 @@ export default class fetchRequest {
 		this.path = args.path;
 		this.params = args.params;
 		this.body = args.body;
-		
+
 		if (Array.isArray(this.body)) {
 			let arrayBody = "";
 
@@ -30,13 +30,18 @@ export default class fetchRequest {
 		this.resultStream = new Stream();
 		this.resultStream.readable = true;
 
+		const headers = {
+			"Accept": "application/json",
+			"Content-Type": "application/json"
+		}
+
+		if (this.client.credentials) {
+			headers.Authorization = `Basic ${btoa(this.client.credentials)}`;
+		}
+
 		fetch(`${this.client.protocol}//${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, {
 			method: this.method,
-			headers: {
-				"Authorization": `Basic ${btoa(this.client.credentials)}`,
-				"Accept": "application/json",
-				"Content-Type": "application/json"
-			},
+			headers,
 			body: this.body
 		})
 			.then(res => {
@@ -104,7 +109,7 @@ function Utf8ArrayToStr(array) {
 	while(i < len) {
 		c = array[i++];
 		switch(c >> 4)
-		{ 
+		{
 			case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
 				// 0xxxxxxx
 				out += String.fromCharCode(c);

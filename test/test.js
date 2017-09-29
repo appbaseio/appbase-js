@@ -9,6 +9,7 @@ var getStreamTests = require("./get_stream_test.js");
 var searchStreamTests = require("./search_stream_test.js");
 var getTypesTest = require("./get_types_test.js");
 var getMappingsTest = require("./get_mappings_test.js");
+var multipleInstancesTest = require("./multiple_instances_test.js");
 var helper = require("../lib/helpers");
 describe("Appbase", function() {
 	this.timeout(10000);
@@ -84,6 +85,17 @@ describe("Appbase", function() {
 	describe("#getMappings()", function() {
 		it("should get mappings object", function(done) {
 			getMappingsTest.getAllMappings(streamingClient, done);
+		});
+	});
+
+	describe("#Compare two appbase instances", function() {
+		it("should create a new instance on every new instantiation", function(done) {
+			var newClient = new appbase({
+				url: "https://scalr.api.appbase.io",
+				app: "testapp123",
+				credentials: "HkcL06rjZ:a83f7cb3-6cbb-40ef-bfa9-9c490abec06c"
+			});
+			multipleInstancesTest.compareInstances(streamingClient, newClient, done);
 		});
 	});
 
