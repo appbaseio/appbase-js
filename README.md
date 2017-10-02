@@ -20,23 +20,23 @@ const CREDENTIALS = "RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f"
 // Add data into our ES "app index"
 var Appbase = require("appbase-js")
 var appbase = new Appbase({
-		url: HOST_URL,
-		app: APPNAME,
-		credentials: CREDENTIALS
-	});
+  url: HOST_URL,
+  app: APPNAME,
+  credentials: CREDENTIALS
+});
 appbase.index({
-    type: "product",
-    id: "1",
-    body: {
-        name: "A green door",
-        price: 12.50,
-        tags: ["home", "green"],
-        stores: ["Walmart", "Target"]
-    }
+  type: "product",
+  id: "1",
+  body: {
+    name: "A green door",
+    price: 12.50,
+    tags: ["home", "green"],
+    stores: ["Walmart", "Target"]
+  }
 }).on("data", function(res) {
-    console.log(res);
+  console.log(res);
 }).on("error", function(err) {
-	console.log(err);
+  console.log(err);
 });
 ```
 
@@ -46,13 +46,13 @@ Returns continous updates on a JSON document from a particular ``type``.
 
 ```js
 appbase.getStream({
-      type: "product",
-      id: "1"
+  type: "product",
+  id: "1"
 }).on("data", function(res) {
-      // "data" handler is triggered every time there is a **new** document update.
-      console.log(res);
+  // "data" handler is triggered every time there is a **new** document update.
+  console.log(res);
 }).on("error", function(err) {
-      console.log("caught a stream error", err);
+  console.log("caught a stream error", err);
 })
 ```
 
@@ -61,16 +61,19 @@ appbase.getStream({
 ##### Console Output
 
 ```js
-{ _index: "app`248",
+{
+  _index: "app`248",
   _type: "product",
   _id: "1",
   _version: 4,
   found: true,
-  _source: 
-   { name: "A green door",
-     price: 12.5,
-     tags: [ "home", "green" ],
-     stores: [ "Walmart", "Target" ] } }
+  _source: { 
+    name: "A green door",
+    price: 12.5,
+    tags: [ "home", "green" ],
+    stores: [ "Walmart", "Target" ] 
+  } 
+}
 ```
 
 getStream() returns a ``stream.Readable`` object, which can be conveniently listened via the `on("data")` event listener. Check out the [stream_document_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_document_test.js) where we make an update to the document and see any further updates to it via the "data" event. 
@@ -81,29 +84,36 @@ Get continuous results by searching across the database streams. A query can be 
 
 ```js
 appbase.searchStream({
-	type: "product",
-	body: {
-		query: {
-			match_all: {}
-		}
-	}
+  type: "product",
+  body: {
+    query: {
+      match_all: {}
+    }
+  }
 }).on("data", function(res, err) {
-	console.log(res);
+  console.log(res);
 }).on("error", function(err) {
-	console.log("caught a stream error", err);
+  console.log("caught a stream error", err);
 })
 ```
 
 ##### Console Output
 
 ```js
-{ took: 1,
+{ 
+  took: 1,
   timed_out: false,
-  _shards: { total: 1, successful: 1, failed: 0 },
-  hits: 
-   { total: 4,
-     max_score: 1,
-     hits: [ [Object], [Object], [Object], [Object] ] } }
+  _shards: { 
+    total: 1, 
+    successful: 1, 
+    failed: 0
+  },
+  hits: {
+    total: 4,
+    max_score: 1,
+    hits: [ [Object], [Object], [Object], [Object] ] 
+  } 
+}
 ```
 
 searchStream() also returns a ``stream.Readable`` object, which can be conveniently listened via the `on("data")` event listener. Check out the [stream_search_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_search_test.js) where we make an update that matches the query and see the results in the event stream. 
