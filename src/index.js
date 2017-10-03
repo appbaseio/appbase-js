@@ -1,4 +1,6 @@
-import "babel-polyfill";
+if ((window && !window._babelPolyfill) || (global && !global._babelPolyfill)) {
+	require("babel-polyfill");
+}
 
 import URL from "url";
 import fetchRequest from "./fetch_request.js";
