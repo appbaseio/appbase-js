@@ -1,4 +1,5 @@
-if ((window && !window._babelPolyfill) || (global && !global._babelPolyfill)) {
+if ((typeof(window) !== "undefined" && !window._babelPolyfill) ||
+	(global && !global._babelPolyfill)) {
 	require("babel-polyfill");
 }
 

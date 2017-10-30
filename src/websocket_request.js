@@ -1,6 +1,7 @@
-import Guid from "guid";
 import querystring from "querystring";
 import Stream from "stream";
+
+import { uuidv4 } from "./helpers";
 
 const EventEmitter = require("eventemitter2").EventEmitter2;
 
@@ -25,7 +26,7 @@ class wsRequest {
 	init() {
 		const that = this;
 
-		this.id = Guid.raw();
+		this.id = uuidv4();
 
 		this.request = {
 			id: this.id,
