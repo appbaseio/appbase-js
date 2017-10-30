@@ -1,7 +1,7 @@
 import querystring from "querystring";
 import Stream from "stream";
 
-import { uuidv4 } from "./helpers";
+import { uuidv4, btoa } from "./helpers";
 
 const EventEmitter = require("eventemitter2").EventEmitter2;
 
@@ -36,7 +36,7 @@ class wsRequest {
 		};
 
 		if (this.client.credentials) {
-			this.request.authorization = `Basic ${new Buffer(this.client.credentials).toString("base64")}`;
+			this.request.authorization = `Basic ${btoa(this.client.credentials)}`;
 		}
 
 		this.resultStream = new Stream();
