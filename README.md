@@ -4,7 +4,7 @@
 
 Appbase.io is a data streams library for Node.JS and Javascript (browser UMD build is in the [dist/](https://github.com/appbaseio/appbase-js/tree/master/dist) directory); compatible with [elasticsearch.js](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html).
 
-An up-to-date documentation for Node.JS API is available at http://docs.appbase.io/scalr/javascript/nodejs-intro.html.
+An up-to-date documentation for Node.JS API is available at http://docs.appbase.io/javascript/quickstart.html.
 
 ## Quick Example
 
@@ -111,7 +111,7 @@ searchStream() also returns a ``stream.Readable`` object, which can be convenien
 
 ## API Reference
 
-For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/scalr/javascript/api-reference.html).
+For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/javascript/api-reference.html).
 
 ### Global
 
