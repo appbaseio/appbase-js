@@ -1,4 +1,4 @@
-![Build Status Image](https://img.shields.io/badge/build-passing-brightgreen.svg) [![Code Climate](https://codeclimate.com/github/appbaseio/appbase-js/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/appbase-js)
+![Build Status Image](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
 # appbase-js
 
