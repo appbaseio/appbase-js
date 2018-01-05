@@ -33,7 +33,9 @@ export default class fetchRequest {
 		const headers = {
 			"Accept": "application/json",
 			"Content-Type": "application/json"
-		}
+		};
+
+		const timestamp = Date.now();
 
 		if (this.client.credentials) {
 			headers.Authorization = `Basic ${btoa(this.client.credentials)}`;
@@ -46,7 +48,11 @@ export default class fetchRequest {
 		})
 			.then(res => {
 				res.json().then(data => {
-					this.resultStream.emit("data", data);
+					const response = Object.assign({}, data, {
+						_timestamp: timestamp
+					});
+
+					this.resultStream.emit("data", response);
 					this.resultStream.emit("end");
 				});
 			})
