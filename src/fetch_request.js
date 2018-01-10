@@ -30,10 +30,10 @@ export default class fetchRequest {
 		this.resultStream = new Stream();
 		this.resultStream.readable = true;
 
-		const headers = {
+		const headers = Object.assign({}, {
 			"Accept": "application/json",
 			"Content-Type": "application/json"
-		};
+		}, client.headers);
 
 		const timestamp = Date.now();
 

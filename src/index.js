@@ -32,6 +32,7 @@ class AppbaseClient {
 		this.protocol = parsedUrl.protocol;
 		this.credentials = parsedUrl.auth || null;
 		this.appname = args.appname || args.app;
+		this.headers = {};
 
 		if (typeof this.appname !== "string" || this.appname === "") {
 			throw new Error("App name is not present in options.");
@@ -64,6 +65,10 @@ class AppbaseClient {
 		}
 
 		return this;
+	}
+
+	setHeaders(headers) {
+		this.headers = headers;
 	}
 
 	performWsRequest(args) {
