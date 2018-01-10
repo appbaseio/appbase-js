@@ -27,6 +27,7 @@ bulkTests.bulkIndexOneDocument = function bulkIndexOneDocument(streamingClient, 
 			responseStream.on("data", function(res) {
 				delete res._version;
 				delete res._index;
+				delete res._timestamp;
 				try {
 					assert.deepEqual(res, {
 						_type: "tweet",
