@@ -29,10 +29,11 @@
 		"fetch-everywhere": "^1.0.5",
 		"json-stable-stringify": "^1.0.1",
 		"stream": "^0.0.2",
-		"url": "^0.11.0",
+		"url-parser-lite": "^0.1.0",
 		"ws": "^2.2.0"
 	},
 	"devDependencies": {
+		"babel-cli": "^6.26.0",
 		"babel-core": "^6.26.0",
 		"babel-eslint": "^8.0.0",
 		"babel-loader": "^7.1.2",
@@ -44,7 +45,7 @@
 		"eslint": "^4.7.1",
 		"eslint-config-prettier": "^2.5.0",
 		"eslint-plugin-babel": "^4.1.2",
-		"eslint-plugin-import": "^2.7.0",
+		"eslint-plugin-import": "^2.8.0",
 		"eslint-plugin-prettier": "^2.3.1",
 		"grunt": "^0.4.5",
 		"grunt-mocha-test": "^0.12.7",
