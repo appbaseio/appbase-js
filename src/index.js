@@ -3,7 +3,7 @@ if ((typeof(window) !== "undefined" && !window._babelPolyfill) ||
 	require("babel-polyfill");
 }
 
-import URL from "url";
+import URL from "url-parser-lite";
 import fetchRequest from "./fetch_request.js";
 import betterWs from "./better_websocket.js";
 import wsRequest from "./websocket_request.js";
@@ -26,11 +26,16 @@ class AppbaseClient {
 			throw new Error("URL not present in options.");
 		}
 
-		const parsedUrl = URL.parse(args.url);
+		const {
+			auth = null,
+			host = "",
+			path = "",
+			protocol = ""
+		} = URL(args.url);
 
-		this.url = parsedUrl.host;
-		this.protocol = parsedUrl.protocol;
-		this.credentials = parsedUrl.auth || null;
+		this.url = host + path;
+		this.protocol = protocol;
+		this.credentials = auth || null;
 		this.appname = args.appname || args.app;
 		this.headers = {};
 
@@ -54,10 +59,10 @@ class AppbaseClient {
 			throw new Error("Authentication information is not present. Did you add credentials?");
 		}
 
-		if (parsedUrl.protocol === "https:") {
-			this.ws = new betterWs(`wss://${parsedUrl.host}/${this.appname}`);
+		if (protocol === "https") {
+			this.ws = new betterWs(`wss://${host}/${this.appname}`);
 		} else {
-			this.ws = new betterWs(`ws://${parsedUrl.host}/${this.appname}`);
+			this.ws = new betterWs(`ws://${host}/${this.appname}`);
 		}
 
 		if (this.url.slice(-1) === "/") {
