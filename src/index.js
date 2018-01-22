@@ -59,10 +59,12 @@ class AppbaseClient {
 			throw new Error("Authentication information is not present. Did you add credentials?");
 		}
 
-		if (protocol === "https") {
-			this.ws = new betterWs(`wss://${host}/${this.appname}`);
-		} else {
-			this.ws = new betterWs(`ws://${host}/${this.appname}`);
+		if (isAppbase(this)) {
+			try {
+				this.ws = new betterWs(`wss://${this.url}/${this.appname}`);
+			} catch(e) {
+				console.error(e);
+			}
 		}
 
 		if (this.url.slice(-1) === "/") {

@@ -41,7 +41,7 @@ export default class fetchRequest {
 			headers.Authorization = `Basic ${btoa(this.client.credentials)}`;
 		}
 
-		fetch(`${this.client.protocol}//${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, {
+		fetch(`${this.client.protocol}://${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, {
 			method: this.method,
 			headers,
 			body: this.body
