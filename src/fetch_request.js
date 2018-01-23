@@ -14,19 +14,6 @@ export default class fetchRequest {
 		this.params = args.params;
 		this.body = args.body;
 
-		if (Array.isArray(this.body)) {
-			let arrayBody = "";
-
-			this.body.map(item => {
-				arrayBody += JSON.stringify(item);
-				arrayBody += "\n";
-			});
-
-			this.body = arrayBody;
-		} else {
-			this.body = JSON.stringify(this.body) || {};
-		}
-
 		this.resultStream = new Stream();
 		this.resultStream.readable = true;
 
@@ -41,11 +28,29 @@ export default class fetchRequest {
 			headers.Authorization = `Basic ${btoa(this.client.credentials)}`;
 		}
 
-		fetch(`${this.client.protocol}://${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, {
+		const requestOptions = {
 			method: this.method,
-			headers,
-			body: this.body
-		})
+			headers
+		};
+
+		if (Array.isArray(this.body)) {
+			let arrayBody = "";
+
+			this.body.map(item => {
+				arrayBody += JSON.stringify(item);
+				arrayBody += "\n";
+			});
+
+			this.body = arrayBody;
+		} else {
+			this.body = JSON.stringify(this.body) || {};
+		}
+
+		if (Object.keys(this.body).length !== 0) {
+			requestOptions.body = this.body;
+		}
+
+		fetch(`${this.client.protocol}://${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, requestOptions)
 			.then(res => {
 				res.json().then(data => {
 					const response = Object.assign({}, data, {
