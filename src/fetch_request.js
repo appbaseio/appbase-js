@@ -2,7 +2,8 @@ import querystring from "querystring";
 import Stream from "stream";
 import { btoa } from "./helpers";
 
-require("fetch-everywhere");
+import fetchPonyfill from "fetch-ponyfill";
+const { fetch } = fetchPonyfill();
 
 export default class fetchRequest {
 	constructor(client, args) {
