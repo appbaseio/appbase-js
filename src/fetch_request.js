@@ -2,8 +2,7 @@ import querystring from "querystring";
 import Stream from "stream";
 import { btoa } from "./helpers";
 
-import fetchPonyfill from "fetch-ponyfill";
-const { fetch } = fetchPonyfill();
+import fetch from "cross-fetch";
 
 export default class fetchRequest {
 	constructor(client, args) {
