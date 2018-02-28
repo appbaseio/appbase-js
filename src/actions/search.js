@@ -25,7 +25,7 @@ const searchService = function searchService(client, args) {
 	if (type) {
 		path = `${type}/_search`;
 	} else {
-		path = "/_search";
+		path = "_search";
 	}
 
 	return client.performFetchRequest({
