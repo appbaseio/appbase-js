@@ -5,7 +5,7 @@ import { uuidv4, btoa } from "./helpers";
 
 const EventEmitter = require("eventemitter2").EventEmitter2;
 
-class wsRequest {
+export default class wsRequest {
 	constructor(client, args) {
 		this.client = client;
 		this.args = args;
@@ -145,5 +145,3 @@ class wsRequest {
 		return new wsRequest(this.client, this.args);
 	}
 }
-
-export default wsRequest;

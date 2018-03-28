@@ -1,7 +1,7 @@
 const WebSocket = (typeof window !== "undefined") ? window.WebSocket : require("ws");
 const EventEmitter = require("eventemitter2").EventEmitter2;
 
-const betterWs = function betterWs(url) {
+export default function betterWs(url) {
 	const conn = new WebSocket(url);
 	const ee = new EventEmitter();
 
@@ -38,5 +38,3 @@ const betterWs = function betterWs(url) {
 
 	return ee;
 };
-
-export default betterWs;

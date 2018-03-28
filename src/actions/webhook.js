@@ -1,7 +1,7 @@
 import stringify from "json-stable-stringify";
 import { validate, btoa } from "../helpers";
 
-class addWebhookService {
+export default class addWebhookService {
 	constructor(client, args, webhook) {
 		let valid = validate(args, {
 			"body": "object"
@@ -54,7 +54,7 @@ class addWebhookService {
 
 		this.path = path;
 
-		return this.performRequest("POST"); 
+		return this.performRequest("POST");
 	}
 
 	populateBody() {
@@ -105,5 +105,3 @@ class addWebhookService {
 		return this.performRequest("DELETE");
 	}
 }
-
-export default addWebhookService;

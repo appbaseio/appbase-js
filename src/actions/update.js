@@ -1,6 +1,6 @@
 import { validate } from "../helpers";
 
-const updateService = function updateService(client, args) {
+export default function updateService(client, args) {
 	const valid = validate(args, {
 		"type": "string",
 		"id": "string",
@@ -26,6 +26,3 @@ const updateService = function updateService(client, args) {
 		body
 	});
 };
-
-
-export default updateService;

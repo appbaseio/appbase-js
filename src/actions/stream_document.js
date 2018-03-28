@@ -1,6 +1,6 @@
 import { validate } from "../helpers";
 
-const streamDocumentService = function streamDocumentService(client, args) {
+export default function streamDocumentService(client, args) {
 	const valid = validate(args, {
 		"type": "string",
 		"id": "string"
@@ -29,6 +29,3 @@ const streamDocumentService = function streamDocumentService(client, args) {
 		params: args
 	});
 };
-
-
-export default streamDocumentService;

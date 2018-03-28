@@ -1,6 +1,6 @@
 import { validate } from "../helpers";
 
-const streamSearchService = function streamSearchService(client, args) {
+export default function streamSearchService(client, args) {
 	const valid = validate(args, {
 		"body": "object"
 	});
@@ -36,5 +36,3 @@ const streamSearchService = function streamSearchService(client, args) {
 		body
 	});
 };
-
-export default streamSearchService;

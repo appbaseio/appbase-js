@@ -1,6 +1,6 @@
 import { validate } from "../helpers";
 
-const getService = function getService(client, args) {
+export default function getService(client, args) {
 	const valid = validate(args, {
 		"type": "string",
 		"id": "string"
@@ -24,6 +24,3 @@ const getService = function getService(client, args) {
 		params: args
 	});
 };
-
-
-export default getService;

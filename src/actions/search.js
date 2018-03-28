@@ -1,6 +1,6 @@
 import { validate } from "../helpers";
 
-const searchService = function searchService(client, args) {
+export default function searchService(client, args) {
 	const valid = validate(args, {
 		"body": "object"
 	});
@@ -35,5 +35,3 @@ const searchService = function searchService(client, args) {
 		body
 	});
 };
-
-export default searchService;

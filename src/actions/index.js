@@ -1,6 +1,6 @@
 import { validate } from "../helpers";
 
-const indexService = function indexService(client, args) {
+export default function indexService(client, args) {
 	const valid = validate(args, {
 		"type": "string",
 		"body": "object"
@@ -30,5 +30,3 @@ const indexService = function indexService(client, args) {
 		body
 	});
 };
-
-export default indexService;

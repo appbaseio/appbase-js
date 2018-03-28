@@ -1,6 +1,6 @@
 import Stream from "stream";
 
-const getTypesService = function getTypesService(client) {
+export default function getTypesService(client) {
 	const stream = new Stream();
 
 	client.performFetchRequest({
@@ -20,5 +20,3 @@ const getTypesService = function getTypesService(client) {
 
 	return stream;
 };
-
-export default getTypesService;

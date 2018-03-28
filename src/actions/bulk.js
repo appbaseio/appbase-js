@@ -1,6 +1,6 @@
 import { validate } from "../helpers";
 
-const bulkService = function bulkService(client, args) {
+export default function bulkService(client, args) {
 	const valid = validate(args, {
 		"body": "object"
 	});
@@ -28,6 +28,3 @@ const bulkService = function bulkService(client, args) {
 		body
 	});
 };
-
-
-export default bulkService;

@@ -16,10 +16,13 @@ export default class fetchRequest {
 
 		this.resultStream = new Stream();
 		this.resultStream.readable = true;
+		const contentType = args.path.endsWith("msearch")
+			? "application/x-ndjson"
+			: "application/json";
 
 		const headers = Object.assign({}, {
 			"Accept": "application/json",
-			"Content-Type": "application/json"
+			"Content-Type": contentType
 		}, client.headers);
 
 		const timestamp = Date.now();

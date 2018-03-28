@@ -1,6 +1,6 @@
 import { validate } from "../helpers";
 
-const deleteService = function deleteService(client, args) {
+export default function deleteService(client, args) {
 	const valid = validate(args, {
 		"type": "string",
 		"id": "string"
@@ -23,6 +23,3 @@ const deleteService = function deleteService(client, args) {
 		params: args
 	});
 };
-
-
-export default deleteService;
