@@ -4,6 +4,7 @@ var indexTest = require("./index_test.js");
 var updateTest = require("./update_test.js");
 var getTest = require("./get_test.js");
 var searchTest = require("./search_test.js");
+var msearchTest = require("./msearch_test.js");
 var bulkTest = require("./bulk_test.js");
 var getStreamTests = require("./get_stream_test.js");
 var searchStreamTests = require("./search_stream_test.js");
@@ -45,6 +46,12 @@ describe("Appbase", function() {
 	describe("#search()", function() {
 		it("should return results", function(done) {
 			searchTest.searchForOneDoc(streamingClient, done);
+		});
+	});
+
+	describe("#msearch()", function() {
+		it("should return results", function(done) {
+			msearchTest.searchForDocs(streamingClient, done);
 		});
 	});
 

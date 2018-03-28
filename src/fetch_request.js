@@ -16,7 +16,7 @@ export default class fetchRequest {
 
 		this.resultStream = new Stream();
 		this.resultStream.readable = true;
-		const contentType = args.path.endsWith("msearch")
+		const contentType = args.path.endsWith("msearch") || args.path.endsWith("bulk")
 			? "application/x-ndjson"
 			: "application/json";
 

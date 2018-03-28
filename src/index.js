@@ -13,6 +13,7 @@ import updateService from "./actions/update.js";
 import deleteService from "./actions/delete.js";
 import bulkService from "./actions/bulk.js";
 import searchService from "./actions/search.js";
+import msearchService from "./actions/msearch.js";
 import getTypesService from "./actions/get_types.js";
 import getMappingsService from "./actions/get_mappings.js";
 import addWebhookService from "./actions/webhook.js";
@@ -112,6 +113,10 @@ class AppbaseClient {
 
 	search(args) {
 		return new searchService(this, JSON.parse(JSON.stringify(args)));
+	}
+
+	msearch(args) {
+		return new msearchService(this, JSON.parse(JSON.stringify(args)));
 	}
 
 	getStream(args) {
