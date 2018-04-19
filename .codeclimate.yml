@@ -10,4 +10,3 @@ exclude_paths:
   - "dist/**"
   - "meteor/**"
   - "node_modules/**"
-  - "bower_components/**"
