@@ -56,6 +56,10 @@ export default class fetchRequest {
 		fetch(`${this.client.protocol}://${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, requestOptions)
 			.then(res => {
 				res.json().then(data => {
+					if (res.status >= 400) {
+						this.resultStream.emit("error", res);
+						return;
+					}
 					const response = Object.assign({}, data, {
 						_timestamp: timestamp
 					});
