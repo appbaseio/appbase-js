@@ -1,6 +1,6 @@
 {
 	"name": "appbase-js",
-	"version": "2.3.0",
+	"version": "3.0.0",
 	"description": "Appbase.io streaming client lib for Javascript",
 	"main": "lib/index.js",
 	"scripts": {
