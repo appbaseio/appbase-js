@@ -49,7 +49,11 @@ export default class wsRequest {
 			this.processError(...[err]);
 		};
 		this.messageHandler = dataObj => {
-			this.processMessage(...[dataObj]);
+			if (dataObj.body && dataObj.body.status >= 400) {
+				this.processError(...[dataObj]);
+			} else {
+				this.processMessage(...[dataObj]);
+			}
 		};
 
 		this.client.ws.on("close", this.closeHandler);
