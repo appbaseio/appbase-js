@@ -55,6 +55,11 @@ export default class fetchRequest {
 
 		fetch(`${this.client.protocol}://${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, requestOptions)
 			.then(res => {
+				if (res.status >= 500) {
+					this.resultStream.emit("error", res);
+					return;
+				}
+
 				res.json().then(data => {
 					if (res.status >= 400) {
 						this.resultStream.emit("error", res);

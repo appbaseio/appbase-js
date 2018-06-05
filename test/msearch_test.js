@@ -9,7 +9,7 @@ searchTests.searchForDocs = function searchForDocs(streamingClient, done) {
 	})
 		.on("error", function(e) {
 			console.log(e);
-			done();
+			done(e);
 		})
 		.on("data", function(res) {
 			// index second tweet
@@ -21,7 +21,7 @@ searchTests.searchForDocs = function searchForDocs(streamingClient, done) {
 			})
 				.on("error", function(e) {
 					console.log(e);
-					done();
+					done(e);
 				})
 				.on("data", function(res) {
 					var first = true;
