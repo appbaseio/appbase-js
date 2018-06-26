@@ -39,6 +39,7 @@ class AppbaseClient {
 		this.credentials = auth || null;
 		this.appname = args.appname || args.app;
 		this.headers = {};
+		this.beforeSend = args.beforeSend;
 
 		if (typeof this.appname !== "string" || this.appname === "") {
 			throw new Error("App name is not present in options.");

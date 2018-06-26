@@ -53,6 +53,10 @@ export default class fetchRequest {
 			requestOptions.body = this.body;
 		}
 
+		if(this.client.beforeSend){
+			this.client.beforeSend(requestOptions);
+		}
+
 		fetch(`${this.client.protocol}://${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, requestOptions)
 			.then(res => {
 				if (res.status >= 500) {
