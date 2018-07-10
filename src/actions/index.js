@@ -18,7 +18,7 @@ export default function indexService(client, args) {
 
 	let path;
 	if (id) {
-		path = `${type}/${id}`;
+		path = `${type}/${encodeURIComponent(id)}`;
 	} else {
 		path = type;
 	}

@@ -16,7 +16,7 @@ export default function getService(client, args) {
 	delete args.type;
 	delete args.id;
 
-	const path = `${type}/${id}`;
+	const path = `${type}/${encodeURIComponent(id)}`;
 
 	return client.performFetchRequest({
 		method: "GET",

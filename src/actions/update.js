@@ -17,7 +17,7 @@ export default function updateService(client, args) {
 	delete args.id;
 	delete args.body;
 
-	const path = `${type}/${id}/_update`;
+	const path = `${type}/${encodeURIComponent(id)}/_update`;
 
 	return client.performFetchRequest({
 		method: "POST",

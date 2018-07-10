@@ -25,7 +25,7 @@ export default function streamDocumentService(client, args) {
 
 	return client.performWsRequest({
 		method: "GET",
-		path: `${type}/${id}`,
+		path: `${type}/${encodeURIComponent(id)}`,
 		params: args
 	});
 };
