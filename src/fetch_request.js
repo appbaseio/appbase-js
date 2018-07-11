@@ -53,11 +53,14 @@ export default class fetchRequest {
 			requestOptions.body = this.body;
 		}
 
+		let finalRequest = requestOptions;
 		if(this.client.beforeSend){
-			this.client.beforeSend(requestOptions);
+			const newRequest = this.client.beforeSend(requestOptions);
+			if(newRequest)
+				finalRequest = newRequest;
 		}
 
-		fetch(`${this.client.protocol}://${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, requestOptions)
+		fetch(`${this.client.protocol}://${this.client.url}/${this.client.appname}/${this.path}?${querystring.stringify(this.params)}`, finalRequest)
 			.then(res => {
 				if (res.status >= 500) {
 					this.resultStream.emit("error", res);
