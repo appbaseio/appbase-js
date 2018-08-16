@@ -1,13 +1,16 @@
 {
-  "name": "rollup-starter-lib",
+  "name": "appbase-js",
   "version": "1.0.0",
-  "main": "dist/how-long-till-lunch.cjs.js",
-  "module": "dist/how-long-till-lunch.esm.js",
-  "browser": "dist/how-long-till-lunch.umd.js",
-  "dependencies": {
-    "ms": "^2.0.0"
-  },
+  "main": "dist/appbase-js.cjs.js",
+  "module": "dist/appbase-js.esm.js",
+  "browser": "dist/appbase-js.umd.js",
   "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
     "rollup": "^0.64.0",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-resolve": "^3.0.0"
