@@ -11,6 +11,8 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.2",
     "rollup": "^0.64.0",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-resolve": "^3.0.0"
@@ -19,9 +21,23 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "node test/test.js",
-    "pretest": "npm run build"
+    "pretest": "npm run build",
+    "lint": "eslint .",
+    "precommit": "lint-staged && npm run test"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ]
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "cross-fetch": "^2.2.2",
+    "eventemitter2": "^5.0.1",
+    "json-stable-stringify": "^1.0.1",
+    "url-parser-lite": "^0.1.0",
+    "ws": "^6.0.0"
+  }
 }
