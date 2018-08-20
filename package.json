@@ -15,7 +15,8 @@
     "lint-staged": "^7.2.2",
     "rollup": "^0.64.0",
     "rollup-plugin-commonjs": "^9.1.0",
-    "rollup-plugin-node-resolve": "^3.0.0"
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.3.0"
   },
   "scripts": {
     "build": "rollup -c",
@@ -37,6 +38,8 @@
     "cross-fetch": "^2.2.2",
     "eventemitter2": "^5.0.1",
     "json-stable-stringify": "^1.0.1",
+    "querystring": "^0.2.0",
+    "stream": "git+https://git@github.com/bietkul/stream.git",
     "url-parser-lite": "^0.1.0",
     "ws": "^6.0.0"
   }

@@ -1,27 +1,9 @@
-export function validate(object, fields) {
-  const invalid = [];
-  const keys = Object.keys(fields);
-
-  // eslint-disable-next-line
-  for (const key of keys) {
-    const type = fields[key];
-    // eslint-disable-next-line
-    if (typeof object[key] !== type || object[key] === empty_for[type]) {
-      invalid.push(key);
-    }
-  }
-
-  let missing = '';
-  for (let i = 0; i < invalid.length; i += 1) {
-    missing += `${invalid[i]}, `;
-  }
-  if (invalid.length > 0) {
-    return new Error(`fields missing: ${missing}`);
-  }
-
-  return true;
+export function contains(string, substring) {
+  return string.indexOf(substring) !== -1;
 }
-
+export function isAppbase(url) {
+  return contains(url, 'scalr.api.appbase.io');
+}
 export function btoa(input = '') {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   const str = input;
@@ -46,13 +28,6 @@ export function btoa(input = '') {
 
   return output;
 }
-function contains(string, substring) {
-  return string.indexOf(substring) !== -1;
-}
-export function isAppbase(client) {
-  return contains(client.url, 'scalr.api.appbase.io');
-}
-
 export function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0; // eslint-disable-line no-bitwise
@@ -60,4 +35,28 @@ export function uuidv4() {
     const v = c === 'x' ? r : (r & 0x3) | 0x8; // eslint-disable-line no-bitwise
     return v.toString(16);
   });
+}
+export function validate(object, fields) {
+  const invalid = [];
+  const keys = Object.keys(fields);
+  Object.keys(keys).forEach((key) => {
+    const type = fields[key];
+    // eslint-disable-next-line
+    if (typeof object[key] !== type || object[key] === empty_for[type]) {
+      invalid.push(key);
+    }
+  });
+  let missing = '';
+  for (let i = 0; i < invalid.length; i += 1) {
+    missing += `${invalid[i]}, `;
+  }
+  if (invalid.length > 0) {
+    return new Error(`fields missing: ${missing}`);
+  }
+
+  return true;
+}
+
+export function removeUndefined(value) {
+  return JSON.parse(JSON.stringify(value));
 }
