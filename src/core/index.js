@@ -1,29 +1,26 @@
 import URL from 'url-parser-lite';
 import { isAppbase } from '../utils/index';
-import betterWs from '../utils/betterWs';
 /**
  * Returns an instance of Appbase client
  * @param {Object} config To configure properties
  * @param {String} config.url
- * @param {String} config.appname
+ * @param {String} config.app
  * @param {String} config.credentials
  * @param {String} config.username
  * @param {String} config.password
- * @param {Function} config.beforeSend
  * A callback function which will be invoked before a fetch request made
  */
 function AppBase(config) {
-  let { url } = config;
-  let ws = '';
   const {
  auth = null, host = '', path = '', protocol = '',
-} = URL(config.url);
+} = URL(config.url || '');
+  let url = host + path;
 
   // Validate config and throw appropriate error
   if (typeof url !== 'string' || url === '') {
     throw new Error('URL not present in options.');
   }
-  if (typeof config.appname !== 'string' || config.appname === '') {
+  if (typeof config.app !== 'string' || config.app === '') {
     throw new Error('App name is not present in options.');
   }
   if (typeof protocol !== 'string' || protocol === '') {
@@ -54,23 +51,10 @@ function AppBase(config) {
   if (isAppbase(url) && credentials === null) {
     throw new Error('Authentication information is not present. Did you add credentials?');
   }
-
-  if (isAppbase(url)) {
-    try {
-      ws = betterWs(`wss://${config.url}/${config.appname}`);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  this.url = host + path;
+  this.url = url;
   this.protocol = protocol;
-  this.appname = config.appname;
-  this.beforeSend = config.beforeSend;
+  this.app = config.app;
   this.credentials = credentials;
   this.headers = {};
-  this.ws = ws;
-  this.setHeaders = (headers) => {
-    this.headers = headers;
-  };
 }
 export default AppBase;

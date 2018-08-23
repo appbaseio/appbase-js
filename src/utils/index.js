@@ -38,11 +38,15 @@ export function uuidv4() {
 }
 export function validate(object, fields) {
   const invalid = [];
+  const emptyFor = {
+    object: null,
+    string: '',
+  };
   const keys = Object.keys(fields);
-  Object.keys(keys).forEach((key) => {
+  keys.forEach((key) => {
     const type = fields[key];
     // eslint-disable-next-line
-    if (typeof object[key] !== type || object[key] === empty_for[type]) {
+    if (typeof object[key] !== type || object[key] === emptyFor[type]) {
       invalid.push(key);
     }
   });
@@ -58,5 +62,24 @@ export function validate(object, fields) {
 }
 
 export function removeUndefined(value) {
-  return JSON.parse(JSON.stringify(value));
+  if (value || !(Object.keys(value).length === 0 && value.constructor === Object)) {
+    return JSON.parse(JSON.stringify(value));
+  }
+  return null;
+}
+
+export function resolveWs() {
+  let ws;
+
+  if (typeof WebSocket !== 'undefined') {
+    ws = WebSocket;
+  } else if (typeof MozWebSocket !== 'undefined') {
+    // eslint-disable-next-line
+    ws = MozWebSocket;
+  } else {
+    ws = window.WebSocket || window.MozWebSocket;
+  }
+
+  module.exports = ws;
+  return ws;
 }

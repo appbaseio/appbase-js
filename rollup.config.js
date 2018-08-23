@@ -1,40 +1,57 @@
+import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import nodeResolve from 'rollup-plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
+import replace from 'rollup-plugin-replace';
 import builtins from 'rollup-plugin-node-builtins';
 import pkg from './package.json';
 
-export default [
-  // browser-friendly UMD build
-  {
-    input: 'src/index.js',
-    output: {
-      name: 'appbase-js',
-      file: pkg.browser,
+const minify = process.env.MINIFY;
+const format = process.env.FORMAT;
+const es = format === 'es';
+const umd = format === 'umd';
+const cjs = format === 'cjs';
+
+let output;
+
+if (es) {
+  output = { file: 'dist/appbase-js.es.js', format: 'es' };
+} else if (umd) {
+  if (minify) {
+    output = {
+      file: 'dist/appbase-js.umd.min.js',
       format: 'umd',
+    };
+  } else {
+    output = { file: 'dist/appbase-js.umd.js', format: 'umd' };
+  }
+} else if (cjs) {
+  output = { file: 'dist/appbase-js.cjs.js', format: 'cjs' };
+} else if (format) {
+  throw new Error(`invalid format specified: "${format}".`);
+} else {
+  throw new Error('no format specified. --environment FORMAT:xxx');
+}
+
+export default {
+  input: 'src/index.js',
+  output: Object.assign(
+    {
+      name: 'appbase-js',
     },
-    plugins: [
-      nodeResolve({ preferBuiltins: false }), // or `true`
-      commonjs(),
-      builtins(),
-    ],
-  },
-  // CommonJS (for Node) and ES module (for bundlers) build.
-  // (We could have three entries in the configuration array
-  // instead of two, but it's quicker to generate multiple
-  // builds from a single configuration where possible, using
-  // an array for the `output` option, where we can specify
-  // `file` and `format` for each target)
-  {
-    input: 'src/index.js',
-    external: [
-      'cross-fetch',
-      'eventemitter2',
-      'json-stable-stringify',
-      'querystring',
-      'stream',
-      'url-parser-lite',
-      'ws',
-    ],
-    output: [{ file: pkg.main, format: 'cjs' }, { file: pkg.module, format: 'es' }],
-  },
-];
+    output,
+  ),
+  external: umd
+    ? Object.keys(pkg.peerDependencies || {})
+    : [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
+  plugins: [
+    umd ? resolve({ jsnext: true, main: true, preferBuiltins: false }) : {},
+    umd ? commonjs() : {},
+    umd ? builtins() : {},
+    umd
+      ? replace({
+          'process.env.NODE_ENV': JSON.stringify(minify ? 'production' : 'development'),
+        })
+      : null,
+    minify ? terser() : null,
+  ].filter(Boolean),
+};

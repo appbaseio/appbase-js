@@ -1,30 +1,43 @@
 {
   "name": "appbase-js",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "main": "dist/appbase-js.cjs.js",
   "module": "dist/appbase-js.esm.js",
   "browser": "dist/appbase-js.umd.js",
+  "description": "Appbase.io streaming client lib for Javascript",
+  "keywords": [
+    "appbase",
+    "elasticsearch",
+    "stream",
+    "search"
+  ],
+  "author": "Kuldeep Saxena",
   "devDependencies": {
+    "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
+    "babel-jest": "^23.4.2",
     "eslint": "^5.3.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.11.1",
     "husky": "^0.14.3",
+    "jest": "^23.5.0",
     "lint-staged": "^7.2.2",
+    "nps": "^5.9.3",
+    "nps-utils": "^1.7.0",
     "rollup": "^0.64.0",
+    "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-resolve": "^3.3.0"
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-terser": "^1.0.1"
   },
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "test": "node test/test.js",
-    "pretest": "npm run build",
-    "lint": "eslint .",
-    "precommit": "lint-staged && npm run test"
+    "start": "nps",
+    "pretest": "nps build",
+    "test": "nps test",
+    "precommit": "lint-staged",
+    "prepare": "npm start validate"
   },
   "lint-staged": {
     "*.js": [
@@ -36,11 +49,10 @@
   ],
   "dependencies": {
     "cross-fetch": "^2.2.2",
-    "eventemitter2": "^5.0.1",
     "json-stable-stringify": "^1.0.1",
     "querystring": "^0.2.0",
     "stream": "git+https://git@github.com/bietkul/stream.git",
     "url-parser-lite": "^0.1.0",
-    "ws": "^6.0.0"
+    "ws": "^2.2.0"
   }
 }

@@ -1,4 +1,5 @@
-.DS_Store
+test
+__tests__
 node_modules
-dist
 coverage
+dist

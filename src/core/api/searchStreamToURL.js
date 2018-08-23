@@ -8,7 +8,7 @@ import { removeUndefined, validate, btoa } from '../../utils/index';
  * @param {Object} args.body
  * @param {Object} webhook
  */
-function searchStreamToURLApi(args, webhook) {
+function searchStreamToURLApi(args, webhook, ...rest) {
   const parsedArgs = removeUndefined(args);
   let bodyCopy = parsedArgs.body;
   let type;
@@ -37,8 +37,7 @@ function searchStreamToURLApi(args, webhook) {
   }
 
   if (Array.isArray(parsedArgs.type)) {
-    // eslint-disable-next-line
-    type = parsedArgs.type;
+    ({ type } = parsedArgs);
     typeString = parsedArgs.type.join();
   } else {
     type = [parsedArgs.type];
@@ -46,8 +45,7 @@ function searchStreamToURLApi(args, webhook) {
   }
 
   let webhooks = [];
-  // eslint-disable-next-line
-  let query = bodyCopy.query;
+  const { query } = bodyCopy;
 
   if (typeof webhook === 'string') {
     const webHookObj = {};
@@ -75,11 +73,14 @@ function searchStreamToURLApi(args, webhook) {
   };
 
   this.performRequest = (method) => {
-    const res = this.performWsRequest({
-      method,
-      path,
-      body: bodyCopy,
-    });
+    const res = this.performWsRequest(
+      {
+        method,
+        path,
+        body: bodyCopy,
+      },
+      ...rest,
+    );
 
     res.change = this.change();
     res.stop = this.stop();

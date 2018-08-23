@@ -7,7 +7,7 @@ import { removeUndefined, validate } from '../../utils/index';
  * @param {Object} args.body
  * @param {Boolean} args.stream
  */
-function searchStreamApi(args) {
+function searchStreamApi(args, ...rest) {
   const parsedArgs = removeUndefined(args);
   // Validate arguments
   const valid = validate(parsedArgs, {
@@ -28,8 +28,7 @@ function searchStreamApi(args) {
   if (Array.isArray(parsedArgs.type)) {
     type = parsedArgs.type.join();
   } else {
-    // eslint-disable-next-line
-    type = parsedArgs.type;
+    ({ type } = parsedArgs);
   }
 
   const { body } = parsedArgs;
@@ -39,11 +38,14 @@ function searchStreamApi(args) {
 
   parsedArgs.streamonly = 'true';
 
-  return this.performWsRequest({
-    method: 'POST',
-    path: `${type}/_search`,
-    params: parsedArgs,
-    body,
-  });
+  return this.performWsRequest(
+    {
+      method: 'POST',
+      path: `${type}/_search`,
+      params: parsedArgs,
+      body,
+    },
+    ...rest,
+  );
 }
 export default searchStreamApi;

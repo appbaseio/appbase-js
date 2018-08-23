@@ -17,33 +17,37 @@ import getMappingsApi from './core/api/getMappings';
 export default function (config) {
   const client = new AppBaseClient(config);
 
-  client.prototype.performFetchRequest = fetchRequest;
+  AppBaseClient.prototype.performFetchRequest = fetchRequest;
 
-  client.prototype.performWsRequest = wsRequest;
+  AppBaseClient.prototype.performWsRequest = wsRequest;
 
-  client.prototype.index = indexApi;
+  AppBaseClient.prototype.index = indexApi;
 
-  client.prototype.get = getApi;
+  AppBaseClient.prototype.get = getApi;
 
-  client.prototype.update = updateApi;
+  AppBaseClient.prototype.update = updateApi;
 
-  client.prototype.delete = deleteApi;
+  AppBaseClient.prototype.delete = deleteApi;
 
-  client.prototype.bulk = bulkApi;
+  AppBaseClient.prototype.bulk = bulkApi;
 
-  client.prototype.search = searchApi;
+  AppBaseClient.prototype.search = searchApi;
 
-  client.prototype.msearch = msearchApi;
+  AppBaseClient.prototype.msearch = msearchApi;
 
-  client.prototype.getStream = getStreamApi;
+  AppBaseClient.prototype.getStream = getStreamApi;
 
-  client.prototype.searchStream = searchStreamApi;
+  AppBaseClient.prototype.searchStream = searchStreamApi;
 
-  client.prototype.searchStreamToURL = searchStreamToURLApi;
+  AppBaseClient.prototype.searchStreamToURL = searchStreamToURLApi;
 
-  client.prototype.getTypes = getTypesApi;
+  AppBaseClient.prototype.getTypes = getTypesApi;
 
-  client.prototype.getMappings = getMappingsApi;
+  AppBaseClient.prototype.getMappings = getMappingsApi;
+
+  AppBaseClient.prototype.setHeaders = function (headers) {
+    this.headers = headers;
+  };
 
   return client;
 }

@@ -1,6 +1,10 @@
 import querystring from 'querystring';
 import Stream from 'stream';
-import { uuidv4, btoa, removeUndefined } from '../../utils/index';
+import {
+ uuidv4, btoa, removeUndefined, resolveWs,
+} from '../../utils/index';
+
+const WebSocket = typeof window !== 'undefined' ? resolveWs() : require('ws');
 
 /**
  * To connect a web socket
@@ -19,19 +23,18 @@ function wsRequest(args, onData, onError, onClose) {
       bodyCopy = {};
     }
     const init = () => {
-      const id = uuidv4();
+      this.ws = new WebSocket(`wss://${this.url}/${this.app}`);
+      this.id = uuidv4();
 
       this.request = {
-        id,
-        path: `${this.appname}/${path}?${querystring.stringify(params)}`,
+        id: this.id,
+        path: `${this.app}/${path}?${querystring.stringify(params)}`,
         method,
         body: bodyCopy,
       };
-
       if (this.credentials) {
         this.request.authorization = `Basic ${btoa(this.credentials)}`;
       }
-
       this.resultStream = new Stream();
       this.resultStream.readable = true;
 
@@ -41,48 +44,47 @@ function wsRequest(args, onData, onError, onClose) {
       this.errorHandler = (err) => {
         this.processError(...[err]);
       };
-      this.messageHandler = (dataObj) => {
+      this.messageHandler = (message) => {
+        const dataObj = JSON.parse(message.data);
         if (dataObj.body && dataObj.body.status >= 400) {
           this.processError(...[dataObj]);
         } else {
           this.processMessage(...[dataObj]);
         }
       };
-      if (onClose) {
-        this.client.ws.on('close', this.closeHandler);
-      }
-      if (onError) {
-        this.client.ws.on('error', onError);
-      }
-      this.client.ws.on('message', this.messageHandler);
-
-      this.client.ws.send(this.request);
-
+      this.send = (request) => {
+        if (this.ws.readyState !== 1) {
+          this.ws.onopen = () => {
+            this.ws.send(JSON.stringify(request));
+          };
+        } else {
+          this.ws.send(JSON.stringify(request));
+        }
+      };
+      this.ws.onmessage = this.messageHandler;
+      this.ws.onerror = this.errorHandler;
+      this.ws.onclose = this.closeHandler;
+      this.send(this.request);
       this.resultStream.stop = this.stop;
       this.resultStream.reconnect = this.reconnect;
 
       return this.resultStream;
     };
-    const resultStream = init();
     this.wsClosed = () => {
-      resultStream.emit('end');
+      if (onClose) {
+        onClose();
+      }
     };
     this.stop = () => {
-      if (onClose) {
-        this.client.ws.removeListener('close', this.closeHandler);
-      }
-
-      if (onError) {
-        this.client.ws.removeListener('error', onError);
-      }
-      this.client.ws.removeListener('message', this.messageHandler);
-      this.resultStream.emit('end');
-
+      this.ws.onmessage = undefined;
+      this.ws.onclose = undefined;
+      this.ws.onerror = undefined;
+      this.wsClosed();
       const unsubRequest = JSON.parse(JSON.stringify(this.request));
       unsubRequest.unsubscribe = true;
 
       if (this.unsubscribed !== true) {
-        this.client.ws.send(unsubRequest);
+        this.send(unsubRequest);
       }
 
       this.unsubscribed = true;
@@ -92,21 +94,26 @@ function wsRequest(args, onData, onError, onClose) {
       return wsRequest(args, onData, onError, onClose);
     };
     this.processError = (err) => {
-      this.resultStream.emit('error', err);
+      if (onError) {
+        onError(err);
+      }
     };
 
     this.processMessage = (origDataObj) => {
       const dataObj = JSON.parse(JSON.stringify(origDataObj));
-
       if (!dataObj.id && dataObj.message) {
-        this.resultStream.emit('error', dataObj);
+        if (onError) {
+          onError(dataObj);
+        }
         return;
       }
 
       if (dataObj.id === this.id) {
         if (dataObj.message) {
           delete dataObj.id;
-          this.resultStream.emit('error', dataObj);
+          if (onError) {
+            onError(dataObj);
+          }
           return;
         }
 
@@ -119,17 +126,21 @@ function wsRequest(args, onData, onError, onClose) {
         }
 
         if (dataObj.body && dataObj.body !== '') {
-          this.resultStream.emit('data', dataObj.body);
+          if (onData) {
+            onData(dataObj.body);
+          }
         }
 
         return;
       }
 
       if (!dataObj.id && dataObj.channel && dataObj.channel === this.channel) {
-        this.resultStream.emit('data', dataObj.event);
+        if (onData) {
+          onData(dataObj.event);
+        }
       }
     };
-    return resultStream;
+    return init();
   } catch (e) {
     if (onError) {
       onError(e);

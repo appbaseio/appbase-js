@@ -29,7 +29,6 @@ function indexApi(args) {
   } else {
     path = type;
   }
-
   return this.performFetchRequest({
     method: 'POST',
     path,

@@ -8,7 +8,7 @@ function getTypesService() {
         method: 'GET',
         path: '_mapping',
       }).then((data) => {
-        const types = Object.keys(data[this.appname].mappings).filter(type => type !== '_default_');
+        const types = Object.keys(data[this.app].mappings).filter(type => type !== '_default_');
         return resolve(types);
       });
     } catch (e) {

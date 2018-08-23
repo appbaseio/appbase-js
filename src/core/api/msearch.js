@@ -20,8 +20,7 @@ function msearchApi(args) {
   if (Array.isArray(parsedArgs.type)) {
     type = parsedArgs.type.join();
   } else {
-    // eslint-disable-next-line
-    type = parsedArgs.type;
+    ({ type } = parsedArgs);
   }
 
   const { body } = parsedArgs;

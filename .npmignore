@@ -1,0 +1,16 @@
+# DOT FILES
+.vscode
+.eslintignore
+.eslintrc.js
+.gitignore
+.travis.yml
+
+# TEST FILES
+jest.config.js
+coverage
+__mocks__
+__test__
+
+# MISC
+src
+rollup.config.json

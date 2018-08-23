@@ -7,7 +7,7 @@ import { removeUndefined, validate } from '../../utils/index';
  * @param {Boolean} args.stream
  * @param {String} args.id
  */
-function getStream(args) {
+function getStream(args, ...rest) {
   const parsedArgs = removeUndefined(args);
   // Validate arguments
   const valid = validate(parsedArgs, {
@@ -31,10 +31,13 @@ function getStream(args) {
     parsedArgs.streamonly = 'true';
   }
 
-  return this.performWsRequest({
-    method: 'GET',
-    path: `${type}/${encodeURIComponent(id)}`,
-    params: parsedArgs,
-  });
+  return this.performWsRequest(
+    {
+      method: 'GET',
+      path: `${type}/${encodeURIComponent(id)}`,
+      params: parsedArgs,
+    },
+    ...rest,
+  );
 }
 export default getStream;

@@ -50,25 +50,33 @@ function fetchRequest(args) {
       }
 
       if (Object.keys(bodyCopy).length !== 0) {
-        requestOptions.bodyCopy = bodyCopy;
+        requestOptions.body = bodyCopy;
       }
 
       let finalRequest = requestOptions;
-      if (this.beforeSend) {
-        finalRequest = this.beforeSend(requestOptions);
+      if (this.transformRequest) {
+        finalRequest = this.transformRequest(requestOptions);
       }
-
+      let responseHeaders = {};
       return fetch(
-        `${this.protocol}://${this.url}/${this.appname}/${path}?${querystring.stringify(params)}`,
+        `${this.protocol}://${this.url}/${this.app}/${path}?${querystring.stringify(params)}`,
         finalRequest,
-      )
-        .then(res => res.json())
-        .then((data) => {
+      ).then((res) => {
+        if (res.status >= 500) {
+          return reject(res);
+        }
+        responseHeaders = res.headers;
+        return res.json().then((data) => {
+          if (res.status >= 400) {
+            return reject(res);
+          }
           const response = Object.assign({}, data, {
             _timestamp: timestamp,
+            _headers: responseHeaders,
           });
           return resolve(response);
         });
+      });
     } catch (e) {
       return reject(e);
     }
