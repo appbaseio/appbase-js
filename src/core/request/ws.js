@@ -1,5 +1,4 @@
 import querystring from 'querystring';
-import Stream from 'stream';
 import {
  uuidv4, btoa, removeUndefined, resolveWs,
 } from '../../utils/index';
@@ -35,9 +34,9 @@ function wsRequest(args, onData, onError, onClose) {
       if (this.credentials) {
         this.request.authorization = `Basic ${btoa(this.credentials)}`;
       }
-      this.resultStream = new Stream();
-      this.resultStream.readable = true;
-
+      // this.resultStream = new Stream();
+      // this.resultStream.readable = true;
+      this.result = {};
       this.closeHandler = () => {
         this.wsClosed();
       };
@@ -65,10 +64,10 @@ function wsRequest(args, onData, onError, onClose) {
       this.ws.onerror = this.errorHandler;
       this.ws.onclose = this.closeHandler;
       this.send(this.request);
-      this.resultStream.stop = this.stop;
-      this.resultStream.reconnect = this.reconnect;
+      this.result.stop = this.stop;
+      this.result.reconnect = this.reconnect;
 
-      return this.resultStream;
+      return this.result;
     };
     this.wsClosed = () => {
       if (onClose) {
