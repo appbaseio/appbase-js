@@ -45,7 +45,8 @@
     ]
   },
   "files": [
-    "dist"
+    "dist",
+    "ws-shim.js"
   ],
   "dependencies": {
     "cross-fetch": "^2.2.2",
