@@ -3,7 +3,7 @@ import {
  uuidv4, btoa, removeUndefined, resolveWs,
 } from '../../utils/index';
 
-const WebSocket = typeof window !== 'undefined' ? resolveWs() : require('ws');
+const WebSocket = resolveWs();
 
 /**
  * To connect a web socket

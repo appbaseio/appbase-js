@@ -70,7 +70,6 @@ export function removeUndefined(value) {
 
 export function resolveWs() {
   let ws;
-
   if (typeof WebSocket !== 'undefined') {
     ws = WebSocket;
   } else if (typeof MozWebSocket !== 'undefined') {
