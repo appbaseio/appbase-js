@@ -20,7 +20,7 @@ const CREDENTIALS = "RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f";
 
 // Add data into our ES "app index"
 var Appbase = require("appbase-js");
-var appbase = new Appbase({
+var appbase = Appbase({
   url: HOST_URL,
   app: APPNAME,
   credentials: CREDENTIALS
@@ -36,10 +36,10 @@ appbase
       stores: ["Walmart", "Target"]
     }
   })
-  .on("data", function(res) {
+  .then(res => {
     console.log(res);
   })
-  .on("error", function(err) {
+  .catch(err => {
     console.log(err);
   });
 ```
@@ -49,18 +49,19 @@ appbase
 Returns continous updates on a JSON document from a particular `type`.
 
 ```js
-appbase
-  .getStream({
+appbase.getStream(
+  {
     type: "product",
     id: "1"
-  })
-  .on("data", function(res) {
+  },
+  data => {
     // "data" handler is triggered every time there is a **new** document update.
-    console.log(res);
-  })
-  .on("error", function(err) {
-    console.log("caught a stream error", err);
-  });
+    console.log(data);
+  },
+  error => {
+    console.log("caught a stream error", error);
+  }
+);
 ```
 
 `Note:` Existing document value is returned via `get()` method.

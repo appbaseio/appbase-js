@@ -67,3 +67,20 @@ export function removeUndefined(value) {
   }
   return null;
 }
+
+/**
+ * Send only when a connection is opened
+ * @param {Object} socket
+ * @param {Function} callback
+ */
+export function waitForSocketConnection(socket, callback) {
+  setTimeout(() => {
+    if (socket.readyState === 1) {
+      if (callback != null) {
+        callback();
+      }
+    } else {
+      waitForSocketConnection(socket, callback);
+    }
+  }, 5); // wait 5 ms for the connection...
+}

@@ -1,5 +1,7 @@
 import querystring from 'querystring';
-import { uuidv4, btoa, removeUndefined } from '../../utils/index';
+import {
+ uuidv4, btoa, removeUndefined, waitForSocketConnection,
+} from '../../utils/index';
 
 const WebSocket = typeof window !== 'undefined' ? window.WebSocket : require('ws');
 
@@ -50,13 +52,13 @@ function wsRequest(args, onData, onError, onClose) {
         }
       };
       this.send = (request) => {
-        if (this.ws.readyState !== 1) {
-          this.ws.onopen = () => {
+        waitForSocketConnection(this.ws, () => {
+          try {
             this.ws.send(JSON.stringify(request));
-          };
-        } else {
-          this.ws.send(JSON.stringify(request));
-        }
+          } catch (e) {
+            console.warn(e);
+          }
+        });
       };
       this.ws.onmessage = this.messageHandler;
       this.ws.onerror = this.errorHandler;
@@ -142,7 +144,7 @@ function wsRequest(args, onData, onError, onClose) {
     if (onError) {
       onError(e);
     } else {
-      console.error(e);
+      console.warn(e);
     }
     return null;
   }

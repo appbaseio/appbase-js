@@ -49,5 +49,8 @@ export default function (config) {
     this.headers = headers;
   };
 
+  if (typeof window !== 'undefined') {
+    window.Appbase = client;
+  }
   return client;
 }
