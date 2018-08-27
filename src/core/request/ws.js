@@ -1,9 +1,7 @@
 import querystring from 'querystring';
-import {
- uuidv4, btoa, removeUndefined, resolveWs,
-} from '../../utils/index';
+import { uuidv4, btoa, removeUndefined } from '../../utils/index';
 
-const WebSocket = resolveWs();
+const WebSocket = typeof window !== 'undefined' ? window.WebSocket : require('ws');
 
 /**
  * To connect a web socket

@@ -53,5 +53,8 @@
     "querystring": "^0.2.0",
     "url-parser-lite": "^0.1.0",
     "ws": "^2.2.0"
+  },
+  "browser": {
+    "ws": "./ws-shim.js"
   }
 }
