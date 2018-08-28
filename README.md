@@ -84,7 +84,7 @@ appbase.getStream(
 }
 ```
 
-getStream() returns a `stream.Readable` object, which can be conveniently listened via the `on("data")` event listener. Check out the [stream_document_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_document_test.js) where we make an update to the document and see any further updates to it via the "data" event.
+getStream() returns an object which has `stop` & `reconnect` properties. Check out the [getStreamTest.js](https://github.com/bietkul/appbase-js/blob/develop/__tests__/getStream.js) where we make an update to the document and see any further updates to it via the "data" callback.
 
 #### Step 3: Apply queries on data streams
 
@@ -99,13 +99,13 @@ appbase
         match_all: {}
       }
     }
+  },
+  data => {
+    console.log(data);
+  },
+  error => {
+    console.log("caught a stream error", error);
   })
-  .on("data", function(res, err) {
-    console.log(res);
-  })
-  .on("error", function(err) {
-    console.log("caught a stream error", err);
-  });
 ```
 
 ##### Console Output
@@ -127,7 +127,7 @@ appbase
 }
 ```
 
-searchStream() also returns a `stream.Readable` object, which can be conveniently listened via the `on("data")` event listener. Check out the [stream_search_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_search_test.js) where we make an update that matches the query and see the results in the event stream.
+searchStream() also returns an object, which can be conveniently listened via the `onData` callback. Check out the [searchStreamTest.js](https://github.com/bietkul/appbase-js/blob/develop/__tests__/searchStreamTest.js) where we make an update that matches the query and see the results in the event stream.
 
 ## API Reference
 
@@ -135,7 +135,7 @@ For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/
 
 ### Global
 
-**[new Appbase(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L16)**
+**[Appbase(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L16)**
 
 Returns a **reference** object on which streaming requests can be performed.
 
@@ -148,17 +148,17 @@ Optionally (and like in the quick example above), `url` can contain the credenti
 
 ### Reference
 
-**[reference.getStream(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L99)**
+**[reference.getStream(args, onData, onError, onClose)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L99)**
 
-Get continuous updates on a JSON document with a `type` and `id`. Returns a [`stream.Readable`](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
+Get continuous updates on a JSON document with a `type` and `id`.Returns an object.
 
 > **args** - A set of key/value pairs that makes the document URL
 > &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string
 > &nbsp;&nbsp;&nbsp;&nbsp;id: Valid Document ID
 
-**[reference.searchStream(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L103)**
+**[reference.searchStream(args, onData, onError, onClose)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L103)**
 
-Get continuous updates on search queries (fuzzy, boolean, geolocation, range, full-text). Returns a [`stream.Readable`](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
+Get continuous updates on search queries (fuzzy, boolean, geolocation, range, full-text).Returns an object.
 
 > **args** - A set of key/value pairs that makes the document URL
 > &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string
