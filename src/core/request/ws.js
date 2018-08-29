@@ -34,8 +34,6 @@ function wsRequest(args, onData, onError, onClose) {
       if (this.credentials) {
         this.request.authorization = `Basic ${btoa(this.credentials)}`;
       }
-      // this.resultStream = new Stream();
-      // this.resultStream.readable = true;
       this.result = {};
       this.closeHandler = () => {
         this.wsClosed();
@@ -95,6 +93,8 @@ function wsRequest(args, onData, onError, onClose) {
     this.processError = (err) => {
       if (onError) {
         onError(err);
+      } else {
+        console.warn(err);
       }
     };
 

@@ -1,6 +1,6 @@
 {
   "name": "appbase-js",
-  "version": "4.0.0",
+  "version": "4.0.0-beta",
   "main": "dist/appbase-js.cjs.js",
   "jsnext:main": "dist/appbase-js.es.js",
   "module": "dist/appbase-js.es.js",
@@ -10,7 +10,7 @@
     "elasticsearch",
     "search"
   ],
-  "author": "Kuldeep Saxena",
+  "author": "Kuldeep Saxena <kul.anjuma@gmail.com>",
   "devDependencies": {
     "@babel/preset-env": "^7.0.0-rc.2",
     "babel-core": "^6.26.3",

@@ -6,6 +6,9 @@ import { removeUndefined, validate } from '../../utils/index';
  * @param {String} args.type
  * @param {Object} args.body
  * @param {Boolean} args.stream
+ * @param {Function} onData
+ * @param {Function} onError
+ * @param {Function} onClose
  */
 function searchStreamApi(args, ...rest) {
   const parsedArgs = removeUndefined(args);

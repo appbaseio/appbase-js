@@ -7,6 +7,9 @@ import { removeUndefined, validate, btoa } from '../../utils/index';
  * @param {String} args.type
  * @param {Object} args.body
  * @param {Object} webhook
+ * @param {Function} onData
+ * @param {Function} onError
+ * @param {Function} onClose
  */
 function searchStreamToURLApi(args, webhook, ...rest) {
   const parsedArgs = removeUndefined(args);
@@ -60,33 +63,17 @@ function searchStreamToURLApi(args, webhook, ...rest) {
     throw new Error('fields missing: second argument(webhook) is necessary');
   }
 
-  this.populateBody();
-
-  const encode64 = btoa(stringify(query));
-  const path = `.percolator/webhooks-0-${typeString}-0-${encode64}`;
-
-  this.populateBody = () => {
+  const populateBody = () => {
     bodyCopy = {};
     bodyCopy.webhooks = webhooks;
     bodyCopy.query = query;
     bodyCopy.type = type;
   };
 
-  this.performRequest = (method) => {
-    const res = this.performWsRequest(
-      {
-        method,
-        path,
-        body: bodyCopy,
-      },
-      ...rest,
-    );
+  populateBody();
 
-    res.change = this.change();
-    res.stop = this.stop();
-
-    return res;
-  };
+  const encode64 = btoa(stringify(query));
+  const path = `.percolator/webhooks-0-${typeString}-0-${encode64}`;
 
   this.change = () => {
     webhooks = [];
@@ -104,7 +91,7 @@ function searchStreamToURLApi(args, webhook, ...rest) {
       throw new Error('fields missing: one of webhook or url fields is required');
     }
 
-    this.populateBody();
+    populateBody();
 
     return this.performRequest('POST');
   };
@@ -112,7 +99,21 @@ function searchStreamToURLApi(args, webhook, ...rest) {
     bodyCopy = undefined;
     return this.performRequest('DELETE');
   };
+  this.performRequest = (method) => {
+    const res = this.performWsRequest(
+      {
+        method,
+        path,
+        body: bodyCopy,
+      },
+      ...rest,
+    );
 
+    res.change = this.change;
+    res.stop = this.stop;
+
+    return res;
+  };
   return this.performRequest('POST');
 }
 export default searchStreamToURLApi;
