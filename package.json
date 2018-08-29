@@ -11,6 +11,7 @@
     "search"
   ],
   "author": "Kuldeep Saxena <kul.anjuma@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "@babel/preset-env": "^7.0.0-rc.2",
     "babel-core": "^6.26.3",
