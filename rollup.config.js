@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import replace from 'rollup-plugin-replace';
 import builtins from 'rollup-plugin-node-builtins';
+import babel from 'rollup-plugin-babel';
 import pkg from './package.json';
 
 const minify = process.env.MINIFY;
@@ -44,8 +45,16 @@ export default {
     ? Object.keys(pkg.peerDependencies || {})
     : [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
   plugins: [
-    umd ? resolve({ jsnext: true, main: true, preferBuiltins: false }) : {},
-    umd ? commonjs() : {},
+    umd ? resolve({
+ jsnext: true, main: true, preferBuiltins: false, browser: true,
+}) : {},
+    umd ? commonjs({ include: 'node_modules/**' }) : {},
+    babel({
+      exclude: 'node_modules/**',
+      babelrc: false,
+      presets: [['env', { loose: true, modules: false }]],
+      plugins: ['external-helpers'],
+    }),
     umd ? builtins() : {},
     umd
       ? replace({
