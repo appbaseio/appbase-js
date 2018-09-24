@@ -37,7 +37,7 @@ export default {
   input: 'src/index.js',
   output: Object.assign(
     {
-      name: 'appbase-js',
+      name: umd ? 'Appbase' : 'appbase-js',
     },
     output,
   ),
@@ -45,9 +45,14 @@ export default {
     ? Object.keys(pkg.peerDependencies || {})
     : [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
   plugins: [
-    umd ? resolve({
- jsnext: true, main: true, preferBuiltins: false, browser: true,
-}) : {},
+    umd
+      ? resolve({
+          jsnext: true,
+          main: true,
+          preferBuiltins: false,
+          browser: true,
+        })
+      : {},
     umd ? commonjs({ include: 'node_modules/**' }) : {},
     babel({
       exclude: 'node_modules/**',

@@ -17,7 +17,7 @@ module.exports = {
       description: 'delete the dist directory and run all builds',
       default: series(
         rimraf('dist'),
-        concurrent.nps('build.es', 'build.cjs', 'build.umd.main', 'build.umd.min'),
+        concurrent.nps('compileToes5', 'build.es', 'build.cjs', 'build.umd.main', 'build.umd.min'),
       ),
       es: {
         description: 'run the build with rollup (uses rollup.config.js)',
@@ -40,6 +40,7 @@ module.exports = {
       andTest: series.nps('build'),
     },
     copyTypes: series(npsUtils.copy('dist')),
+    compileToes5: series(rimraf('lib'), 'babel src/shim -d lib'),
     lint: {
       description: 'lint the entire project',
       script: 'eslint .',
@@ -47,7 +48,7 @@ module.exports = {
     validate: {
       description:
         'This runs several scripts to make sure things look good before committing or on clean install',
-      default: concurrent.nps('lint', 'build.andTest'),
+      default: concurrent.nps('compileToes5', 'lint', 'build.andTest'),
     },
   },
   options: {
