@@ -76,7 +76,7 @@ function fetchRequest(args) {
           });
           return resolve(response);
         });
-      });
+      }).catch(e => reject(e));
     } catch (e) {
       return reject(e);
     }
