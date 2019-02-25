@@ -45,8 +45,18 @@ export default function (config) {
 
   AppBaseClient.prototype.getMappings = getMappingsApi;
 
-  AppBaseClient.prototype.setHeaders = function (headers) {
-    this.headers = headers;
+  AppBaseClient.prototype.setHeaders = function (headers = {}, shouldEncode = true) {
+    // Encode headers
+    let encodedHeaders = {};
+    if (shouldEncode) {
+      Object.keys(headers).forEach((header) => {
+        encodedHeaders[header] = encodeURI(headers[header]);
+      });
+    } else {
+      encodedHeaders = headers;
+    }
+    this.headers = encodedHeaders;
+    console.log("CALLED ENCODE", encodedHeaders);
   };
 
   if (typeof window !== 'undefined') {
