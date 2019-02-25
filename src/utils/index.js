@@ -84,3 +84,16 @@ export function waitForSocketConnection(socket, callback) {
     }
   }, 5); // wait 5 ms for the connection...
 }
+
+export function encodeHeaders(headers = {}, shouldEncode = true) {
+  // Encode headers
+  let encodedHeaders = {};
+  if (shouldEncode) {
+    Object.keys(headers).forEach((header) => {
+      encodedHeaders[header] = encodeURI(headers[header]);
+    });
+  } else {
+    encodedHeaders = headers;
+  }
+  return encodedHeaders;
+}

@@ -2,7 +2,7 @@ const appbase = require('..');
 
 const { uuidv4 } = require('../__mocks__');
 
-describe('#AppBase_Client', function() {
+describe('#AppBase_Client', () => {
   test('should create appbase client', () => {
     const client = appbase({
       url: 'https://scalr.api.appbase.io',
@@ -75,6 +75,7 @@ describe('#AppBase_Client', function() {
     });
     client.setHeaders({
       authorization: 'test-authorize',
+      'x-search-key': '美女',
     });
     expect(client).toEqual({
       url: 'scalr.api.appbase.io',
@@ -84,6 +85,7 @@ describe('#AppBase_Client', function() {
       credentials: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
       headers: {
         authorization: 'test-authorize',
+        'x-search-key': '%E7%BE%8E%E5%A5%B3',
       },
     });
   });
@@ -93,7 +95,7 @@ describe('#AppBase_Client', function() {
       app: 'appbasejs-test-app',
       credentials: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
     });
-    client.transformRequest = request => {
+    client.transformRequest = (request) => {
       expect(true).toBe(true);
       return request;
     };
@@ -104,7 +106,7 @@ describe('#AppBase_Client', function() {
     };
     client.index({
       type: 'tweet_transform_error',
-      id: id,
+      id,
       body: tweet,
     });
   });

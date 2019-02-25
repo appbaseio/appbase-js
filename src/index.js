@@ -13,6 +13,7 @@ import searchStreamApi from './core/api/searchStream';
 import searchStreamToURLApi from './core/api/searchStreamToURL';
 import getTypesApi from './core/api/getTypes';
 import getMappingsApi from './core/api/getMappings';
+import { encodeHeaders } from './utils/index';
 
 export default function (config) {
   const client = new AppBaseClient(config);
@@ -47,16 +48,11 @@ export default function (config) {
 
   AppBaseClient.prototype.setHeaders = function (headers = {}, shouldEncode = true) {
     // Encode headers
-    let encodedHeaders = {};
     if (shouldEncode) {
-      Object.keys(headers).forEach((header) => {
-        encodedHeaders[header] = encodeURI(headers[header]);
-      });
+      this.headers = encodeHeaders(headers);
     } else {
-      encodedHeaders = headers;
+      this.headers = headers;
     }
-    this.headers = encodedHeaders;
-    console.log("CALLED ENCODE", encodedHeaders);
   };
 
   if (typeof window !== 'undefined') {
