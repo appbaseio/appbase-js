@@ -5,7 +5,7 @@ if (typeof WebSocket !== 'undefined') {
 } else if (typeof MozWebSocket !== 'undefined') {
   // eslint-disable-next-line
   ws = MozWebSocket;
-} else {
+} else if (typeof window !== 'undefined') {
   ws = window.WebSocket || window.MozWebSocket;
 }
 
