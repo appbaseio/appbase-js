@@ -53,40 +53,61 @@ function fetchRequest(args) {
         requestOptions.body = bodyCopy;
       }
 
-      let finalRequest = requestOptions;
-      if (this.transformRequest) {
-        finalRequest = this.transformRequest(requestOptions);
-      }
+      const handleTransformRequest = (res) => {
+        if (this.transformRequest && typeof this.transformRequest === 'function') {
+          const tarnsformRequestPromise = this.transformRequest(res);
+          return tarnsformRequestPromise instanceof Promise
+            ? tarnsformRequestPromise
+            : Promise.resolve(tarnsformRequestPromise);
+        }
+        return Promise.resolve(res);
+      };
+
       let responseHeaders = {};
-      return fetch(
-        `${this.protocol}://${this.url}/${this.app}/${path}?${querystring.stringify(params)}`,
-        finalRequest,
+      const finalURL = `${this.protocol}://${this.url}/${this.app}/${path}?${querystring.stringify(
+        params,
+      )}`;
+      return handleTransformRequest(
+        Object.assign(
+          {},
+          {
+            url: finalURL,
+          },
+          requestOptions,
+        ),
       )
-        .then((res) => {
-          if (res.status >= 500) {
-            return reject(res);
-          }
-          responseHeaders = res.headers;
-          return res.json().then((data) => {
-            if (res.status >= 400) {
-              return reject(res);
-            }
-            if (data && data.responses instanceof Array) {
-              const allResponses = data.responses.length;
-              const errorResponses = data.responses.filter(entry => Object.prototype.hasOwnProperty.call(entry, 'error')).length;
-              // reject only when all responses has error
-              if (allResponses === errorResponses) {
-                return reject(data);
+        .then((ts) => {
+          const transformedRequest = Object.assign({}, ts);
+          const { url } = transformedRequest;
+          delete transformedRequest.url;
+          return fetch(url || finalURL, transformedRequest)
+            .then((res) => {
+              if (res.status >= 500) {
+                return reject(res);
               }
-            }
-            const response = Object.assign({}, data, {
-              _timestamp: timestamp,
-              _headers: responseHeaders,
-            });
-            return resolve(response);
-          });
+              responseHeaders = res.headers;
+              return res.json().then((data) => {
+                if (res.status >= 400) {
+                  return reject(res);
+                }
+                if (data && data.responses instanceof Array) {
+                  const allResponses = data.responses.length;
+                  const errorResponses = data.responses.filter(entry => Object.prototype.hasOwnProperty.call(entry, 'error')).length;
+                  // reject only when all responses has error
+                  if (allResponses === errorResponses) {
+                    return reject(data);
+                  }
+                }
+                const response = Object.assign({}, data, {
+                  _timestamp: timestamp,
+                  _headers: responseHeaders,
+                });
+                return resolve(response);
+              });
+            })
+            .catch(e => reject(e));
         })
-        .catch(e => reject(e));
+        .catch(err => reject(err));
     } catch (e) {
       return reject(e);
     }
