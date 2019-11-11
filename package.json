@@ -1,6 +1,6 @@
 {
   "name": "appbase-js",
-  "version": "4.0.2-beta.08",
+  "version": "4.0.2-beta.09",
   "main": "dist/appbase-js.cjs.js",
   "jsnext:main": "dist/appbase-js.es.js",
   "module": "dist/appbase-js.es.js",
