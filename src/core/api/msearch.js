@@ -36,7 +36,7 @@ function msearchApi(args) {
   }
 
   return this.performFetchRequest({
-    method: 'POST',
+    method: 'GET',
     path,
     params: parsedArgs,
     body,
