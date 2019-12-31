@@ -46,7 +46,10 @@ export default function (config) {
 
   AppBaseClient.prototype.getMappings = getMappingsApi;
 
-  AppBaseClient.prototype.setHeaders = function (headers = {}, shouldEncode = true) {
+  AppBaseClient.prototype.setHeaders = function (
+    headers = {},
+    shouldEncode = false,
+  ) {
     // Encode headers
     if (shouldEncode) {
       this.headers = encodeHeaders(headers);
