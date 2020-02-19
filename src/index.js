@@ -8,6 +8,7 @@ import deleteApi from './core/api/delete';
 import bulkApi from './core/api/bulk';
 import searchApi from './core/api/search';
 import msearchApi from './core/api/msearch';
+import reactiveSearchv3Api from './core/api/reactiveSearchv3Api';
 import getStreamApi from './core/api/getStream';
 import searchStreamApi from './core/api/searchStream';
 import searchStreamToURLApi from './core/api/searchStreamToURL';
@@ -35,6 +36,8 @@ export default function (config) {
   AppBaseClient.prototype.search = searchApi;
 
   AppBaseClient.prototype.msearch = msearchApi;
+
+  AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchv3Api;
 
   AppBaseClient.prototype.getStream = getStreamApi;
 

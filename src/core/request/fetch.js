@@ -64,9 +64,14 @@ function fetchRequest(args) {
       };
 
       let responseHeaders = {};
-      const finalURL = `${this.protocol}://${this.url}/${this.app}/${path}?${querystring.stringify(
-        params,
-      )}`;
+
+      let paramsString = '';
+      if (params) {
+        paramsString = `?${querystring.stringify(
+          params,
+        )}`;
+      }
+      const finalURL = `${this.protocol}://${this.url}/${this.app}/${path}${paramsString}`;
       return handleTransformRequest(
         Object.assign(
           {},
@@ -90,6 +95,26 @@ function fetchRequest(args) {
                 if (res.status >= 400) {
                   return reject(res);
                 }
+                // Handle error from RS API RESPONSE
+                if (data && Object.prototype.toString.call(data) === '[object Object]') {
+                  // Object.keys(data).forEach(entry => )
+                  let allResponses;
+                  let errorResponses = 0;
+                  if (body.query) {
+                    allResponses = body.query.length;
+                  }
+                  body.query.forEach((query) => {
+                    if (data[query.id] && Object.prototype.hasOwnProperty.call(data[query.id], 'error')) {
+                      errorResponses += 1;
+                    }
+                  });
+                  // reject only when all responses has error
+                  if (allResponses === errorResponses) {
+                    return reject(data);
+                  }
+                }
+
+                // Handle error from _msearch response
                 if (data && data.responses instanceof Array) {
                   const allResponses = data.responses.length;
                   const errorResponses = data.responses.filter(entry => Object.prototype.hasOwnProperty.call(entry, 'error')).length;

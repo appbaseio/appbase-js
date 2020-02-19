@@ -36,6 +36,30 @@ export function uuidv4() {
     return v.toString(16);
   });
 }
+
+export function validateRSQuery(query) {
+  if (query && Object.prototype.toString.call(query) === '[object Array]') {
+    for (let i = 0; i < query.length; i += 1) {
+      const q = query[i];
+      if (q) {
+        if (!q.id) {
+          return new Error('\'id\' field must be present in query object');
+        }
+        if (!q.dataField) {
+          return new Error('\'dataField\' field must be present in query object');
+        } if (Object.prototype.toString.call(q.dataField) !== '[object Array]') {
+          return new Error('\'dataField\' field must be an array');
+        }
+      } else {
+        return new Error('query object can not have an empty value');
+      }
+    }
+    return true;
+  }
+  return new Error('invalid query value, \'query\' value must be an array');
+}
+
+
 export function validate(object, fields) {
   const invalid = [];
   const emptyFor = {
@@ -61,7 +85,7 @@ export function validate(object, fields) {
   return true;
 }
 
-export function removeUndefined(value) {
+export function removeUndefined(value = {}) {
   if (value || !(Object.keys(value).length === 0 && value.constructor === Object)) {
     return JSON.parse(JSON.stringify(value));
   }
