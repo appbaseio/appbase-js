@@ -102,12 +102,12 @@ function fetchRequest(args) {
                   let errorResponses = 0;
                   if (body.query) {
                     allResponses = body.query.length;
+                    body.query.forEach((query) => {
+                      if (data[query.id] && Object.prototype.hasOwnProperty.call(data[query.id], 'error')) {
+                        errorResponses += 1;
+                      }
+                    });
                   }
-                  body.query.forEach((query) => {
-                    if (data[query.id] && Object.prototype.hasOwnProperty.call(data[query.id], 'error')) {
-                      errorResponses += 1;
-                    }
-                  });
                   // reject only when all responses has error
                   if (allResponses === errorResponses) {
                     return reject(data);
