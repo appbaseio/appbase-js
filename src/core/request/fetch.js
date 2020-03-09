@@ -54,7 +54,10 @@ function fetchRequest(args) {
       }
 
       const handleTransformRequest = (res) => {
-        if (this.transformRequest && typeof this.transformRequest === 'function') {
+        if (
+          this.transformRequest
+          && typeof this.transformRequest === 'function'
+        ) {
           const tarnsformRequestPromise = this.transformRequest(res);
           return tarnsformRequestPromise instanceof Promise
             ? tarnsformRequestPromise
@@ -67,9 +70,7 @@ function fetchRequest(args) {
 
       let paramsString = '';
       if (params) {
-        paramsString = `?${querystring.stringify(
-          params,
-        )}`;
+        paramsString = `?${querystring.stringify(params)}`;
       }
       const finalURL = `${this.protocol}://${this.url}/${this.app}/${path}${paramsString}`;
       return handleTransformRequest(
@@ -95,15 +96,28 @@ function fetchRequest(args) {
                 if (res.status >= 400) {
                   return reject(res);
                 }
+                if (data && data.error) {
+                  return reject(data);
+                }
                 // Handle error from RS API RESPONSE
-                if (data && Object.prototype.toString.call(data) === '[object Object]') {
+                if (
+                  data
+                  && Object.prototype.toString.call(data) === '[object Object]'
+                ) {
                   // Object.keys(data).forEach(entry => )
-                  let allResponses;
+                  let allResponses = 0;
                   let errorResponses = 0;
                   if (body.query) {
-                    allResponses = body.query.length;
-                    body.query.forEach((query) => {
-                      if (data[query.id] && Object.prototype.hasOwnProperty.call(data[query.id], 'error')) {
+                    allResponses = body.query.filter(
+                      q => q.execute || q.execute === undefined,
+                    ).length;
+                  }
+                  if (data) {
+                    Object.keys(data).forEach((key) => {
+                      if (
+                        data[key]
+                        && Object.prototype.hasOwnProperty.call(data[key], 'error')
+                      ) {
                         errorResponses += 1;
                       }
                     });
