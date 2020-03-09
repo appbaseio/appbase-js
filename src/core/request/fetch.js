@@ -104,27 +104,25 @@ function fetchRequest(args) {
                   data
                   && Object.prototype.toString.call(data) === '[object Object]'
                 ) {
-                  // Object.keys(data).forEach(entry => )
-                  let allResponses = 0;
-                  let errorResponses = 0;
                   if (body.query) {
-                    allResponses = body.query.filter(
+                    let errorResponses = 0;
+                    const allResponses = body.query.filter(
                       q => q.execute || q.execute === undefined,
                     ).length;
-                  }
-                  if (data) {
-                    Object.keys(data).forEach((key) => {
-                      if (
-                        data[key]
-                        && Object.prototype.hasOwnProperty.call(data[key], 'error')
-                      ) {
-                        errorResponses += 1;
-                      }
-                    });
-                  }
-                  // reject only when all responses has error
-                  if (allResponses === errorResponses) {
-                    return reject(data);
+                    if (data) {
+                      Object.keys(data).forEach((key) => {
+                        if (
+                          data[key]
+                          && Object.prototype.hasOwnProperty.call(data[key], 'error')
+                        ) {
+                          errorResponses += 1;
+                        }
+                      });
+                    }
+                    // reject only when all responses has error
+                    if (errorResponses > 0 && allResponses === errorResponses) {
+                      return reject(data);
+                    }
                   }
                 }
 
