@@ -104,7 +104,7 @@ function fetchRequest(args) {
                   data
                   && Object.prototype.toString.call(data) === '[object Object]'
                 ) {
-                  if (body.query) {
+                  if (body.query && body.query instanceof Array) {
                     let errorResponses = 0;
                     const allResponses = body.query.filter(
                       q => q.execute || q.execute === undefined,
