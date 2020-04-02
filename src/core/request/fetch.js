@@ -15,7 +15,7 @@ function fetchRequest(args) {
     const parsedArgs = removeUndefined(args);
     try {
       const {
- method, path, params, body,
+ method, path, params, body, isRSAPI,
 } = parsedArgs;
       let bodyCopy = body;
       const contentType = path.endsWith('msearch') || path.endsWith('bulk')
@@ -101,10 +101,11 @@ function fetchRequest(args) {
                 }
                 // Handle error from RS API RESPONSE
                 if (
-                  data
+                  isRSAPI
+                  && data
                   && Object.prototype.toString.call(data) === '[object Object]'
                 ) {
-                  if (body.query && body.query instanceof Array) {
+                  if (body && body.query && body.query instanceof Array) {
                     let errorResponses = 0;
                     const allResponses = body.query.filter(
                       q => q.execute || q.execute === undefined,

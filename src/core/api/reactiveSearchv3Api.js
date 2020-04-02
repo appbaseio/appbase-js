@@ -29,6 +29,7 @@ function reactiveSearchv3Api(query, settings) {
     method: 'POST',
     path: '_reactivesearch.v3',
     body,
+    isRSAPI: true,
   });
 }
 export default reactiveSearchv3Api;
