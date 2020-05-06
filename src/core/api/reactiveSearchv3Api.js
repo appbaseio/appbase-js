@@ -12,7 +12,6 @@ import { removeUndefined, validateRSQuery } from '../../utils/index';
 function reactiveSearchv3Api(query, settings) {
     const parsedSettings = removeUndefined(settings);
 
-
   // Validate query
   const valid = validateRSQuery(query);
 

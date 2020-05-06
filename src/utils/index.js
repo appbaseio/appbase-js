@@ -45,6 +45,10 @@ export function validateRSQuery(query) {
         if (!q.id) {
           return new Error('\'id\' field must be present in query object');
         }
+        // `dataField` is only optional for search types
+        if (q.type !== 'search' && !q.dataField) {
+          return new Error('\'dataField\' field must be present in query object');
+        }
         if (q.dataField && Object.prototype.toString.call(q.dataField) !== '[object Array]') {
           return new Error('\'dataField\' field must be an array');
         }
