@@ -37,7 +37,7 @@ export function uuidv4() {
   });
 }
 
-export function validateRSQuery(query) {
+export function validateRSQuery(query, isSuggestionsAPI = false) {
   if (query && Object.prototype.toString.call(query) === '[object Array]') {
     for (let i = 0; i < query.length; i += 1) {
       const q = query[i];
@@ -46,8 +46,8 @@ export function validateRSQuery(query) {
           return new Error('\'id\' field must be present in query object');
         }
         // `dataField` is only optional for search types
-        if (q.type !== 'search' && !q.dataField) {
-          return new Error('\'dataField\' field must be present in query object');
+        if (q.type !== 'search' || isSuggestionsAPI) {
+          if (!q.dataField) return new Error('\'dataField\' field must be present in query object');
         }
         if (q.dataField && Object.prototype.toString.call(q.dataField) !== '[object Array]') {
           return new Error('\'dataField\' field must be an array');

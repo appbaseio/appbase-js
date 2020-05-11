@@ -9,14 +9,21 @@ import { btoa, removeUndefined } from '../../utils/index';
  * @param {String} args.path
  * @param {Object} args.params
  * @param {Object} args.body
+ * @param {boolean} args.isSuggestionsAPI
  */
 function fetchRequest(args) {
   return new Promise((resolve, reject) => {
     const parsedArgs = removeUndefined(args);
     try {
       const {
- method, path, params, body, isRSAPI,
-} = parsedArgs;
+        method,
+        path,
+        params,
+        body,
+        isRSAPI,
+        isSuggestionsAPI,
+      } = parsedArgs;
+      const app = isSuggestionsAPI ? '.suggestions' : this.app;
       let bodyCopy = body;
       const contentType = path.endsWith('msearch') || path.endsWith('bulk')
           ? 'application/x-ndjson'
@@ -72,7 +79,7 @@ function fetchRequest(args) {
       if (params) {
         paramsString = `?${querystring.stringify(params)}`;
       }
-      const finalURL = `${this.protocol}://${this.url}/${this.app}/${path}${paramsString}`;
+      const finalURL = `${this.protocol}://${this.url}/${app}/${path}${paramsString}`;
       return handleTransformRequest(
         Object.assign(
           {},

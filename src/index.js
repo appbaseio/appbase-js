@@ -15,6 +15,7 @@ import searchStreamToURLApi from './core/api/searchStreamToURL';
 import getTypesApi from './core/api/getTypes';
 import getMappingsApi from './core/api/getMappings';
 import { encodeHeaders } from './utils/index';
+import getSuggestionsv3Api from './core/api/getSuggestionsv3Api';
 
 export default function (config) {
   const client = new AppBaseClient(config);
@@ -38,6 +39,8 @@ export default function (config) {
   AppBaseClient.prototype.msearch = msearchApi;
 
   AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchv3Api;
+
+  AppBaseClient.prototype.getQuerySuggestions = getSuggestionsv3Api;
 
   AppBaseClient.prototype.getStream = getStreamApi;
 
