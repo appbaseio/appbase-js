@@ -1,7 +1,7 @@
 import { removeUndefined, validateRSQuery } from '../../utils/index';
 
 /**
- * ReactiveSearch API Service for v3
+ * ReactiveSearch suggestions API for v3
  * @param {Array<Object>} query
  * @param {Object} settings
  * @param {boolean} settings.recordAnalytics
