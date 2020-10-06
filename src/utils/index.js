@@ -46,7 +46,7 @@ export function validateRSQuery(query, isSuggestionsAPI = false) {
           return new Error('\'id\' field must be present in query object');
         }
         // `dataField` is only optional for search types
-        if (q.type !== 'search' || isSuggestionsAPI) {
+        if ((q.type && q.type !== 'search') || isSuggestionsAPI) {
           if (!q.dataField) return new Error('\'dataField\' field must be present in query object');
         }
         if (q.dataField && Object.prototype.toString.call(q.dataField) !== '[object Array]') {
