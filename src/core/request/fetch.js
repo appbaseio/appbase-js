@@ -148,7 +148,7 @@ function fetchRequest(args) {
                   _headers: responseHeaders,
                 });
                 return resolve(response);
-              });
+              }).catch(e => reject(e));
             })
             .catch(e => reject(e));
         })
