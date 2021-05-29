@@ -57,7 +57,7 @@
     "querystring": "^0.2.0",
     "stream": "^0.0.2",
     "url-parser-lite": "^0.1.0",
-    "ws": "^6.1.2"
+    "ws": "^7.4.6"
   },
   "browser": {
     "ws": "./lib/ws-shim.js"
