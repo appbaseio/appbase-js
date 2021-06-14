@@ -15,18 +15,16 @@ describe('#Search', function() {
   test('should return results', async () => {
     var tweet = { user: 'olivere', message: 'Welcome to Golang and Elasticsearch.' };
     await client.index({
-      type: 'tweet_search',
       id: uuidv4(),
       body: tweet,
     });
     const res = await client.search({
-      type: 'tweet_search',
       body: {
         query: {
           match_all: {},
         },
       },
     });
-    expect(res.hits.total).toBeGreaterThan(0);
+    expect(res.hits.total.value).toBeGreaterThan(0);
   });
 });

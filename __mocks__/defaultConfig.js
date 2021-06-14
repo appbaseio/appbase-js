@@ -1,5 +1,5 @@
 module.exports = {
-  URL: 'https://scalr.api.appbase.io',
-  APPNAME: 'appbasejs-test-app',
-  CREDENTIALS: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
+  URL: 'https://appbase-demo-ansible-abxiydt-arc.searchbase.io',
+  APPNAME: 'appbase-js-test-cases',
+  CREDENTIALS: 'f1a7b4562098:35fed6ff-4a19-4387-a188-7cdfe759c40f',
 };

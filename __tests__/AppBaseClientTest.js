@@ -13,7 +13,6 @@ describe('#AppBase_Client', () => {
       url: 'scalr.api.appbase.io',
       protocol: 'https',
       app: 'appbasejs-test-app',
-      beforeSend: undefined,
       credentials: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
       headers: {},
     });
@@ -81,11 +80,10 @@ describe('#AppBase_Client', () => {
       url: 'scalr.api.appbase.io',
       protocol: 'https',
       app: 'appbasejs-test-app',
-      beforeSend: undefined,
       credentials: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
       headers: {
         authorization: 'test-authorize',
-        'x-search-key': '%E7%BE%8E%E5%A5%B3',
+        'x-search-key': '美女',
       },
     });
   });

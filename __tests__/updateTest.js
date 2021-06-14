@@ -12,7 +12,7 @@ describe('#Update', function() {
     });
   });
 
-  test('should update one document', async done => {
+  test('should update one document', async () => {
     const id = uuidv4();
     var tweet = {
       user: 'olivere',
@@ -23,47 +23,15 @@ describe('#Update', function() {
       message: 'This is a new tweet.',
     };
     await client.index({
-      type: 'tweet_update',
       id,
       body: tweet,
     });
-
-    var responseStream = client.getStream(
-      {
-        type: 'tweet_update',
-        id,
+    const updateRes = await client.update({
+      id,
+      body: {
+        doc: tweet2
       },
-      data => {
-        try {
-          expect(data).toEqual({
-            _type: 'tweet_update',
-            _id: id,
-            _source: tweet2,
-            _updated: true,
-          });
-        } catch (e) {
-          responseStream.stop();
-          return done(e);
-        }
-        responseStream.stop();
-        done();
-      },
-      error => {
-        if (error) {
-          done(error);
-          return;
-        }
-        // throw error;
-      },
-    );
-    setTimeout(async () => {
-      await client.update({
-        type: 'tweet_update',
-        id,
-        body: {
-          doc: tweet2,
-        },
-      });
-    }, 2000);
+    })
+    expect(updateRes.result).toEqual('updated');
   });
 });
