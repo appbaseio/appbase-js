@@ -15,7 +15,7 @@ function getStream(args, ...rest) {
   // Validate arguments
   const valid = validate(parsedArgs, {
     type: 'string',
-    id: 'string',
+    id: 'string|number',
   });
   if (valid !== true) {
     throw valid;

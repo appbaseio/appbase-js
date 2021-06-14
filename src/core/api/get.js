@@ -10,15 +10,14 @@ function getApi(args) {
   const parsedArgs = removeUndefined(args);
   // Validate arguments
   const valid = validate(parsedArgs, {
-    type: 'string',
-    id: 'string',
+    id: 'string|number',
   });
 
   if (valid !== true) {
     throw valid;
   }
 
-  const { type, id } = parsedArgs;
+  const { type = '_doc', id } = parsedArgs;
 
   delete parsedArgs.type;
   delete parsedArgs.id;

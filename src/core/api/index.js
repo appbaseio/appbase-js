@@ -11,13 +11,12 @@ function indexApi(args) {
   const parsedArgs = removeUndefined(args);
   // Validate arguments
   const valid = validate(parsedArgs, {
-    type: 'string',
     body: 'object',
   });
   if (valid !== true) {
     throw valid;
   }
-  const { type, id, body } = parsedArgs;
+  const { type = '_doc', id, body } = parsedArgs;
 
   delete parsedArgs.type;
   delete parsedArgs.body;
@@ -25,7 +24,7 @@ function indexApi(args) {
 
   let path;
   if (id) {
-    path = `${type}/${encodeURIComponent(id)}`;
+    path = type ? `${type}/${encodeURIComponent(id)}` : encodeURIComponent(id);
   } else {
     path = type;
   }

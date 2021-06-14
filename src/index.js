@@ -52,7 +52,7 @@ export default function (config) {
 
   AppBaseClient.prototype.getMappings = getMappingsApi;
 
-  AppBaseClient.prototype.setHeaders = function (
+  AppBaseClient.prototype.setHeaders = function setHeaders(
     headers = {},
     shouldEncode = false,
   ) {

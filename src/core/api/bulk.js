@@ -25,7 +25,7 @@ function bulkApi(args) {
   if (type) {
     path = `${type}/_bulk`;
   } else {
-    path = '/_bulk';
+    path = '_bulk';
   }
 
   return this.performFetchRequest({

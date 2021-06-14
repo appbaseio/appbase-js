@@ -43,14 +43,21 @@ export function validateRSQuery(query, isSuggestionsAPI = false) {
       const q = query[i];
       if (q) {
         if (!q.id) {
-          return new Error('\'id\' field must be present in query object');
+          return new Error("'id' field must be present in query object");
         }
         // `dataField` is only optional for search types
         if ((q.type && q.type !== 'search') || isSuggestionsAPI) {
-          if (!q.dataField) return new Error('\'dataField\' field must be present in query object');
+          if (!q.dataField) {
+            return new Error(
+              "'dataField' field must be present in query object",
+            );
+          }
         }
-        if (q.dataField && Object.prototype.toString.call(q.dataField) !== '[object Array]') {
-          return new Error('\'dataField\' field must be an array');
+        if (
+          q.dataField
+          && Object.prototype.toString.call(q.dataField) !== '[object Array]'
+        ) {
+          return new Error("'dataField' field must be an array");
         }
       } else {
         return new Error('query object can not have an empty value');
@@ -58,21 +65,25 @@ export function validateRSQuery(query, isSuggestionsAPI = false) {
     }
     return true;
   }
-  return new Error('invalid query value, \'query\' value must be an array');
+  return new Error("invalid query value, 'query' value must be an array");
 }
-
 
 export function validate(object, fields) {
   const invalid = [];
   const emptyFor = {
     object: null,
     string: '',
+    number: 0,
   };
   const keys = Object.keys(fields);
   keys.forEach((key) => {
-    const type = fields[key];
-    // eslint-disable-next-line
-    if (typeof object[key] !== type || object[key] === emptyFor[type]) {
+    const types = fields[key].split('|');
+    const matchedType = types.find(
+      type =>
+        // eslint-disable-next-line
+        typeof object[key] === type
+    );
+    if (!matchedType || object[key] === emptyFor[matchedType]) {
       invalid.push(key);
     }
   });
@@ -88,7 +99,10 @@ export function validate(object, fields) {
 }
 
 export function removeUndefined(value = {}) {
-  if (value || !(Object.keys(value).length === 0 && value.constructor === Object)) {
+  if (
+    value
+    || !(Object.keys(value).length === 0 && value.constructor === Object)
+  ) {
     return JSON.parse(JSON.stringify(value));
   }
   return null;
