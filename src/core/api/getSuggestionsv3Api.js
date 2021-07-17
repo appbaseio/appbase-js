@@ -13,7 +13,7 @@ function getSuggestionsv3Api(query, settings) {
   const parsedSettings = removeUndefined(settings);
 
   // Validate query
-  const valid = validateRSQuery(query, true);
+  const valid = validateRSQuery(query);
 
   if (valid !== true) {
     throw valid;

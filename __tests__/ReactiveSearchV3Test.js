@@ -31,20 +31,6 @@ describe("#Search", function () {
     ]);
     expect(res.tweet_search.hits.total.value).toBeGreaterThan(0);
   });
-  test("Error validation", async () => {
-    try {
-      const res = await client.reactiveSearchv3([
-        {
-          id: "tweet_search",
-          dataField: "user",
-          size: 10,
-          value: "olivere",
-        },
-      ]);
-    } catch (e) {
-      expect(e.message).toEqual("'dataField' field must be an array");
-    }
-  });
   test("Elastic error", async () => {
     try {
       const res = await client.reactiveSearchv3([

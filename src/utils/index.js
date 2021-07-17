@@ -37,27 +37,13 @@ export function uuidv4() {
   });
 }
 
-export function validateRSQuery(query, isSuggestionsAPI = false) {
+export function validateRSQuery(query) {
   if (query && Object.prototype.toString.call(query) === '[object Array]') {
     for (let i = 0; i < query.length; i += 1) {
       const q = query[i];
       if (q) {
         if (!q.id) {
           return new Error("'id' field must be present in query object");
-        }
-        // `dataField` is only optional for search types
-        if ((q.type && q.type !== 'search') || isSuggestionsAPI) {
-          if (!q.dataField) {
-            return new Error(
-              "'dataField' field must be present in query object",
-            );
-          }
-        }
-        if (
-          q.dataField
-          && Object.prototype.toString.call(q.dataField) !== '[object Array]'
-        ) {
-          return new Error("'dataField' field must be an array");
         }
       } else {
         return new Error('query object can not have an empty value');
