@@ -23,7 +23,7 @@ var Appbase = require("appbase-js");
 var appbase = Appbase({
   url: HOST_URL,
   app: APPNAME,
-  credentials: CREDENTIALS
+  credentials: CREDENTIALS,
 });
 appbase
   .index({
@@ -33,13 +33,13 @@ appbase
       name: "A green door",
       price: 12.5,
       tags: ["home", "green"],
-      stores: ["Walmart", "Target"]
-    }
+      stores: ["Walmart", "Target"],
+    },
   })
-  .then(res => {
+  .then((res) => {
     console.log(res);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 ```
@@ -52,13 +52,13 @@ Returns continous updates on a JSON document from a particular `type`.
 appbase.getStream(
   {
     type: "product",
-    id: "1"
+    id: "1",
   },
-  data => {
+  (data) => {
     // "data" handler is triggered every time there is a **new** document update.
     console.log(data);
   },
-  error => {
+  (error) => {
     console.log("caught a stream error", error);
   }
 );
@@ -91,21 +91,22 @@ getStream() returns an object which has `stop` & `reconnect` properties. Check o
 Get continuous results by searching across the database streams. A query can be written using the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - which supports composing boolean, regex, geo, fuzzy, range queries. Let's stream the results of a simple **`match_all`** query on the `product` type:
 
 ```js
-appbase
-  .searchStream({
+appbase.searchStream(
+  {
     type: "product",
     body: {
       query: {
-        match_all: {}
-      }
-    }
+        match_all: {},
+      },
+    },
   },
-  data => {
+  (data) => {
     console.log(data);
   },
-  error => {
+  (error) => {
     console.log("caught a stream error", error);
-  })
+  }
+);
 ```
 
 ##### Console Output
@@ -140,8 +141,7 @@ For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/
 Returns a **reference** object on which streaming requests can be performed.
 
 > **args** - A set of key/value pairs that configures the ElasticSearch Index
-> &nbsp;&nbsp;&nbsp;&nbsp;url: "https://scalr.api.appbase.io"
-> &nbsp;&nbsp;&nbsp;&nbsp;app: App name (equivalent to an ElasticSearch Index)
+> &nbsp;&nbsp;&nbsp;&nbsp;url: "https://scalr.api.appbase.io" > &nbsp;&nbsp;&nbsp;&nbsp;app: App name (equivalent to an ElasticSearch Index)
 > &nbsp;&nbsp;&nbsp;&nbsp;credentials: A `username:password` combination used for Basic Auth.
 
 Optionally (and like in the quick example above), `url` can contain the credentials field in the format: https://&lt;credentials>@scalr.appbase.io.
