@@ -1,165 +1,114 @@
-![Build Status Image](https://img.shields.io/badge/build-passing-brightgreen.svg)
+## ![Build Status Image](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
-# appbase-js
+<h2 id="top" align="center">
+  <img src="https://i.imgur.com/iiR9wAs.png" alt="appbase-js" title="appbase-js" width="200" />
+  <br />
+  appbase-js
+  <br />
+</h2>
 
-Appbase.io is a data streams library for Node.JS and Javascript (browser UMD build is in the [dist/](https://github.com/appbaseio/appbase-js/tree/master/dist) directory); compatible with [elasticsearch.js](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html).
+[appbase-js](https://github.com/appbaseio/appbase-js) is a universal JavaScript client library for working with the appbase.io database, for Node.JS and Javascript (browser UMD build is in the [dist/](https://github.com/appbaseio/appbase-js/tree/master/dist) directory); compatible with [elasticsearch.js](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html).
 
 An up-to-date documentation for Node.JS API is available at http://docs.appbase.io/javascript/quickstart.html.
 
-## Quick Example
+## TOC
 
-Working code snippets where each step builds on the previous ones.
+1. **[appbase-js: Intro](#1-appbase-js-intro)**
+2. **[Features](#2-features)**
+3. **[Live Examples](#3-live-examples)**
+4. **[Installation](#4-installation)**
+5. **[Docs Manual](#5-docs-manual)**
+6. **[Other Projects You Might Like](#6-other-projects-you-might-like)**
 
-#### Step 1: Add some data into the app (uses elasticsearch.js)
+<br />
+## 1. appbase-js: Intro
+
+[appbase-js](https://github.com/appbaseio/appbase-js) is a universal JavaScript client library for working with the appbase.io database.
+
+## 2. Features
+
+It can:
+
+- Index new documents or update / delete existing ones.
+- Work universally with Node.JS, Browser, and React Native.
+
+It can't:
+
+- Configure mappings, change analyzers, or capture snapshots. All these are provided by [elasticsearch.js](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html) - the official Elasticsearch JS client library.
+
+[Appbase.io - the database service](https://appbase.io) is opinionated about cluster setup and hence doesn't support the Elasticsearch devops APIs. See [rest.appbase.io](https://rest.appbase.io) for a full reference on the supported APIs.
+
+## 3. Live Examples
+
+<br />
+<p>Check out the Live interactive Examples at <a href="
+https://docs.appbase.io/api/examples/rest/" target="_blank">reactiveapps.io</a>.</p>
+<br/>
+
+[![image](https://user-images.githubusercontent.com/57627350/128456523-7c964efc-8940-43bc-b3b5-142fc40bdf11.png)](https://docs.appbase.io/api/examples/rest/)
+
+## 4. Installation
+
+We will fetch and install the **appbase-js** lib using npm. `4.0.0-beta` is the most current version.
 
 ```js
-// app and authentication configurations
-const HOST_URL = "https://scalr.api.appbase.io";
-const APPNAME = "createnewtestapp01";
-const CREDENTIALS = "RIvfxo1u1:dee8ee52-8b75-4b5b-be4f-9df3c364f59f";
+npm install appbase-js
+```
 
-// Add data into our ES "app index"
-var Appbase = require("appbase-js");
-var appbase = Appbase({
-  url: HOST_URL,
-  app: APPNAME,
-  credentials: CREDENTIALS,
+Adding it in the browser should be a one line script addition.
+
+```html
+<script
+  defer
+  src="https://unpkg.com/appbase-js/dist/appbase-js.umd.min.js"
+></script>
+```
+
+Alternatively, a UMD build of the library can be used directly from [jsDelivr](https://cdn.jsdelivr.net/npm/appbase-js/dist/).
+
+To write data to [appbase.io](https://appbase.io), we need to first create a reference object. We do this by passing the appbase.io API URL, app name, and credentials into the `Appbase` constructor:
+
+```js
+var appbaseRef = Appbase({
+  url: "https://appbase-demo-ansible-abxiydt-arc.searchbase.io",
+  app: "good-books-demo",
+  credentials: "c84fb24cbe08:db2a25b5-1267-404f-b8e6-cf0754953c68",
 });
-appbase
-  .index({
-    type: "product",
-    id: "1",
-    body: {
-      name: "A green door",
-      price: 12.5,
-      tags: ["home", "green"],
-      stores: ["Walmart", "Target"],
-    },
-  })
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 ```
 
-#### Step 2: Read the data stream from a particular DB location
-
-Returns continous updates on a JSON document from a particular `type`.
+**OR**
 
 ```js
-appbase.getStream(
-  {
-    type: "product",
-    id: "1",
-  },
-  (data) => {
-    // "data" handler is triggered every time there is a **new** document update.
-    console.log(data);
-  },
-  (error) => {
-    console.log("caught a stream error", error);
-  }
-);
+var appbaseRef = Appbase({
+  url: "https://c84fb24cbe08:db2a25b5-1267-404f-b8e6-cf0754953c68@appbase-demo-ansible-abxiydt-arc.searchbase.io",
+  app: "good-books-demo",
+});
 ```
 
-`Note:` Existing document value is returned via `get()` method.
+Credentials can also be directly passed as a part of the API URL.
 
-##### Console Output
-
-```js
-{
-  _index: "app`248",
-  _type: "product",
-  _id: "1",
-  _version: 4,
-  found: true,
-  _source: {
-    name: "A green door",
-    price: 12.5,
-    tags: [ "home", "green" ],
-    stores: [ "Walmart", "Target" ]
-  }
-}
-```
-
-getStream() returns an object which has `stop` & `reconnect` properties. Check out the [getStreamTest.js](https://github.com/bietkul/appbase-js/blob/develop/__tests__/getStream.js) where we make an update to the document and see any further updates to it via the "data" callback.
-
-#### Step 3: Apply queries on data streams
-
-Get continuous results by searching across the database streams. A query can be written using the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - which supports composing boolean, regex, geo, fuzzy, range queries. Let's stream the results of a simple **`match_all`** query on the `product` type:
-
-```js
-appbase.searchStream(
-  {
-    type: "product",
-    body: {
-      query: {
-        match_all: {},
-      },
-    },
-  },
-  (data) => {
-    console.log(data);
-  },
-  (error) => {
-    console.log("caught a stream error", error);
-  }
-);
-```
-
-##### Console Output
-
-```js
-{
-  took: 1,
-  timed_out: false,
-  _shards: {
-    total: 1,
-    successful: 1,
-    failed: 0
-  },
-  hits: {
-    total: 4,
-    max_score: 1,
-    hits: [ [Object], [Object], [Object], [Object] ]
-  }
-}
-```
-
-searchStream() also returns an object, which can be conveniently listened via the `onData` callback. Check out the [searchStreamTest.js](https://github.com/bietkul/appbase-js/blob/develop/__tests__/searchStreamTest.js) where we make an update that matches the query and see the results in the event stream.
-
-## API Reference
+## 5. Docs Manual
 
 For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/javascript/api-reference.html).
 
-### Global
+## 6. Other Projects You Might Like
 
-**[Appbase(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L16)**
+- [**arc**](https://github.com/appbaseio/arc) API Gateway for ElasticSearch (Out of the box Security, Rate Limit Features, Record Analytics and Request Logs).
 
-Returns a **reference** object on which streaming requests can be performed.
+- [**searchbox**](https://github.com/appbaseio/searchox) A lightweight and performance focused searchbox UI libraries to query and display results from your ElasticSearch app (aka index).
 
-> **args** - A set of key/value pairs that configures the ElasticSearch Index
-> &nbsp;&nbsp;&nbsp;&nbsp;url: "https://scalr.api.appbase.io" > &nbsp;&nbsp;&nbsp;&nbsp;app: App name (equivalent to an ElasticSearch Index)
-> &nbsp;&nbsp;&nbsp;&nbsp;credentials: A `username:password` combination used for Basic Auth.
+  - **Vanilla JS** - (~16kB Minified + Gzipped)
+  - **React** - (~30kB Minified + Gzipped)
+  - **Vue** - (~22kB Minified + Gzipped)
 
-Optionally (and like in the quick example above), `url` can contain the credentials field in the format: https://&lt;credentials>@scalr.appbase.io.
+- [**dejavu**](https://github.com/appbaseio/dejavu) allows viewing raw data within an appbase.io (or Elasticsearch) app. **Soon to be released feature:** An ability to import custom data from CSV and JSON files, along with a guided walkthrough on applying data mappings.
 
-### Reference
+- [**mirage**](https://github.com/appbaseio/mirage) ReactiveSearch components can be extended using custom Elasticsearch queries. For those new to Elasticsearch, Mirage provides an intuitive GUI for composing queries.
 
-**[reference.getStream(args, onData, onError, onClose)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L99)**
+- [**ReactiveMaps**](https://github.com/appbaseio/reactivesearch/tree/next/packages/maps) is a similar project to Reactive Search that allows building realtime maps easily.
 
-Get continuous updates on a JSON document with a `type` and `id`.Returns an object.
+- [**reactivesearch**](https://github.com/appbaseio/reactivesearch) UI components library for Elasticsearch: Available for React and Vue.
 
-> **args** - A set of key/value pairs that makes the document URL
-> &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string
-> &nbsp;&nbsp;&nbsp;&nbsp;id: Valid Document ID
+[⬆ Back to Top](#top)
 
-**[reference.searchStream(args, onData, onError, onClose)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L103)**
-
-Get continuous updates on search queries (fuzzy, boolean, geolocation, range, full-text).Returns an object.
-
-> **args** - A set of key/value pairs that makes the document URL
-> &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string
-> &nbsp;&nbsp;&nbsp;&nbsp;body: A JSON Query Body (Any query matching the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html))
+<a href="https://appbase.io/support/"><img src="https://i.imgur.com/UL6B0uE.png" width="100%" /></a>
