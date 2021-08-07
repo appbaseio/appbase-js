@@ -56,11 +56,14 @@ export default function (config) {
     headers = {},
     shouldEncode = false,
   ) {
+    const mergedHeaders = client.headers;
+
+    Object.assign(mergedHeaders, headers);
     // Encode headers
     if (shouldEncode) {
-      this.headers = encodeHeaders(headers);
+      this.headers = encodeHeaders(mergedHeaders);
     } else {
-      this.headers = headers;
+      this.headers = mergedHeaders;
     }
   };
 
