@@ -10,11 +10,13 @@ describe('#AppBase_Client', () => {
       credentials: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
     });
     expect(client).toEqual({
-      url: 'scalr.api.appbase.io',
-      protocol: 'https',
-      app: 'appbasejs-test-app',
-      credentials: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
-      headers: {},
+      url: "scalr.api.appbase.io",
+      protocol: "https",
+      app: "appbasejs-test-app",
+      credentials: "zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef",
+      headers: {
+        "X-Search-Client": "Appbase JS"
+      },
     });
   });
   test('should throw url missing error', () => {
@@ -82,8 +84,27 @@ describe('#AppBase_Client', () => {
       app: 'appbasejs-test-app',
       credentials: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
       headers: {
+        'X-Search-Client': 'Appbase JS',
         authorization: 'test-authorize',
         'x-search-key': '美女',
+      },
+    });
+  });
+  test("should set X-Enable-Telemetry header", () => {
+    const client = appbase({
+      url: "https://scalr.api.appbase.io",
+      app: "appbasejs-test-app",
+      credentials: "zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef",
+      enableTelemetry: false
+    });
+    expect(client).toEqual({
+      url: "scalr.api.appbase.io",
+      protocol: "https",
+      app: "appbasejs-test-app",
+      credentials: "zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef",
+      headers: {
+        "X-Search-Client": "Appbase JS",
+        "X-Enable-Telemetry": false,
       },
     });
   });

@@ -8,12 +8,16 @@ import { isAppbase } from '../utils/index';
  * @param {String} config.credentials
  * @param {String} config.username
  * @param {String} config.password
+ * @param {Boolean} config.enableTelemetry
  * A callback function which will be invoked before a fetch request made
  */
 function AppBase(config) {
   const {
- auth = null, host = '', path = '', protocol = '',
-} = URL(config.url || '');
+    auth = null,
+    host = '',
+    path = '',
+    protocol = '',
+  } = URL(config.url || '');
   let url = host + path;
 
   // Validate config and throw appropriate error
@@ -49,12 +53,19 @@ function AppBase(config) {
   }
 
   if (isAppbase(url) && credentials === null) {
-    throw new Error('Authentication information is not present. Did you add credentials?');
+    throw new Error(
+      'Authentication information is not present. Did you add credentials?',
+    );
   }
   this.url = url;
   this.protocol = protocol;
   this.app = config.app;
   this.credentials = credentials;
-  this.headers = {};
+  this.headers = {
+    'X-Search-Client': 'Appbase JS',
+    ...(config.enableTelemetry === false && {
+      'X-Enable-Telemetry': config.enableTelemetry,
+    }),
+  };
 }
 export default AppBase;
