@@ -8,6 +8,7 @@ import { isAppbase } from '../utils/index';
  * @param {String} config.credentials
  * @param {String} config.username
  * @param {String} config.password
+ * @param {Boolean} config.enableTelemetry
  * A callback function which will be invoked before a fetch request made
  */
 function AppBase(config) {
@@ -60,6 +61,9 @@ function AppBase(config) {
   this.protocol = protocol;
   this.app = config.app;
   this.credentials = credentials;
-  this.headers = { 'X-Search-Client': 'Appbase JS' };
+  this.headers = {
+    'X-Search-Client': 'Appbase JS',
+    'X-Enable-Telemetry': config.enableTelemetry === undefined ? true : config.enableTelemetry,
+  };
 }
 export default AppBase;
