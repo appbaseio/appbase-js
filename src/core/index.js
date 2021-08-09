@@ -63,7 +63,9 @@ function AppBase(config) {
   this.credentials = credentials;
   this.headers = {
     'X-Search-Client': 'Appbase JS',
-    'X-Enable-Telemetry': config.enableTelemetry === undefined ? true : config.enableTelemetry,
+    ...(config.enableTelemetry === false && {
+      'X-Enable-Telemetry': config.enableTelemetry,
+    }),
   };
 }
 export default AppBase;

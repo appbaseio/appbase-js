@@ -15,8 +15,7 @@ describe('#AppBase_Client', () => {
       app: "appbasejs-test-app",
       credentials: "zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef",
       headers: {
-        "X-Search-Client": "Appbase JS",
-        "X-Enable-Telemetry": true,
+        "X-Search-Client": "Appbase JS"
       },
     });
   });
@@ -86,7 +85,6 @@ describe('#AppBase_Client', () => {
       credentials: 'zuGt16TPP:1ede0dc2-e727-476e-bc35-ee2956e750ef',
       headers: {
         'X-Search-Client': 'Appbase JS',
-        'X-Enable-Telemetry': true,
         authorization: 'test-authorize',
         'x-search-key': '美女',
       },
