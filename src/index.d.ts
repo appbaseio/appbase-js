@@ -60,6 +60,5 @@ interface AppbaseInstanceObject {
   setHeaders: (headers?: Object, shouldEncode?: Boolean) => void;
 }
 
-export default function appbasejs: (
-    config: AppbaseConfig
-) => AppbaseInstanceObject;
+declare function appbasejs(config: AppbaseConfig): AppbaseInstanceObject;
+export default appbasejs;
