@@ -12,46 +12,42 @@ import getMappingsApi from './core/api/getMappings';
 import { encodeHeaders } from './utils/index';
 import getSuggestionsv3Api from './core/api/getSuggestionsv3Api';
 
-function appbasejs(config) {
-  const client = new AppBaseClient(config);
+export default function (config) {
+	const client = new AppBaseClient(config);
 
-  AppBaseClient.prototype.performFetchRequest = fetchRequest;
+	AppBaseClient.prototype.performFetchRequest = fetchRequest;
 
-  AppBaseClient.prototype.index = indexApi;
+	AppBaseClient.prototype.index = indexApi;
 
-  AppBaseClient.prototype.get = getApi;
+	AppBaseClient.prototype.get = getApi;
 
-  AppBaseClient.prototype.update = updateApi;
+	AppBaseClient.prototype.update = updateApi;
 
-  AppBaseClient.prototype.delete = deleteApi;
+	AppBaseClient.prototype.delete = deleteApi;
 
-  AppBaseClient.prototype.bulk = bulkApi;
+	AppBaseClient.prototype.bulk = bulkApi;
 
-  AppBaseClient.prototype.search = searchApi;
+	AppBaseClient.prototype.search = searchApi;
 
-  AppBaseClient.prototype.msearch = msearchApi;
+	AppBaseClient.prototype.msearch = msearchApi;
 
-  AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchv3Api;
+	AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchv3Api;
 
-  AppBaseClient.prototype.getQuerySuggestions = getSuggestionsv3Api;
+	AppBaseClient.prototype.getQuerySuggestions = getSuggestionsv3Api;
 
-  AppBaseClient.prototype.getMappings = getMappingsApi;
+	AppBaseClient.prototype.getMappings = getMappingsApi;
 
-  AppBaseClient.prototype.setHeaders = function setHeaders(
-    headers = {},
-    shouldEncode = false,
-  ) {
-    // Encode headers
-    if (shouldEncode) {
-      this.headers = encodeHeaders(headers);
-    } else {
-      this.headers = headers;
-    }
-  };
+	AppBaseClient.prototype.setHeaders = function setHeaders(headers = {}, shouldEncode = false) {
+		// Encode headers
+		if (shouldEncode) {
+			this.headers = encodeHeaders(headers);
+		} else {
+			this.headers = headers;
+		}
+	};
 
-  if (typeof window !== 'undefined') {
-    window.Appbase = client;
-  }
-  return client;
+	if (typeof window !== 'undefined') {
+		window.Appbase = client;
+	}
+	return client;
 }
-export default appbasejs;
