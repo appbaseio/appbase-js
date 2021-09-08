@@ -5,6 +5,7 @@
   "jsnext:main": "dist/appbase-js.es.js",
   "module": "dist/appbase-js.es.js",
   "description": "Appbase.io streaming client lib for Javascript",
+  "types": "dist/index.d.ts",
   "keywords": [
     "appbase",
     "elasticsearch",
