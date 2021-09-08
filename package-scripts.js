@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-const npsUtils = require('nps-utils');
+const npsUtils = require("nps-utils");
 
 const {
  series, concurrent, rimraf, crossEnv,
@@ -11,13 +11,21 @@ module.exports = {
       default: crossEnv('NODE_ENV=test jest --coverage'),
       update: crossEnv('NODE_ENV=test jest --coverage'),
       watch: crossEnv('NODE_ENV=test jest --watch'),
-      codeCov: crossEnv('cat ./coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js'),
+      codeCov: crossEnv(
+        'cat ./coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js',
+      ),
     },
     build: {
       description: 'delete the dist directory and run all builds',
       default: series(
         rimraf('dist'),
-        concurrent.nps('compileToes5', 'build.es', 'build.cjs', 'build.umd.main', 'build.umd.min'),
+        concurrent.nps(
+          'compileToes5',
+          'build.es',
+          'build.cjs',
+          'build.umd.main',
+          'build.umd.min',
+        ),
       ),
       es: {
         description: 'run the build with rollup (uses rollup.config.js)',
@@ -40,7 +48,7 @@ module.exports = {
       andTest: series.nps('build'),
     },
     copyTypes: series(npsUtils.copy('dist')),
-    compileToes5: series(rimraf('lib'), 'babel src/shim -d lib'),
+    compileToes5: series(rimraf('lib')),
     lint: {
       description: 'lint the entire project',
       script: 'eslint .',
