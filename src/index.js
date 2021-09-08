@@ -12,7 +12,7 @@ import getMappingsApi from './core/api/getMappings';
 import { encodeHeaders } from './utils/index';
 import getSuggestionsv3Api from './core/api/getSuggestionsv3Api';
 
-export default function (config) {
+export default function appbasejs(config) {
 	const client = new AppBaseClient(config);
 
 	AppBaseClient.prototype.performFetchRequest = fetchRequest;
