@@ -33,6 +33,7 @@ type FetchApiArgs = {
   isSuggestionsAPI?: Boolean;
 };
 
+/* eslint-disable */
 interface AppbaseConfig {
   url?: string;
   app?: string;
@@ -60,5 +61,6 @@ interface AppbaseInstanceObject {
   setHeaders: (headers?: Object, shouldEncode?: Boolean) => void;
 }
 
+/* eslint-enable */
 declare function appbasejs(config: AppbaseConfig): AppbaseInstanceObject;
 export default appbasejs;
