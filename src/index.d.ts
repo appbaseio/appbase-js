@@ -52,10 +52,13 @@ interface AppbaseInstanceObject {
   bulk: (args: BulkApiArgs) => Object;
   search: (args: SearchApiArgs) => Object;
   msearch: (args: MsearchApiArgs) => Object;
-  reactiveSearchv3: (query: Array<Object>, settings: AppbaseSettings) => Object;
+  reactiveSearchv3: (
+    query: Array<Object>,
+    settings?: AppbaseSettings
+  ) => Object;
   getQuerySuggestions: (
     query: Array<Object>,
-    settings: AppbaseSettings
+    settings?: AppbaseSettings
   ) => Object;
   getMappings: () => Object;
   setHeaders: (headers?: Object, shouldEncode?: Boolean) => void;
