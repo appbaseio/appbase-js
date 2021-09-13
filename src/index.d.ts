@@ -3,7 +3,7 @@ type BulkApiArgs = {
   body: Object;
 };
 type DeleteApiArgs = {
-  type: string;
+  type?: string;
   id: string | number;
 };
 type GetApiArgs = DeleteApiArgs;
