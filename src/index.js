@@ -8,12 +8,11 @@ import bulkApi from './core/api/bulk';
 import searchApi from './core/api/search';
 import msearchApi from './core/api/msearch';
 import reactiveSearchv3Api from './core/api/reactiveSearchv3Api';
-import getTypesApi from './core/api/getTypes';
 import getMappingsApi from './core/api/getMappings';
 import { encodeHeaders } from './utils/index';
 import getSuggestionsv3Api from './core/api/getSuggestionsv3Api';
 
-export default function (config) {
+export default function appbasejs(config) {
 	const client = new AppBaseClient(config);
 
 	AppBaseClient.prototype.performFetchRequest = fetchRequest;
@@ -35,8 +34,6 @@ export default function (config) {
 	AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchv3Api;
 
 	AppBaseClient.prototype.getQuerySuggestions = getSuggestionsv3Api;
-
-	AppBaseClient.prototype.getTypes = getTypesApi;
 
 	AppBaseClient.prototype.getMappings = getMappingsApi;
 
