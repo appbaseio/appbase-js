@@ -21,7 +21,7 @@ type IndexApiArgs = {
 type MsearchApiArgs = BulkApiArgs;
 type SearchApiArgs = BulkApiArgs;
 type UpdateApiArgs = {
-  type: string;
+  type?: string;
   id: string | number;
   body: Object;
 };
