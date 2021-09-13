@@ -14,7 +14,7 @@ type AppbaseSettings = {
   customEvents?: Object;
 };
 type IndexApiArgs = {
-  type: string;
+  type?: string;
   id?: string;
   body: Object;
 };
