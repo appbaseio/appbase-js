@@ -4,6 +4,7 @@ import { terser } from 'rollup-plugin-terser';
 import replace from 'rollup-plugin-replace';
 import builtins from 'rollup-plugin-node-builtins';
 import babel from 'rollup-plugin-babel';
+import copy from 'rollup-plugin-copy';
 import pkg from './package.json';
 
 const minify = process.env.MINIFY;
@@ -43,7 +44,10 @@ export default {
   ),
   external: umd
     ? Object.keys(pkg.peerDependencies || {})
-    : [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
+    : [
+        ...Object.keys(pkg.dependencies || {}),
+        ...Object.keys(pkg.peerDependencies || {}),
+      ],
   plugins: [
     umd
       ? resolve({
@@ -63,9 +67,14 @@ export default {
     umd ? builtins() : {},
     umd
       ? replace({
-          'process.env.NODE_ENV': JSON.stringify(minify ? 'production' : 'development'),
+          'process.env.NODE_ENV': JSON.stringify(
+            minify ? 'production' : 'development',
+          ),
         })
       : null,
     minify ? terser() : null,
+    copy({
+      targets: [{ src: 'src/index.d.ts', dest: 'dist' }],
+    }),
   ].filter(Boolean),
 };
