@@ -40,9 +40,9 @@ export default function appbasejs(config) {
   ) {
     // Encode headers
     if (shouldEncode) {
-      this.headers = encodeHeaders(headers);
+      Object.assign(this.headers, encodeHeaders(headers));
     } else {
-      this.headers = headers;
+      Object.assign(this.headers, headers);
     }
   };
 
