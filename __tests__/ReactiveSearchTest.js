@@ -1,4 +1,4 @@
-const appbase = require("../dist");
+const appbase = require("..");
 const { uuidv4 } = require("../__mocks__");
 const config = require("../__mocks__/defaultConfig");
 
