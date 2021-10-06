@@ -32,6 +32,8 @@ export default function appbasejs(config) {
 
   AppBaseClient.prototype.reactiveSearch = reactiveSearchApi;
 
+  AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchApi;
+
   AppBaseClient.prototype.getMappings = getMappingsApi;
 
   AppBaseClient.prototype.setHeaders = function setHeaders(

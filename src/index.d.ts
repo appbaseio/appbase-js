@@ -53,6 +53,10 @@ interface AppbaseInstanceObject {
   search: (args: SearchApiArgs) => Object;
   msearch: (args: MsearchApiArgs) => Object;
   reactiveSearch: (query: Array<Object>, settings?: AppbaseSettings) => Object;
+  reactiveSearchv3: (
+    query: Array<Object>,
+    settings?: AppbaseSettings
+  ) => Object;
   getQuerySuggestions: (
     query: Array<Object>,
     settings?: AppbaseSettings
