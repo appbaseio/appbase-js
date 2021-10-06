@@ -1,4 +1,4 @@
-const appbase = require("..");
+const appbase = require("../dist");
 const { uuidv4 } = require("../__mocks__");
 const config = require("../__mocks__/defaultConfig");
 
@@ -21,7 +21,7 @@ describe("#Search", function () {
       id: uuidv4(),
       body: tweet,
     });
-    const res = await client.reactiveSearchv3([
+    const res = await client.reactiveSearch([
       {
         id: "tweet_search",
         dataField: ["user"],
@@ -33,7 +33,7 @@ describe("#Search", function () {
   });
   test("Elastic error", async () => {
     try {
-      const res = await client.reactiveSearchv3([
+      const res = await client.reactiveSearch([
         {
           id: "tweet_search",
           dataField: ["user"],
