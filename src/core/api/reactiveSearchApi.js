@@ -9,7 +9,7 @@ import { removeUndefined, validateRSQuery } from '../../utils/index';
  * @param {boolean} settings.enableQueryRules
  * @param {boolean} settings.customEvents
  */
-function reactiveSearchv3Api(query, settings) {
+function reactiveSearchApi(query, settings) {
   const parsedSettings = removeUndefined(settings);
 
   // Validate query
@@ -26,9 +26,9 @@ function reactiveSearchv3Api(query, settings) {
 
   return this.performFetchRequest({
     method: 'POST',
-    path: '_reactivesearch.v3',
+    path: '_reactivesearch',
     body,
     isRSAPI: true,
   });
 }
-export default reactiveSearchv3Api;
+export default reactiveSearchApi;
