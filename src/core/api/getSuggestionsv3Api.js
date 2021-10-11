@@ -1,7 +1,7 @@
 import { removeUndefined, validateRSQuery } from '../../utils/index';
 
 /**
- * ReactiveSearch API Service for v3
+ * ReactiveSearch suggestions API for v3
  * @param {Array<Object>} query
  * @param {Object} settings
  * @param {boolean} settings.recordAnalytics
@@ -9,7 +9,7 @@ import { removeUndefined, validateRSQuery } from '../../utils/index';
  * @param {boolean} settings.enableQueryRules
  * @param {boolean} settings.customEvents
  */
-function reactiveSearchApi(query, settings) {
+function getSuggestionsv3Api(query, settings) {
   const parsedSettings = removeUndefined(settings);
 
   // Validate query
@@ -26,9 +26,11 @@ function reactiveSearchApi(query, settings) {
 
   return this.performFetchRequest({
     method: 'POST',
-    path: '_reactivesearch',
+    path: '_reactivesearch.v3',
     body,
     isRSAPI: true,
+    isSuggestionsAPI: true,
   });
 }
-export default reactiveSearchApi;
+
+export default getSuggestionsv3Api;

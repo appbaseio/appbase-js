@@ -10,6 +10,7 @@ import msearchApi from './core/api/msearch';
 import reactiveSearchApi from './core/api/reactiveSearchApi';
 import getMappingsApi from './core/api/getMappings';
 import { encodeHeaders } from './utils/index';
+import getSuggestionsv3Api from './core/api/getSuggestionsv3Api';
 
 export default function appbasejs(config) {
   const client = new AppBaseClient(config);
@@ -33,6 +34,8 @@ export default function appbasejs(config) {
   AppBaseClient.prototype.reactiveSearch = reactiveSearchApi;
 
   AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchApi;
+
+  AppBaseClient.prototype.getQuerySuggestions = getSuggestionsv3Api;
 
   AppBaseClient.prototype.getMappings = getMappingsApi;
 
