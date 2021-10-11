@@ -8,6 +8,7 @@ import bulkApi from './core/api/bulk';
 import searchApi from './core/api/search';
 import msearchApi from './core/api/msearch';
 import reactiveSearchApi from './core/api/reactiveSearchApi';
+import reactiveSearchv3Api from './core/api/reactiveSearchv3Api';
 import getMappingsApi from './core/api/getMappings';
 import { encodeHeaders } from './utils/index';
 import getSuggestionsv3Api from './core/api/getSuggestionsv3Api';
@@ -33,7 +34,7 @@ export default function appbasejs(config) {
 
   AppBaseClient.prototype.reactiveSearch = reactiveSearchApi;
 
-  AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchApi;
+  AppBaseClient.prototype.reactiveSearchv3 = reactiveSearchv3Api;
 
   AppBaseClient.prototype.getQuerySuggestions = getSuggestionsv3Api;
 
