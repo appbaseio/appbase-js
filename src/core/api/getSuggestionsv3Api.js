@@ -1,4 +1,8 @@
-import { removeUndefined, validateRSQuery } from '../../utils/index';
+import {
+  getTelemetryHeaders,
+  removeUndefined,
+  validateRSQuery,
+} from '../../utils/index';
 
 /**
  * ReactiveSearch suggestions API for v3
@@ -28,6 +32,7 @@ function getSuggestionsv3Api(query, settings) {
     method: 'POST',
     path: '_reactivesearch.v3',
     body,
+    headers: getTelemetryHeaders(this.enableTelemetry),
     isRSAPI: true,
     isSuggestionsAPI: true,
   });

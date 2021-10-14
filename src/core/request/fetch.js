@@ -9,6 +9,7 @@ import { btoa, removeUndefined } from '../../utils/index';
  * @param {String} args.path
  * @param {Object} args.params
  * @param {Object} args.body
+ * @param {Object} args.headers
  * @param {boolean} args.isSuggestionsAPI
  */
 function fetchRequest(args) {
@@ -16,13 +17,8 @@ function fetchRequest(args) {
     const parsedArgs = removeUndefined(args);
     try {
       const {
-        method,
-        path,
-        params,
-        body,
-        isRSAPI,
-        isSuggestionsAPI,
-      } = parsedArgs;
+ method, path, params, body, isRSAPI, isSuggestionsAPI,
+} = parsedArgs;
       const app = isSuggestionsAPI ? '.suggestions' : this.app;
       let bodyCopy = body;
       const contentType = path.endsWith('msearch') || path.endsWith('bulk')
@@ -35,6 +31,7 @@ function fetchRequest(args) {
           'Content-Type': contentType,
         },
         this.headers,
+        args.headers,
       );
       const timestamp = Date.now();
       if (this.credentials) {
@@ -99,56 +96,65 @@ function fetchRequest(args) {
                 return reject(res);
               }
               responseHeaders = res.headers;
-              return res.json().then((data) => {
-                if (res.status >= 400) {
-                  return reject(res);
-                }
-                if (data && data.error) {
-                  return reject(data);
-                }
-                // Handle error from RS API RESPONSE
-                if (
-                  isRSAPI
-                  && data
-                  && Object.prototype.toString.call(data) === '[object Object]'
-                ) {
-                  if (body && body.query && body.query instanceof Array) {
-                    let errorResponses = 0;
-                    const allResponses = body.query.filter(
-                      q => q.execute || q.execute === undefined,
-                    ).length;
-                    if (data) {
-                      Object.keys(data).forEach((key) => {
-                        if (
-                          data[key]
-                          && Object.prototype.hasOwnProperty.call(data[key], 'error')
-                        ) {
-                          errorResponses += 1;
-                        }
-                      });
+              return res
+                .json()
+                .then((data) => {
+                  if (res.status >= 400) {
+                    return reject(res);
+                  }
+                  if (data && data.error) {
+                    return reject(data);
+                  }
+                  // Handle error from RS API RESPONSE
+                  if (
+                    isRSAPI
+                    && data
+                    && Object.prototype.toString.call(data) === '[object Object]'
+                  ) {
+                    if (body && body.query && body.query instanceof Array) {
+                      let errorResponses = 0;
+                      const allResponses = body.query.filter(
+                        q => q.execute || q.execute === undefined,
+                      ).length;
+                      if (data) {
+                        Object.keys(data).forEach((key) => {
+                          if (
+                            data[key]
+                            && Object.prototype.hasOwnProperty.call(
+                              data[key],
+                              'error',
+                            )
+                          ) {
+                            errorResponses += 1;
+                          }
+                        });
+                      }
+                      // reject only when all responses has error
+                      if (
+                        errorResponses > 0
+                        && allResponses === errorResponses
+                      ) {
+                        return reject(data);
+                      }
                     }
+                  }
+
+                  // Handle error from _msearch response
+                  if (data && data.responses instanceof Array) {
+                    const allResponses = data.responses.length;
+                    const errorResponses = data.responses.filter(entry => Object.prototype.hasOwnProperty.call(entry, 'error')).length;
                     // reject only when all responses has error
-                    if (errorResponses > 0 && allResponses === errorResponses) {
+                    if (allResponses === errorResponses) {
                       return reject(data);
                     }
                   }
-                }
-
-                // Handle error from _msearch response
-                if (data && data.responses instanceof Array) {
-                  const allResponses = data.responses.length;
-                  const errorResponses = data.responses.filter(entry => Object.prototype.hasOwnProperty.call(entry, 'error')).length;
-                  // reject only when all responses has error
-                  if (allResponses === errorResponses) {
-                    return reject(data);
-                  }
-                }
-                const response = Object.assign({}, data, {
-                  _timestamp: timestamp,
-                  _headers: responseHeaders,
-                });
-                return resolve(response);
-              }).catch(e => reject(e));
+                  const response = Object.assign({}, data, {
+                    _timestamp: timestamp,
+                    _headers: responseHeaders,
+                  });
+                  return resolve(response);
+                })
+                .catch(e => reject(e));
             })
             .catch(e => reject(e));
         })
