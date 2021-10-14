@@ -14,9 +14,6 @@ describe('#AppBase_Client', () => {
       protocol: 'https',
       app: 'appbasejs-test-app',
       credentials: 'f1a7b4562098:35fed6ff-4a19-4387-a188-7cdfe759c40f',
-      headers: {
-        'X-Search-Client': 'Appbase JS',
-      },
     });
   });
   test('should throw url missing error', () => {
@@ -84,7 +81,6 @@ describe('#AppBase_Client', () => {
       app: 'appbasejs-test-app',
       credentials: 'f1a7b4562098:35fed6ff-4a19-4387-a188-7cdfe759c40f',
       headers: {
-        'X-Search-Client': 'Appbase JS',
         authorization: 'test-authorize',
         'x-search-key': '美女',
       },
@@ -98,14 +94,11 @@ describe('#AppBase_Client', () => {
       enableTelemetry: false,
     });
     expect(client).toEqual({
-      url: 'appbase-demo-ansible-abxiydt-arc.searchbase.io',
-      protocol: 'https',
-      app: 'appbasejs-test-app',
-      credentials: 'f1a7b4562098:35fed6ff-4a19-4387-a188-7cdfe759c40f',
-      headers: {
-        'X-Search-Client': 'Appbase JS',
-        'X-Enable-Telemetry': false,
-      },
+      url: "appbase-demo-ansible-abxiydt-arc.searchbase.io",
+      protocol: "https",
+      app: "appbasejs-test-app",
+      credentials: "f1a7b4562098:35fed6ff-4a19-4387-a188-7cdfe759c40f",
+      enableTelemetry: false,
     });
   });
   test('should call transformRequest before fetch', async () => {

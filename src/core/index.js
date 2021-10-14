@@ -61,16 +61,8 @@ function AppBase(config) {
   this.protocol = protocol;
   this.app = config.app;
   this.credentials = credentials;
-  this.headers = {};
-  if (this.url.includes('searchbase.io')) {
-    Object.assign(this.headers, {
-      'X-Search-Client': 'Appbase JS',
-    });
-    if (config.enableTelemetry === false) {
-      Object.assign(this.headers, {
-        'X-Enable-Telemetry': config.enableTelemetry,
-      });
-    }
+  if (typeof config.enableTelemetry === 'boolean') {
+    this.enableTelemetry = config.enableTelemetry;
   }
 }
 export default AppBase;

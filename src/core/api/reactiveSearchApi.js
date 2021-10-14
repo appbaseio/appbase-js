@@ -24,10 +24,22 @@ function reactiveSearchApi(query, settings) {
     query,
   };
 
+  const headers = {};
+
+  Object.assign(headers, {
+    'X-Search-Client': 'Appbase JS',
+  });
+  if (this.enableTelemetry === false) {
+    Object.assign(headers, {
+      'X-Enable-Telemetry': this.enableTelemetry,
+    });
+  }
+
   return this.performFetchRequest({
     method: 'POST',
     path: '_reactivesearch',
     body,
+    headers,
     isRSAPI: true,
   });
 }
