@@ -90,7 +90,16 @@ function fetchRequest(args) {
           const transformedRequest = Object.assign({}, ts);
           const { url } = transformedRequest;
           delete transformedRequest.url;
-          return fetch(url || finalURL, transformedRequest)
+          return fetch(url || finalURL, {
+            ...transformedRequest,
+            // apply timestamp header for RS API
+            headers: isRSAPI
+              ? {
+                  ...transformedRequest.headers,
+                  'x-timestamp': new Date().getTime(),
+                }
+              : transformedRequest.headers,
+          })
             .then((res) => {
               if (res.status >= 500) {
                 return reject(res);
