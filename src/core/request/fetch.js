@@ -30,8 +30,8 @@ function fetchRequest(args) {
           Accept: 'application/json',
           'Content-Type': contentType,
         },
-        this.headers,
         args.headers,
+        this.headers,
       );
       const timestamp = Date.now();
       if (this.credentials) {
