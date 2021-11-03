@@ -94,10 +94,9 @@ function fetchRequest(args) {
             ...transformedRequest,
             // apply timestamp header for RS API
             headers: isRSAPI
-              ? {
-                  ...transformedRequest.headers,
-                  'x-timestamp': new Date().getTime(),
-                }
+              ? Object.assign({}, transformedRequest.headers, {
+                'x-timestamp': new Date().getTime(),
+              })
               : transformedRequest.headers,
           })
             .then((res) => {
