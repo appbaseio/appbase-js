@@ -55,7 +55,7 @@ if (!config.mongodb) {
     credentials = `${config.username}:${config.password}`;
   }
 
-  if (isAppbase(url) && credentials === null) {
+  if (isAppbase(url) && !config.mongodb && credentials === null) {
     throw new Error(
       'Authentication information is not present. Did you add credentials?',
     );
