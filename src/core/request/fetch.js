@@ -76,7 +76,7 @@ function fetchRequest(args) {
       if (params) {
         paramsString = `?${querystring.stringify(params)}`;
       }
-      const finalURL = `${this.protocol}://${this.url}/${app}/${path}${paramsString}`;
+      const finalURL = this.mongodb ? this.url : `${this.protocol}://${this.url}/${app}/${path}${paramsString}`;
       return handleTransformRequest(
         Object.assign(
           {},
