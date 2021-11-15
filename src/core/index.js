@@ -19,27 +19,35 @@ function AppBase(config) {
     path = '',
     protocol = '',
   } = URL(config.url || '');
-  let url = host + path;
+  let { url } = config;
 
   // Validate config and throw appropriate error
   if (typeof url !== 'string' || url === '') {
     throw new Error('URL not present in options.');
   }
-if (!config.mongodb) {
- if (typeof config.app !== 'string' || config.app === '') {
-    throw new Error('App name is not present in options.');
-  }
-}
+
   if (typeof protocol !== 'string' || protocol === '') {
     throw new Error(
       'Protocol is not present in url. URL should be of the form https://scalr.api.appbase.io',
     );
   }
-  // Parse url
-  if (url.slice(-1) === '/') {
-    url = url.slice(0, -1);
-  }
+
   let credentials = auth || null;
+  if (!config.mongodb) {
+    url = host + path;
+    // Parse url
+    if (url.slice(-1) === '/') {
+      url = url.slice(0, -1);
+    }
+    if (typeof config.app !== 'string' || config.app === '') {
+      throw new Error('App name is not present in options.');
+    }
+    if (isAppbase(url) && credentials === null) {
+      throw new Error(
+        'Authentication information is not present. Did you add credentials?',
+      );
+    }
+  }
   /**
    * Credentials can be provided as a part of the URL,
    * as username, password args or as a credentials argument directly */
@@ -55,11 +63,7 @@ if (!config.mongodb) {
     credentials = `${config.username}:${config.password}`;
   }
 
-  if (isAppbase(url) && !config.mongodb && credentials === null) {
-    throw new Error(
-      'Authentication information is not present. Did you add credentials?',
-    );
-  }
+
   this.mongodb = config.mongodb;
   this.url = url;
   this.protocol = protocol;
