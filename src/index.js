@@ -46,9 +46,9 @@ export default function appbasejs(config) {
   ) {
     // Encode headers
     if (shouldEncode) {
-      Object.assign(this.headers, encodeHeaders(headers));
+      this.headers = encodeHeaders(headers);
     } else {
-      Object.assign(this.headers, headers);
+      this.headers = headers;
     }
   };
 

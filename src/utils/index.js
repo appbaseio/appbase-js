@@ -138,3 +138,17 @@ export function getMongoRequest(app, mongo) {
     }
     return mongodb;
   }
+
+export function getTelemetryHeaders(enableTelemetry) {
+  const headers = {};
+  Object.assign(headers, {
+    'X-Search-Client': 'Appbase JS',
+  });
+  if (enableTelemetry === false) {
+    Object.assign(headers, {
+      'X-Enable-Telemetry': enableTelemetry,
+    });
+  }
+
+  return headers;
+}

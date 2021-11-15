@@ -1,4 +1,6 @@
-import { removeUndefined, validateRSQuery, getMongoRequest } from '../../utils/index';
+import {
+ removeUndefined, validateRSQuery, getMongoRequest, getTelemetryHeaders,
+} from '../../utils/index';
 
 /**
  * ReactiveSearch API Service for v3
@@ -30,6 +32,7 @@ function reactiveSearchv3Api(query, settings) {
     method: 'POST',
     path: '_reactivesearch.v3',
     body,
+    headers: getTelemetryHeaders(this.enableTelemetry),
     isRSAPI: true,
   });
 }
