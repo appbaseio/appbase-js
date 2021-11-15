@@ -123,3 +123,18 @@ export function encodeHeaders(headers = {}, shouldEncode = true) {
   }
   return encodedHeaders;
 }
+export function getMongoRequest(app, mongo) {
+    const mongodb = {};
+    if (app) {
+      mongodb.index = app;
+    }
+    if (mongo) {
+      if (mongo.db) {
+        mongodb.db = mongo.db;
+      }
+      if (mongo.collection) {
+        mongodb.collection = mongo.collection;
+      }
+    }
+    return mongodb;
+  }

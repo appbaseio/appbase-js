@@ -1,4 +1,4 @@
-import { removeUndefined, validateRSQuery } from '../../utils/index';
+import { removeUndefined, validateRSQuery, getMongoRequest } from '../../utils/index';
 
 /**
  * ReactiveSearch API Service for v3
@@ -23,7 +23,9 @@ function reactiveSearchv3Api(query, settings) {
     settings: parsedSettings,
     query,
   };
-
+  if (this.mongodb) {
+    Object.assign(body, { mongodb: getMongoRequest(this.app, this.mongodb) });
+  }
   return this.performFetchRequest({
     method: 'POST',
     path: '_reactivesearch.v3',

@@ -55,6 +55,7 @@
   ],
   "dependencies": {
     "cross-fetch": "^2.2.2",
+    "preact": "^10.5.15",
     "querystring": "^0.2.0",
     "url-parser-lite": "^0.1.0"
   }

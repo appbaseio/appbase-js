@@ -9,6 +9,7 @@ import { isAppbase } from '../utils/index';
  * @param {String} config.username
  * @param {String} config.password
  * @param {Boolean} config.enableTelemetry
+ * @param {Object} config.mongodb
  * A callback function which will be invoked before a fetch request made
  */
 function AppBase(config) {
@@ -24,9 +25,11 @@ function AppBase(config) {
   if (typeof url !== 'string' || url === '') {
     throw new Error('URL not present in options.');
   }
-  if (typeof config.app !== 'string' || config.app === '') {
+if (!config.mongodb) {
+ if (typeof config.app !== 'string' || config.app === '') {
     throw new Error('App name is not present in options.');
   }
+}
   if (typeof protocol !== 'string' || protocol === '') {
     throw new Error(
       'Protocol is not present in url. URL should be of the form https://scalr.api.appbase.io',
@@ -57,6 +60,7 @@ function AppBase(config) {
       'Authentication information is not present. Did you add credentials?',
     );
   }
+  this.mongodb = config.mongodb;
   this.url = url;
   this.protocol = protocol;
   this.app = config.app;
