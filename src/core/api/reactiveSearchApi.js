@@ -34,8 +34,8 @@ function reactiveSearchApi(query, settings) {
     method: 'POST',
     path: '_reactivesearch',
     body,
-    headers: getTelemetryHeaders(this.enableTelemetry),
-    isRSAPI: true,
+    headers: getTelemetryHeaders(this.enableTelemetry, !!this.mongodb),
+    isRSAPI: !this.mongodb,
   });
 }
 export default reactiveSearchApi;

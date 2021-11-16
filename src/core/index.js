@@ -63,17 +63,12 @@ function AppBase(config) {
     credentials = `${config.username}:${config.password}`;
   }
 
-
-  this.mongodb = config.mongodb;
   this.url = url;
   this.protocol = protocol;
   this.app = config.app;
   this.credentials = credentials;
-  this.headers = {};
-  if (!this.mongodb) {
-    this.headers = {
-      'X-Search-Client': 'Appbase JS',
-    };
+  if (config.mongodb) {
+    this.mongodb = config.mongodb;
   }
 
   if (typeof config.enableTelemetry === 'boolean') {
