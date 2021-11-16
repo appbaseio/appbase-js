@@ -139,13 +139,15 @@ export function getMongoRequest(app, mongo) {
     return mongodb;
   }
 
-export function getTelemetryHeaders(enableTelemetry, isMongoRequest = false) {
+export function getTelemetryHeaders(enableTelemetry, shouldSetHeaders) {
   const headers = {};
-  if (!isMongoRequest) {
+  if (!shouldSetHeaders) {
+    return headers;
+  }
     Object.assign(headers, {
       'X-Search-Client': 'Appbase JS',
     });
-  }
+
   if (enableTelemetry === false) {
     Object.assign(headers, {
       'X-Enable-Telemetry': enableTelemetry,
@@ -153,4 +155,79 @@ export function getTelemetryHeaders(enableTelemetry, isMongoRequest = false) {
   }
 
   return headers;
+}
+
+
+export const backendAlias = {
+  MONGODB: 'mongodb', // mongodb
+  ELASTICSEARCH: 'elasticsearch', // elasticsearch
+};
+export const dataTypes = {
+  ARRAY: 'array',
+  FUNCTION: 'function',
+  OBJECT: 'object',
+  NUMBER: 'number',
+  BOOLEAN: 'boolean',
+  STRING: 'string',
+};
+const checkDataType = (temp) => {
+  // eslint-disable-next-line
+  if (typeof temp === dataTypes.OBJECT) {
+    if (Array.isArray(temp)) {
+      return dataTypes.ARRAY;
+    }
+
+    return dataTypes.OBJECT;
+  }
+  return typeof temp;
+};
+
+export function validateSchema(
+  passedProperties = {},
+  schema = {},
+  backendName = '',
+) {
+  const passedPropertiesKeys = Object.keys(passedProperties).filter(
+    propertyKey => !!passedProperties[propertyKey],
+  );
+  const acceptedProperties = Object.keys(schema);
+  const requiredProperties = [];
+  // fetch required properties
+  acceptedProperties.forEach((propName) => {
+    const currentProperty = schema[propName];
+      if (currentProperty.required) {
+        requiredProperties.push(propName);
+      }
+  });
+  // check for required properties
+  requiredProperties.forEach((requiredProperty) => {
+    if (!passedPropertiesKeys.includes(requiredProperty)) {
+      throw new Error(
+        `${requiredProperty} is required when using the ${backendName} Search backend.`,
+      );
+    }
+  });
+
+  // check for accepted properties
+  passedPropertiesKeys.forEach((passedPropertyKey) => {
+    if (!acceptedProperties.includes(passedPropertyKey)) {
+      throw new Error(
+        `${passedPropertyKey} property isn't accepted property by ${backendName} backend.`,
+      );
+    }
+
+    const acceptedTypes = Array.isArray(schema[passedPropertyKey].type)
+      ? schema[passedPropertyKey].type
+      : [...schema[passedPropertyKey].type];
+    const receivedPropertyType = checkDataType(
+      passedProperties[passedPropertyKey],
+    );
+    if (!acceptedTypes.includes(receivedPropertyType)) {
+      throw new Error(
+        `The property ${passedPropertyKey} is expected with type(s) [${acceptedTypes.join(
+          ', ',
+        )}], but type was set as ${receivedPropertyType}.`,
+      );
+    }
+  });
 }

@@ -32,7 +32,7 @@ function reactiveSearchv3Api(query, settings) {
     method: 'POST',
     path: '_reactivesearch.v3',
     body,
-    headers: getTelemetryHeaders(this.enableTelemetry, !!this.mongodb),
+    headers: getTelemetryHeaders(this.enableTelemetry, !this.mongodb),
     isRSAPI: !this.mongodb,
   });
 }

@@ -1,5 +1,6 @@
 import URL from 'url-parser-lite';
-import { isAppbase } from '../utils/index';
+import { backendAlias, isAppbase, validateSchema } from '../utils/index';
+import SCHEMA from '../utils/schema/index';
 /**
  * Returns an instance of Appbase client
  * @param {Object} config To configure properties
@@ -21,10 +22,23 @@ function AppBase(config) {
   } = URL(config.url || '');
   let { url } = config;
 
-  // Validate config and throw appropriate error
-  if (typeof url !== 'string' || url === '') {
-    throw new Error('URL not present in options.');
-  }
+  const backendName = backendAlias[config.mongodb ? 'MONGODB' : 'ELASTICSEARCH'];
+  // eslint-disable-next-line
+  const schema = SCHEMA[backendName];
+  validateSchema(
+    {
+      url: config.url,
+      app: config.app,
+      credentials: config.credentials,
+      username: config.username,
+      password: config.password,
+      enableTelemetry: config.enableTelemetry,
+      mongodb: config.mongodb,
+    },
+    schema,
+    backendName,
+  );
+
 
   if (typeof protocol !== 'string' || protocol === '') {
     throw new Error(
@@ -38,9 +52,6 @@ function AppBase(config) {
     // Parse url
     if (url.slice(-1) === '/') {
       url = url.slice(0, -1);
-    }
-    if (typeof config.app !== 'string' || config.app === '') {
-      throw new Error('App name is not present in options.');
     }
     if (isAppbase(url) && credentials === null) {
       throw new Error(
