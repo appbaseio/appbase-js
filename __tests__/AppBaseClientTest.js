@@ -16,26 +16,6 @@ describe("#AppBase_Client", () => {
       credentials: "f1a7b4562098:35fed6ff-4a19-4387-a188-7cdfe759c40f",
     });
   });
-  test("should create appbase client with mongodb", () => {
-    const client = appbase({
-      url: "https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/public-demo-skxjb/service/http_endpoint/incoming_webhook/reactivesearch",
-      app: "appbasejs-test-app",
-      mongodb: {
-        db: "test_db",
-        collection: "test_collection",
-      },
-    });
-    expect(client).toEqual({
-      url: "https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/public-demo-skxjb/service/http_endpoint/incoming_webhook/reactivesearch",
-      protocol: "https",
-      credentials: null,
-      app: "appbasejs-test-app",
-      mongodb: {
-        db: "test_db",
-        collection: "test_collection",
-      },
-    });
-  });
   test("should throw url missing error", () => {
     try {
       appbase({
@@ -140,6 +120,26 @@ describe("#AppBase_Client", () => {
       type: "tweet_transform_error",
       id,
       body: tweet,
+    });
+  });
+  test("should create appbase client with mongodb", () => {
+    const client = appbase({
+      url: "https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/public-demo-skxjb/service/http_endpoint/incoming_webhook/reactivesearch",
+      app: "appbasejs-test-app",
+      mongodb: {
+        db: "test_db",
+        collection: "test_collection",
+      },
+    });
+    expect(client).toEqual({
+      url: "https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/public-demo-skxjb/service/http_endpoint/incoming_webhook/reactivesearch",
+      protocol: "https",
+      credentials: null,
+      app: "appbasejs-test-app",
+      mongodb: {
+        db: "test_db",
+        collection: "test_collection",
+      },
     });
   });
 });
