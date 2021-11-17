@@ -19,7 +19,7 @@ export default {
   },
   mongodb: {
     type: dataTypes.OBJECT,
-    required: false,
+    required: true,
   },
   username: {
     type: dataTypes.STRING,

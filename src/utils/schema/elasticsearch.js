@@ -17,10 +17,6 @@ export default {
     type: dataTypes.BOOLEAN,
     required: false,
   },
-  mongodb: {
-    type: dataTypes.OBJECT,
-    required: false,
-  },
   username: {
     type: dataTypes.STRING,
     required: false,
