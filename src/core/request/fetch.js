@@ -17,8 +17,14 @@ function fetchRequest(args) {
     const parsedArgs = removeUndefined(args);
     try {
       const {
- method, path, params, body, isRSAPI, isSuggestionsAPI,
-} = parsedArgs;
+        method,
+        path,
+        params,
+        body,
+        isRSAPI,
+        isSuggestionsAPI,
+        isMongoRequest = false,
+      } = parsedArgs;
       const app = isSuggestionsAPI ? '.suggestions' : this.app;
       let bodyCopy = body;
       const contentType = path.endsWith('msearch') || path.endsWith('bulk')
@@ -76,7 +82,9 @@ function fetchRequest(args) {
       if (params) {
         paramsString = `?${querystring.stringify(params)}`;
       }
-      const finalURL = this.mongodb ? this.url : `${this.protocol}://${this.url}/${app}/${path}${paramsString}`;
+      const finalURL = this.mongodb
+        ? this.url
+        : `${this.protocol}://${this.url}/${app}/${path}${paramsString}`;
       return handleTransformRequest(
         Object.assign(
           {},
@@ -90,14 +98,17 @@ function fetchRequest(args) {
           const transformedRequest = Object.assign({}, ts);
           const { url } = transformedRequest;
           delete transformedRequest.url;
-          return fetch(url || finalURL, Object.assign({}, transformedRequest, {
-            // apply timestamp header for RS API
-            headers: isRSAPI
-              ? Object.assign({}, transformedRequest.headers, {
-                'x-timestamp': new Date().getTime(),
-              })
-              : transformedRequest.headers,
-          }))
+          return fetch(
+            url || finalURL,
+            Object.assign({}, transformedRequest, {
+              // apply timestamp header for RS API
+              headers: isRSAPI && !isMongoRequest
+                ? Object.assign({}, transformedRequest.headers, {
+                    'x-timestamp': new Date().getTime(),
+                  })
+                : transformedRequest.headers,
+            }),
+          )
             .then((res) => {
               if (res.status >= 500) {
                 return reject(res);

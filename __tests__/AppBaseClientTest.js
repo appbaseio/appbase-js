@@ -128,7 +128,7 @@ describe("#AppBase_Client", () => {
       app: "appbasejs-test-app",
       mongodb: {
         db: "test_db",
-         collection: "test_collection",
+        collection: "test_collection",
       },
     });
     expect(client).toEqual({

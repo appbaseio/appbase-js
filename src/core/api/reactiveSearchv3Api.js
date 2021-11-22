@@ -34,6 +34,7 @@ function reactiveSearchv3Api(query, settings) {
     body,
     headers: getTelemetryHeaders(this.enableTelemetry, !this.mongodb),
     isRSAPI: !this.mongodb,
+    isMongoRequest: !!this.mongodb,
   });
 }
 export default reactiveSearchv3Api;
