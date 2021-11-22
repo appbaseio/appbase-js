@@ -21,7 +21,11 @@ function AppBase(config) {
     protocol = '',
   } = URL(config.url || '');
   let { url } = config;
-
+  url = host + path;
+  // Parse url
+  if (url.slice(-1) === '/') {
+    url = url.slice(0, -1);
+  }
   const backendName = backendAlias[config.mongodb ? 'MONGODB' : 'ELASTICSEARCH'];
   // eslint-disable-next-line
   const schema = SCHEMA[backendName];
@@ -39,7 +43,6 @@ function AppBase(config) {
     backendName,
   );
 
-
   if (typeof protocol !== 'string' || protocol === '') {
     throw new Error(
       'Protocol is not present in url. URL should be of the form https://appbase-demo-ansible-abxiydt-arc.searchbase.io',
@@ -48,11 +51,6 @@ function AppBase(config) {
 
   let credentials = auth || null;
   if (!config.mongodb) {
-    url = host + path;
-    // Parse url
-    if (url.slice(-1) === '/') {
-      url = url.slice(0, -1);
-    }
     if (isAppbase(url) && credentials === null) {
       throw new Error(
         'Authentication information is not present. Did you add credentials?',
