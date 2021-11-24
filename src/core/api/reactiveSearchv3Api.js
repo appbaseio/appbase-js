@@ -1,5 +1,8 @@
 import {
- removeUndefined, validateRSQuery, getMongoRequest, getTelemetryHeaders,
+  removeUndefined,
+  validateRSQuery,
+  getMongoRequest,
+  getTelemetryHeaders,
 } from '../../utils/index';
 
 /**

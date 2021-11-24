@@ -83,8 +83,9 @@ function fetchRequest(args) {
         paramsString = `?${querystring.stringify(params)}`;
       }
       const finalURL = this.mongodb
-        ? this.url
+        ? `${this.protocol}://${this.url}`
         : `${this.protocol}://${this.url}/${app}/${path}${paramsString}`;
+
       return handleTransformRequest(
         Object.assign(
           {},
@@ -102,11 +103,12 @@ function fetchRequest(args) {
             url || finalURL,
             Object.assign({}, transformedRequest, {
               // apply timestamp header for RS API
-              headers: isRSAPI && !isMongoRequest
-                ? Object.assign({}, transformedRequest.headers, {
-                    'x-timestamp': new Date().getTime(),
-                  })
-                : transformedRequest.headers,
+              headers:
+                isRSAPI && !isMongoRequest
+                  ? Object.assign({}, transformedRequest.headers, {
+                      'x-timestamp': new Date().getTime(),
+                    })
+                  : transformedRequest.headers,
             }),
           )
             .then((res) => {

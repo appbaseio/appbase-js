@@ -1,5 +1,8 @@
 import {
- getTelemetryHeaders, getMongoRequest, removeUndefined, validateRSQuery,
+  getTelemetryHeaders,
+  getMongoRequest,
+  removeUndefined,
+  validateRSQuery,
 } from '../../utils/index';
 
 /**
@@ -29,7 +32,6 @@ function reactiveSearchApi(query, settings) {
   if (this.mongodb) {
     Object.assign(body, { mongodb: getMongoRequest(this.app, this.mongodb) });
   }
-
   return this.performFetchRequest({
     method: 'POST',
     path: '_reactivesearch',
