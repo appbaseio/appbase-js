@@ -1,4 +1,9 @@
-import { getTelemetryHeaders, removeUndefined, validateRSQuery } from '../../utils/index';
+import {
+  removeUndefined,
+  validateRSQuery,
+  getMongoRequest,
+  getTelemetryHeaders,
+} from '../../utils/index';
 
 /**
  * ReactiveSearch API Service for v3
@@ -23,14 +28,16 @@ function reactiveSearchv3Api(query, settings) {
     settings: parsedSettings,
     query,
   };
-
-
+  if (this.mongodb) {
+    Object.assign(body, { mongodb: getMongoRequest(this.app, this.mongodb) });
+  }
   return this.performFetchRequest({
     method: 'POST',
     path: '_reactivesearch.v3',
     body,
-    headers: getTelemetryHeaders(this.enableTelemetry),
+    headers: getTelemetryHeaders(this.enableTelemetry, !this.mongodb),
     isRSAPI: true,
+    isMongoRequest: !!this.mongodb,
   });
 }
 export default reactiveSearchv3Api;

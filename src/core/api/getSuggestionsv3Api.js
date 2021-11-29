@@ -1,4 +1,5 @@
 import {
+  getMongoRequest,
   getTelemetryHeaders,
   removeUndefined,
   validateRSQuery,
@@ -28,6 +29,9 @@ function getSuggestionsv3Api(query, settings) {
     query,
   };
 
+  if (this.mongodb) {
+    Object.assign(body, { mongodb: getMongoRequest(this.app, this.mongodb) });
+  }
   return this.performFetchRequest({
     method: 'POST',
     path: '_reactivesearch.v3',
@@ -35,6 +39,7 @@ function getSuggestionsv3Api(query, settings) {
     headers: getTelemetryHeaders(this.enableTelemetry),
     isRSAPI: true,
     isSuggestionsAPI: true,
+    isMongoRequest: !!this.mongodb,
   });
 }
 

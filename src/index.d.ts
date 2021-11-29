@@ -34,6 +34,11 @@ type FetchApiArgs = {
 };
 
 /* eslint-disable */
+
+interface MongoDbObject{
+  db: string;
+  collection: string;
+ }
 interface AppbaseConfig {
   url?: string;
   app?: string;
@@ -41,6 +46,7 @@ interface AppbaseConfig {
   username?: string;
   password?: string;
   enableTelemetry?: boolean;
+  mongodb?: MongoDbObject;
 }
 
 interface AppbaseInstanceObject {
