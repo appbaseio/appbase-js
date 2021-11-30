@@ -82,7 +82,7 @@ function fetchRequest(args) {
       if (params) {
         paramsString = `?${querystring.stringify(params)}`;
       }
-      const finalURL = this.mongodb
+      const finalURL = isMongoRequest
         ? `${this.protocol}://${this.url}`
         : `${this.protocol}://${this.url}/${app}/${path}${paramsString}`;
 
@@ -136,6 +136,7 @@ function fetchRequest(args) {
                       const allResponses = body.query.filter(
                         q => q.execute || q.execute === undefined,
                       ).length;
+
                       if (data) {
                         Object.keys(data).forEach((key) => {
                           if (
@@ -153,6 +154,7 @@ function fetchRequest(args) {
                       if (
                         errorResponses > 0
                         && allResponses === errorResponses
+                        && !isMongoRequest
                       ) {
                         return reject(data);
                       }
