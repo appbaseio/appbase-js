@@ -145,6 +145,7 @@ function fetchRequest(args) {
                               data[key],
                               'error',
                             )
+                            && !!data[key].error
                           ) {
                             errorResponses += 1;
                           }
@@ -154,7 +155,6 @@ function fetchRequest(args) {
                       if (
                         errorResponses > 0
                         && allResponses === errorResponses
-                        && !isMongoRequest
                       ) {
                         return reject(data);
                       }
