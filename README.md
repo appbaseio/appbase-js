@@ -9,7 +9,7 @@
 
 [appbase-js](https://github.com/appbaseio/appbase-js) is a universal JavaScript client library for working with the appbase.io database, for Node.JS and Javascript (browser UMD build is in the [dist/](https://github.com/appbaseio/appbase-js/tree/master/dist) directory); compatible with [elasticsearch.js](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html).
 
-An up-to-date documentation for Node.JS API is available at http://docs.appbase.io/javascript/quickstart.html.
+An up-to-date documentation for Node.JS API is available at http://docs.appbase.io/javascript/quickstart.
 
 ## TOC
 
@@ -89,7 +89,7 @@ Credentials can also be directly passed as a part of the API URL.
 
 ## 5. Docs Manual
 
-For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/javascript/api-reference.html).
+For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/javascript/apireference).
 
 ## 6. Other Projects You Might Like
 
