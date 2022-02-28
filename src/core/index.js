@@ -66,8 +66,6 @@ function AppBase(config) {
     credentials = `${config.username}:${config.password}`;
   }
   if (!config.mongodb) {
-    console.log('isAppbase(url)', isAppbase(url));
-    console.log('credentials', credentials);
     if (isAppbase(url) && credentials === null) {
       throw new Error(
         'Authentication information is not present. Did you add credentials?',
