@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import URL from 'url-parser-lite';
 import { backendAlias, isAppbase, validateSchema } from '../utils/index';
 import SCHEMA from '../utils/schema/index';
@@ -50,13 +51,6 @@ function AppBase(config) {
   }
 
   let credentials = auth || null;
-  if (!config.mongodb) {
-    if (isAppbase(url) && credentials === null) {
-      throw new Error(
-        'Authentication information is not present. Did you add credentials?',
-      );
-    }
-  }
   /**
    * Credentials can be provided as a part of the URL,
    * as username, password args or as a credentials argument directly */
@@ -70,6 +64,13 @@ function AppBase(config) {
     && config.password !== ''
   ) {
     credentials = `${config.username}:${config.password}`;
+  }
+  if (!config.mongodb) {
+    if (isAppbase(url) && credentials === null) {
+      throw new Error(
+        'Authentication information is not present. Did you add credentials?',
+      );
+    }
   }
 
   this.url = url;
