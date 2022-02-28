@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import URL from 'url-parser-lite';
 import { backendAlias, isAppbase, validateSchema } from '../utils/index';
 import SCHEMA from '../utils/schema/index';
