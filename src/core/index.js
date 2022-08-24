@@ -1,5 +1,10 @@
 import URL from 'url-parser-lite';
-import { backendAlias, isAppbase, validateSchema } from '../utils/index';
+import {
+  backendAlias,
+  isAppbase,
+  isValidHttpUrl,
+  validateSchema,
+} from '../utils/index';
 import SCHEMA from '../utils/schema/index';
 /**
  * Returns an instance of Appbase client
@@ -11,6 +16,7 @@ import SCHEMA from '../utils/schema/index';
  * @param {String} config.password
  * @param {Boolean} config.enableTelemetry
  * @param {Object} config.mongodb
+ * @param {Object} config.endpoint
  * A callback function which will be invoked before a fetch request made
  */
 function AppBase(config) {
@@ -29,6 +35,13 @@ function AppBase(config) {
   const backendName = backendAlias[config.mongodb ? 'MONGODB' : 'ELASTICSEARCH'];
   // eslint-disable-next-line
   const schema = SCHEMA[backendName];
+
+  if (config.endpoint && isValidHttpUrl(config.endpoint.url)) {
+    schema.url.required = false;
+    schema.url.app = false;
+    schema.url.credentials = false;
+  }
+
   validateSchema(
     {
       url: config.url,
