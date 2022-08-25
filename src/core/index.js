@@ -41,8 +41,8 @@ function AppBase(config) {
     && isValidHttpUrl(config.endpoint.url)
   ) {
     schema.url.required = false;
-    schema.url.app = false;
-    schema.url.credentials = false;
+    schema.app.required = false;
+    schema.credentials.required = false;
   }
 
   validateSchema(
