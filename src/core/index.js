@@ -36,10 +36,7 @@ function AppBase(config) {
   // eslint-disable-next-line
   const schema = SCHEMA[backendName];
 
-  if (
-    config.endpoint instanceof Object
-    && isValidHttpUrl(config.endpoint.url)
-  ) {
+  if (config.endpoint && isValidHttpUrl(config.endpoint.url)) {
     schema.url.required = false;
     schema.app.required = false;
     schema.credentials.required = false;
