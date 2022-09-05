@@ -132,7 +132,7 @@ describe("#AppBase_Client", () => {
       },
     });
     expect(client).toEqual({
-      url: "https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/public-demo-skxjb/service/http_endpoint/incoming_webhook/reactivesearch",
+      url: "us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/public-demo-skxjb/service/http_endpoint/incoming_webhook/reactivesearch",
       protocol: "https",
       credentials: null,
       app: "appbasejs-test-app",
