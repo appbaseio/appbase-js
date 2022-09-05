@@ -25,7 +25,7 @@ function AppBase(config) {
     host = '',
     path = '',
     protocol = '',
-  } = URL((config.endpoint ? config.endpoint.url : '') || config.url);
+  } = URL((config.endpoint ? config.endpoint.url : config.url) || '');
   let { url } = config;
   url = host + path;
   // Parse url

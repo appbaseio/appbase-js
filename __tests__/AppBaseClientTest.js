@@ -24,7 +24,9 @@ describe("#AppBase_Client", () => {
       });
       expect(true).toBe(false);
     } catch (e) {
-      expect(e.message).toEqual("URL not present in options.");
+      expect(e.message).toEqual(
+        "url is required when using the elasticsearch Search backend."
+      );
     }
   });
   test("should throw app missing error", () => {
@@ -35,7 +37,9 @@ describe("#AppBase_Client", () => {
       });
       expect(true).toBe(false);
     } catch (e) {
-      expect(e.message).toEqual("App name is not present in options.");
+      expect(e.message).toEqual(
+        "app is required when using the elasticsearch Search backend."
+      );
     }
   });
   test("should throw protocol missing error", () => {
