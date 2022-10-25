@@ -14,7 +14,7 @@ import {
  * @param {boolean} settings.enableQueryRules
  * @param {boolean} settings.customEvents
  */
-function reactiveSearchv3Api(query, settings) {
+function reactiveSearchv3Api(query, settings, params) {
   const parsedSettings = removeUndefined(settings);
 
   // Validate query
@@ -38,6 +38,7 @@ function reactiveSearchv3Api(query, settings) {
     headers: getTelemetryHeaders(this.enableTelemetry, !this.mongodb),
     isRSAPI: true,
     isMongoRequest: !!this.mongodb,
+    params,
   });
 }
 export default reactiveSearchv3Api;
