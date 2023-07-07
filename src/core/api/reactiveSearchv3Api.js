@@ -13,9 +13,8 @@ import {
  * @param {boolean} settings.userId
  * @param {boolean} settings.enableQueryRules
  * @param {boolean} settings.customEvents
- * @param {number} httpRequestTimeout
  */
-function reactiveSearchv3Api(query, settings, params, httpRequestTimeout) {
+function reactiveSearchv3Api(query, settings, params) {
   const parsedSettings = removeUndefined(settings);
 
   // Validate query
@@ -40,7 +39,7 @@ function reactiveSearchv3Api(query, settings, params, httpRequestTimeout) {
     isRSAPI: true,
     isMongoRequest: !!this.mongodb,
     params,
-    httpRequestTimeout: httpRequestTimeout || 0,
+    httpRequestTimeout: this.httpRequestTimeout || 0,
   });
 }
 export default reactiveSearchv3Api;
