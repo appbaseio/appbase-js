@@ -40,6 +40,7 @@ function reactiveSearchApi(query, settings, params) {
     isRSAPI: true,
     isMongoRequest: !!this.mongodb,
     params,
+    httpRequestTimeout: this.httpRequestTimeout || 0,
   });
 }
 export default reactiveSearchApi;

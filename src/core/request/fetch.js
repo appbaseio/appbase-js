@@ -11,6 +11,7 @@ import { btoa, removeUndefined } from '../../utils/index';
  * @param {Object} args.body
  * @param {Object} args.headers
  * @param {boolean} args.isSuggestionsAPI
+ * @param {number} args.httpRequestTimeout - Timeout duration in milliseconds
  */
 function fetchRequest(args) {
   return new Promise((resolve, reject) => {
@@ -24,6 +25,7 @@ function fetchRequest(args) {
         isRSAPI,
         isSuggestionsAPI,
         isMongoRequest = false,
+        httpRequestTimeout = 0, // Default timeout is 0 (no timeout)
       } = parsedArgs;
       const app = isSuggestionsAPI ? '.suggestions' : this.app;
       let bodyCopy = body;
@@ -68,10 +70,10 @@ function fetchRequest(args) {
           this.transformRequest
           && typeof this.transformRequest === 'function'
         ) {
-          const tarnsformRequestPromise = this.transformRequest(res);
-          return tarnsformRequestPromise instanceof Promise
-            ? tarnsformRequestPromise
-            : Promise.resolve(tarnsformRequestPromise);
+          const transformRequestPromise = this.transformRequest(res);
+          return transformRequestPromise instanceof Promise
+            ? transformRequestPromise
+            : Promise.resolve(transformRequestPromise);
         }
         return Promise.resolve(res);
       };
@@ -99,7 +101,7 @@ function fetchRequest(args) {
           const transformedRequest = Object.assign({}, ts);
           const { url } = transformedRequest;
           delete transformedRequest.url;
-          return fetch(
+          const fetchPromise = fetch(
             url || finalURL,
             Object.assign({}, transformedRequest, {
               // apply timestamp header for RS API
@@ -110,7 +112,17 @@ function fetchRequest(args) {
                     })
                   : transformedRequest.headers,
             }),
-          )
+          );
+
+          const timeoutPromise = new Promise((_, rejectTP) => {
+            if (httpRequestTimeout > 0) {
+              setTimeout(() => {
+                rejectTP(new Error('Request timeout'));
+              }, httpRequestTimeout);
+            }
+          });
+
+          return Promise.race([fetchPromise, timeoutPromise])
             .then((res) => {
               if (res.status >= 500) {
                 return reject(res);
@@ -151,7 +163,7 @@ function fetchRequest(args) {
                           }
                         });
                       }
-                      // reject only when all responses has error
+                      // reject only when all responses have an error
                       if (
                         errorResponses > 0
                         && allResponses === errorResponses
@@ -165,7 +177,7 @@ function fetchRequest(args) {
                   if (data && data.responses instanceof Array) {
                     const allResponses = data.responses.length;
                     const errorResponses = data.responses.filter(entry => Object.prototype.hasOwnProperty.call(entry, 'error')).length;
-                    // reject only when all responses has error
+                    // reject only when all responses have an error
                     if (allResponses === errorResponses) {
                       return reject(data);
                     }
@@ -186,4 +198,5 @@ function fetchRequest(args) {
     }
   });
 }
+
 export default fetchRequest;

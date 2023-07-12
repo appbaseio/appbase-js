@@ -17,6 +17,7 @@ import SCHEMA from '../utils/schema/index';
  * @param {Boolean} config.enableTelemetry
  * @param {Object} config.mongodb
  * @param {Object} config.endpoint
+ * @param {Object} config.httpRequestTimeout
  * A callback function which will be invoked before a fetch request made
  */
 function AppBase(config) {
@@ -91,6 +92,10 @@ function AppBase(config) {
   this.credentials = credentials;
   if (config.mongodb) {
     this.mongodb = config.mongodb;
+  }
+
+  if (config.httpRequestTimeout) {
+    this.httpRequestTimeout = config.httpRequestTimeout;
   }
 
   if (typeof config.enableTelemetry === 'boolean') {
