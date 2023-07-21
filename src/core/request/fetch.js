@@ -101,6 +101,10 @@ function fetchRequest(args) {
           const transformedRequest = Object.assign({}, ts);
           const { url } = transformedRequest;
           delete transformedRequest.url;
+
+          const controller = new AbortController();
+          const { signal } = controller;
+
           const fetchPromise = fetch(
             url || finalURL,
             Object.assign({}, transformedRequest, {
@@ -111,6 +115,7 @@ function fetchRequest(args) {
                       'x-timestamp': new Date().getTime(),
                     })
                   : transformedRequest.headers,
+              signal, // Attach the abort signal to the fetch request
             }),
           );
 
@@ -118,6 +123,7 @@ function fetchRequest(args) {
             if (httpRequestTimeout > 0) {
               setTimeout(() => {
                 rejectTP(new Error('Request timeout'));
+                controller.abort();
               }, httpRequestTimeout);
             }
           });
